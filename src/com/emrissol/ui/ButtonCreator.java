@@ -3,6 +3,7 @@ package com.emrissol.ui;
 import com.emrissol.Manager;
 import com.emrissol.event.DigitActionListener;
 import com.emrissol.event.operator.PostOperatorActionListener;
+import com.emrissol.event.operator.SqrtActionListener;
 import com.emrissol.expression.operation.Operation;
 import com.emrissol.ui.factory.JButtonDigitFactory;
 import com.emrissol.ui.factory.JButtonOperatorFactory;
@@ -54,9 +55,10 @@ public class ButtonCreator {
         jButtonPercent.setName(Operation.PERCENT.toString());
         jPanel.add(jButtonPercent, "cell 1 2");
 
-        JButton jButtonDel = operatorFactory.create("root");
-        jButtonDel.setName(Operation.SQRT.toString());
-        jPanel.add(jButtonDel, "cell 2 2");
+        JButton jButtonRoot = operatorFactory.create("root");
+        jButtonRoot.setName(Operation.SQRT.toString());
+        jButtonRoot.addActionListener(new SqrtActionListener(manager));
+        jPanel.add(jButtonRoot, "cell 2 2");
 //        JButton jButtonDel = operatorFactory.create("del");
 //        jButtonDel.setName(Operation.DEL.toString());
 //        jPanel.add(jButtonDel, "cell 2 2");
