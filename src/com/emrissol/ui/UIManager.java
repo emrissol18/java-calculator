@@ -51,9 +51,7 @@ public class UIManager {
         jButtonEqual.setName(Operation.EQUALS.toString());
 //        jButtonEqual.addActionListener(new OperatorActionListener(manager, this));
         jButtonEqual.addActionListener( actionEvent -> {
-            JButton target = (JButton) actionEvent.getSource();
-            String text = jTextField.getText();
-            jTextField.setText(text + target.getText());
+            jTextField.setText("");
         });
         jButtonEqual.addActionListener(new EqualOperatorActionListener(manager));
         jPanel.add(jButtonEqual, "cell 3 6");

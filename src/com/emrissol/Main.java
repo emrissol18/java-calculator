@@ -1,22 +1,17 @@
 package com.emrissol;
 
-import java.util.List;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.emrissol.ui.UIManager;
 
 public class Main {
 
     public static void main(String[] args) {
-//        Manager manager = Manager.getInstance();
-//        new UIManager(manager).createLayout();
+        Manager manager = Manager.getInstance();
+        new UIManager(manager).createLayout();
 
 
     }
 
-    public void parser(){
+    /*public void parser(){
 
         String rawExp = "2+";
         Pattern pattern = Pattern.compile("([\\\\.]?\\d+[\\\\.]?\\d*)([+-/*])");
@@ -32,7 +27,7 @@ public class Main {
                 System.out.println("matchResult.group(i) = " + matchResult.group(i));
             }
         }
-    }
+    }*/
     /*public void setLookAndFeel() {
         for (UIManager.LookAndFeelInfo installedLookAndFeel : UIManager.getInstalledLookAndFeels()) {
             System.out.println("installedLookAndFeel.getName() = " + installedLookAndFeel.getName());
