@@ -5,6 +5,7 @@ import com.emrissol.expression.operation.PreOperation;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Objects;
+import java.util.Stack;
 
 @Getter
 @Setter
@@ -12,10 +13,12 @@ public class Expression {
 
     static short ID = 0;
     protected short id;
-    protected String value;
+    protected String value = "";
     protected PreOperation preOperation;
     protected Operation operation;
 
+    protected Expression parent = null;
+    protected Stack<Expression> expressions = new Stack<>();
 
     public Expression() {
         this.id = ID++;
@@ -50,6 +53,14 @@ public class Expression {
         return preOperation != null;
     }
 
+    public boolean hasParent() {
+        return parent != null;
+    }
+
+    public void addExpression(Expression expression) {
+        expression.setParent(this);
+        expressions.add(expression);
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -66,10 +77,19 @@ public class Expression {
 
     @Override
     public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("[empty]");
+        if ( ! expressions.isEmpty()) {
+            stringBuilder.setLength(0);
+            for (Expression expression : expressions) {
+                stringBuilder.append("id=").append(id).append(", value=").append(value).append(", operation=").append(operation).append(", preOperation =").append(preOperation);
+            }
+        }
         return "Expression{" +
                 "id=" + id +
                 ", value=" + value +
                 ", operation=" + operation +
+                ", preOperation =" + preOperation +
+                "\n\t\t, expressions =" + stringBuilder.toString() +
                 '}';
     }
 }

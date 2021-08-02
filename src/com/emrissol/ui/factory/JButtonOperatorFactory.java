@@ -9,6 +9,9 @@ public class JButtonOperatorFactory implements Factory {
 
     List<? extends ActionListener> listeners;
 
+    public JButtonOperatorFactory() {
+    }
+
     public JButtonOperatorFactory(List<? extends ActionListener> listeners) {
         this.listeners = listeners;
     }

@@ -7,4 +7,8 @@ public class SqrtOperation implements PreOperation {
          number = Math.sqrt(number.doubleValue());
     }
 
+    @Override
+    public String toString() {
+        return "SqrtOperation";
+    }
 }

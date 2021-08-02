@@ -2,6 +2,7 @@ package com.emrissol.ui;
 
 import com.emrissol.Manager;
 import com.emrissol.event.DigitActionListener;
+import com.emrissol.event.operator.EqualOperatorActionListener;
 import com.emrissol.event.operator.PostOperatorActionListener;
 import com.emrissol.event.operator.SqrtActionListener;
 import com.emrissol.expression.operation.Operation;
@@ -14,82 +15,104 @@ import java.util.List;
 public class ButtonCreator {
 
     private Manager manager;
+    private UIManager uiManager;
     private JButtonDigitFactory digitFactory;
     private JButtonOperatorFactory operatorFactory;
 
     public ButtonCreator(Manager manager, UIManager uiManager) {
         this.manager = manager;
+        this.uiManager = uiManager;
         digitFactory = new JButtonDigitFactory(List.of(new DigitActionListener(manager, uiManager)));
         operatorFactory = new JButtonOperatorFactory(Collections.emptyList());
     }
 
     public void createDigitButtons(JPanel jPanel) {
-        JButton jButton0 = digitFactory.create("0");
-        jPanel.add(jButton0, "cell 1 6");
-        JButton jButton1 = digitFactory.create("1");
-        jPanel.add(jButton1, "cell 0 5");
-        JButton jButton2 = digitFactory.create("2");
-        jPanel.add(jButton2, "cell 1 5");
-        JButton jButton3 = digitFactory.create("3");
-        jPanel.add(jButton3, "cell 2 5");
-        JButton jButton4 = digitFactory.create("4");
-        jPanel.add(jButton4, "cell 0 4");
-        JButton jButton5 = digitFactory.create("5");
-        jPanel.add(jButton5, "cell 1 4");
-        JButton jButton6 = digitFactory.create("6");
-        jPanel.add(jButton6, "cell 2 4");
-        JButton jButton7 = digitFactory.create("7");
-        jPanel.add(jButton7, "cell 0 3");
-        JButton jButton8 = digitFactory.create("8");
-        jPanel.add(jButton8, "cell 1 3");
-        JButton jButton9 = digitFactory.create("9");
-        jPanel.add(jButton9, "cell 2 3");
-    }
-
-    public void createOperatorButtons(JPanel jPanel) {
         JButton jButtonClear = operatorFactory.create("C");
-        jButtonClear.setName(Operation.CLEAR.toString());
-        jPanel.add(jButtonClear, "cell 0 2");
+        jButtonClear.setActionCommand(Operation.CLEAR.getText());
+        jPanel.add(jButtonClear);
 
         JButton jButtonPercent = operatorFactory.create("%");
-        jButtonPercent.setName(Operation.PERCENT.toString());
-        jPanel.add(jButtonPercent, "cell 1 2");
+        jButtonPercent.setActionCommand(Operation.PERCENT.getText());
+        jPanel.add(jButtonPercent);
 
         JButton jButtonRoot = operatorFactory.create("root");
-        jButtonRoot.setName(Operation.SQRT.toString());
-        jButtonRoot.addActionListener(new SqrtActionListener(manager));
-        jPanel.add(jButtonRoot, "cell 2 2");
+        jButtonRoot.setActionCommand(Operation.SQRT.getText());
+        jButtonRoot.addActionListener(new SqrtActionListener(manager, uiManager));
+        jPanel.add(jButtonRoot);
 //        JButton jButtonDel = operatorFactory.create("del");
-//        jButtonDel.setName(Operation.DEL.toString());
-//        jPanel.add(jButtonDel, "cell 2 2");
+//        jButtonDel.setActionCommand(Operation.DEL.getText());
+//        jPanel.add(jButtonDel);
 
         JButton jButtonMultiply = operatorFactory.create("*");
-        jButtonMultiply.setName(Operation.MULTIPLY.toString());
-        jButtonMultiply.addActionListener(new PostOperatorActionListener(manager, Operation.MULTIPLY));
-        jPanel.add(jButtonMultiply, "cell 3 2");
+        jButtonMultiply.setActionCommand(Operation.MULTIPLY.getText());
+        jButtonMultiply.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.MULTIPLY));
+        jPanel.add(jButtonMultiply);
+
+        JButton jButton7 = digitFactory.create("7");
+        jButton7.setActionCommand("7");
+        jPanel.add(jButton7);
+        JButton jButton8 = digitFactory.create("8");
+        jButton8.setActionCommand("8");
+        jPanel.add(jButton8);
+        JButton jButton9 = digitFactory.create("9");
+        jButton9.setActionCommand("9");
+        jPanel.add(jButton9);
 
         JButton jButtonDivide = operatorFactory.create("/");
-        jButtonDivide.setName(Operation.DIVIDE.toString());
-        jButtonDivide.addActionListener(new PostOperatorActionListener(manager, Operation.DIVIDE));
-        jPanel.add(jButtonDivide, "cell 3 3");
+        jButtonDivide.setActionCommand(Operation.DIVIDE.getText());
+        jButtonDivide.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.DIVIDE));
+        jPanel.add(jButtonDivide);
+
+
+        JButton jButton4 = digitFactory.create("4");
+        jButton4.setActionCommand("4");
+        jPanel.add(jButton4);
+        JButton jButton5 = digitFactory.create("5");
+        jButton5.setActionCommand("5");
+        jPanel.add(jButton5);
+        JButton jButton6 = digitFactory.create("6");
+        jButton6.setActionCommand("6");
+        jPanel.add(jButton6);
 
         JButton jButtonSubstruct = operatorFactory.create("-");
-        jButtonSubstruct.setName(Operation.SUBSTRUCT.toString());
-        jButtonSubstruct.addActionListener(new PostOperatorActionListener(manager, Operation.SUBSTRUCT));
-        jPanel.add(jButtonSubstruct, "cell 3 4");
+        jButtonSubstruct.setActionCommand(Operation.SUBSTRUCT.getText());
+        jButtonSubstruct.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.SUBSTRUCT));
+        jPanel.add(jButtonSubstruct);
+
+        JButton jButton1 = digitFactory.create("1");
+        jButton1.setActionCommand("1");
+        jPanel.add(jButton1);
+        JButton jButton2 = digitFactory.create("2");
+        jButton2.setActionCommand("2");
+        jPanel.add(jButton2);
+        JButton jButton3 = digitFactory.create("3");
+        jButton3.setActionCommand("3");
+        jPanel.add(jButton3);
 
         JButton jButtonAdd = operatorFactory.create("+");
-        jButtonAdd.setName(Operation.ADD.toString());
-        jButtonAdd.addActionListener(new PostOperatorActionListener(manager, Operation.ADD));
-        jPanel.add(jButtonAdd, "cell 3 5");
+        jButtonAdd.setActionCommand(Operation.ADD.getText());
+        jButtonAdd.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.ADD));
+        jPanel.add(jButtonAdd);
 
         JButton jButtonNegative = operatorFactory.create("+/-");
-        jButtonNegative.setName(Operation.NEGATIVE.toString());
-        jPanel.add(jButtonNegative, "cell 0 6");
+        jButtonNegative.setActionCommand(Operation.NEGATIVE.getText());
+        jPanel.add(jButtonNegative);
 
         JButton jButtonPoint = operatorFactory.create(".");
-        jButtonPoint.setName(Operation.POINT.toString());
-        jPanel.add(jButtonPoint, "cell 2 6");
+        jButtonPoint.setActionCommand(Operation.POINT.getText());
+        jButtonPoint.setActionCommand(".");
+        jPanel.add(jButtonPoint);
+
+        JButton jButton0 = digitFactory.create("0");
+        jButton0.setActionCommand("0");
+        jPanel.add(jButton0);
+
+        JButton jButtonEqual = new JButtonDigitFactory(Collections.emptyList()).create("=");
+        jButtonEqual.setActionCommand(Operation.EQUALS.getText());
+//        jButtonEqual.addActionListener(new OperatorActionListener(manager, this));
+//        jButtonEqual.addActionListener( actionEvent -> uiManager.getJTextField().setText(""));
+        jButtonEqual.addActionListener(new EqualOperatorActionListener(manager, uiManager));
+        jPanel.add(jButtonEqual);
     }
 
 }

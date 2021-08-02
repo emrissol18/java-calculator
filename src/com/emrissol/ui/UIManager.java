@@ -1,16 +1,11 @@
 package com.emrissol.ui;
 
 import com.emrissol.Manager;
-import com.emrissol.event.operator.EqualOperatorActionListener;
-import com.emrissol.expression.operation.Operation;
-import com.emrissol.ui.factory.JButtonDigitFactory;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collections;
 
 public class UIManager {
 
@@ -27,17 +22,9 @@ public class UIManager {
     public void createLayout() {
         // 4col x 7row
         MigLayout migLayout = new MigLayout(
-                "debug",
-                "40[grow][grow][grow][grow]40",
-                "40" +
-                        "[]0" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "[]" +
-                        "40");
+                "wrap 4",
+                "",
+                "");
 
         JPanel jPanel = new JPanel(migLayout);
         jPanel.add(createTextArea(), "span 4, pushx, growx, wrap");
@@ -45,16 +32,6 @@ public class UIManager {
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
         buttonCreator.createDigitButtons(jPanel);
-        buttonCreator.createOperatorButtons(jPanel);
-
-        JButton jButtonEqual = new JButtonDigitFactory(Collections.emptyList()).create("=");
-        jButtonEqual.setName(Operation.EQUALS.toString());
-//        jButtonEqual.addActionListener(new OperatorActionListener(manager, this));
-        jButtonEqual.addActionListener( actionEvent -> {
-            jTextField.setText("");
-        });
-        jButtonEqual.addActionListener(new EqualOperatorActionListener(manager));
-        jPanel.add(jButtonEqual, "cell 3 6");
 
         JFrame jFrame = new JFrame();
         jFrame.add(jPanel);
@@ -68,8 +45,13 @@ public class UIManager {
         jTextField.setText(jTextField.getText() + text);
     }
 
+    public void addBtnTextToTextField(ActionEvent actionEvent) {
+        jTextField.setText(jTextField.getText() + actionEvent.getActionCommand());
+    }
+
     private JTextField getJTextFieldLayout() {
         jTextField = new JTextField("");
+        jTextField.setFont(new Font("Monospace", Font.PLAIN, 32));
         jTextField.setHorizontalAlignment(JTextField.RIGHT);
         return jTextField;
     }

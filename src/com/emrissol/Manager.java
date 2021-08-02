@@ -4,7 +4,6 @@ import com.emrissol.expression.Expression;
 import com.emrissol.expression.operation.Operation;
 import lombok.Getter;
 import lombok.Setter;
-import javax.swing.*;
 import java.util.*;
 
 // singleton
@@ -13,6 +12,9 @@ public class Manager {
     private static Manager instance;
 
     private Manager() {
+        for (Operation operation : EnumSet.allOf(Operation.class)) {
+            operations.put(operation.getText(), operation);
+        }
     }
 
     public static Manager getInstance() {
@@ -23,11 +25,8 @@ public class Manager {
     }
 
     @Getter
-    private Set<Operation> operations = EnumSet.allOf(Operation.class);
-
-    @Getter
-    @Setter
-    private String valueAcc = "";
+//    private Set<Operation> operations = EnumSet.allOf(Operation.class);
+    private Map<String, Operation> operations = new HashMap<>();
 
     @Getter
     @Setter
@@ -40,22 +39,29 @@ public class Manager {
     @Getter
     private Queue<Expression> expressions = new LinkedList<>();
 
-    public void addExpression(Expression expression) {
-        expressions.add(expression);
-    }
-
-
-    public Operation getOperation(JButton target) {
-        for (Operation operation : operations) {
-            if (operation.toString().equals(target.getName())) {
-                return operation;
-            }
+    public void addExpressionIfHasNoParent(Expression expression) {
+        if (expression.getParent() == null) {
+            expressions.add(expression);
         }
-        return null;
     }
 
-    public void addToValueAcc(String digit) {
-        valueAcc += digit;
+
+    public Operation getOperation(String text) {
+        return operations.get(text);
     }
 
+    public boolean hasCurrent() {
+        return currentExp != null;
+    }
+
+    public void addToValueOfCurrent(String text) {
+        currentExp.setValue(currentExp.getValue() + text);
+    }
+    public boolean currentHasPreOper() {
+        return currentExp.hasPreOperation();
+    }
+
+    public String getCurrentValue() {
+        return currentExp.getValue();
+    }
 }

@@ -1,6 +1,7 @@
 package com.emrissol.event;
 
 import com.emrissol.Manager;
+import com.emrissol.expression.Expression;
 import com.emrissol.ui.UIManager;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +21,10 @@ public class DigitActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JButton target = (JButton) actionEvent.getSource();
-        manager.addToValueAcc(target.getText());
+        if ( ! manager.hasCurrent()) {
+            manager.setCurrentExp(new Expression());
+        }
+        manager.addToValueOfCurrent(actionEvent.getActionCommand());
         uiManager.addToTextFieldText(target.getText());
     }
 
