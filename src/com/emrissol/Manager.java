@@ -34,6 +34,10 @@ public class Manager {
 
     @Getter
     @Setter
+    private Expression currentParentExp = null;
+
+    @Getter
+    @Setter
     private Expression currentExp = null;
 
     @Getter
@@ -52,6 +56,10 @@ public class Manager {
 
     public boolean hasCurrent() {
         return currentExp != null;
+    }
+
+    public boolean hasCurrentParent() {
+        return currentParentExp != null;
     }
 
     public void addToValueOfCurrent(String text) {
