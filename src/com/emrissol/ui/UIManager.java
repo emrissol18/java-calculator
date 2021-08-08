@@ -49,6 +49,10 @@ public class UIManager {
         jTextField.setText(jTextField.getText() + actionEvent.getActionCommand());
     }
 
+    public void addBtnTextToTextField(String text) {
+        jTextField.setText(jTextField.getText() + text);
+    }
+
     private JTextField getJTextFieldLayout() {
         jTextField = new JTextField("");
         jTextField.setFont(new Font("Monospace", Font.PLAIN, 32));
@@ -66,5 +70,14 @@ public class UIManager {
     }
 
 
+
+    public void trimTextFieldText() {
+        trimTextFieldText(1);
+    }
+
+    public void trimTextFieldText(int length) {
+        String valG = getJTextField().getText();
+        getJTextField().setText(valG.substring(0, valG.length() - length));
+    }
 
 }

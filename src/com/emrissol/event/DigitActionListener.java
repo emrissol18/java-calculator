@@ -21,10 +21,15 @@ public class DigitActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JButton target = (JButton) actionEvent.getSource();
-        if ( ! manager.hasCurrent()) {
-            manager.setCurrentExp(new Expression());
+        if (manager.hasCurrentParent() && ! manager.getCurrentParentExp().hasOperation()) {
+            manager.addToValueOfCurrentParent(actionEvent.getActionCommand());
         }
-        manager.addToValueOfCurrent(actionEvent.getActionCommand());
+        else {
+            if ( ! manager.hasCurrent()) {
+                manager.setCurrentExp(new Expression());
+            }
+            manager.addToValueOfCurrent(actionEvent.getActionCommand());
+        }
         uiManager.addToTextFieldText(target.getText());
     }
 

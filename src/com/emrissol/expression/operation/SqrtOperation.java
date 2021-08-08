@@ -8,6 +8,11 @@ public class SqrtOperation implements PreOperation {
     }
 
     @Override
+    public String getText() {
+        return Operation.SQRT.getText();
+    }
+
+    @Override
     public String toString() {
         return "SqrtOperation";
     }

@@ -8,7 +8,6 @@ public class Main {
         Manager manager = Manager.getInstance();
         new UIManager(manager).createLayout();
 
-
     }
 
     /*public void parser(){

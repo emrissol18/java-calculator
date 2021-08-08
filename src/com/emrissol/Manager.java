@@ -2,6 +2,8 @@ package com.emrissol;
 
 import com.emrissol.expression.Expression;
 import com.emrissol.expression.operation.Operation;
+import com.emrissol.expression.operation.PreOperation;
+import com.emrissol.expression.operation.SqrtOperation;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.*;
@@ -15,6 +17,7 @@ public class Manager {
         for (Operation operation : EnumSet.allOf(Operation.class)) {
             operations.put(operation.getText(), operation);
         }
+        preOperationMap.put(Operation.SQRT, new SqrtOperation());
     }
 
     public static Manager getInstance() {
@@ -41,14 +44,15 @@ public class Manager {
     private Expression currentExp = null;
 
     @Getter
-    private Queue<Expression> expressions = new LinkedList<>();
+    private Deque<Expression> expressionQueue = new LinkedList<>();
+
+    private Map<Operation, PreOperation> preOperationMap = new HashMap<>();
 
     public void addExpressionIfHasNoParent(Expression expression) {
-        if (expression.getParent() == null) {
-            expressions.add(expression);
+        if (expression.getParent() == null && ! expressionQueue.contains(expression)) {
+            expressionQueue.add(expression);
         }
     }
-
 
     public Operation getOperation(String text) {
         return operations.get(text);
@@ -65,11 +69,21 @@ public class Manager {
     public void addToValueOfCurrent(String text) {
         currentExp.setValue(currentExp.getValue() + text);
     }
+
+    public void addToValueOfCurrentParent(String text) {
+        currentParentExp.setValue(currentParentExp.getValue() + text);
+    }
+
     public boolean currentHasPreOper() {
         return currentExp.hasPreOperation();
     }
 
     public String getCurrentValue() {
         return currentExp.getValue();
+    }
+
+
+    public PreOperation getPreOperation(Operation operation) {
+        return preOperationMap.get(operation);
     }
 }

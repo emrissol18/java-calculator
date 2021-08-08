@@ -1,7 +1,9 @@
 package com.emrissol.ui;
 
 import com.emrissol.Manager;
+import com.emrissol.event.DelActionListener;
 import com.emrissol.event.DigitActionListener;
+import com.emrissol.event.operator.ClearAllActionListener;
 import com.emrissol.event.operator.EqualOperatorActionListener;
 import com.emrissol.event.operator.PostOperatorActionListener;
 import com.emrissol.event.operator.SqrtActionListener;
@@ -27,8 +29,14 @@ public class ButtonCreator {
     }
 
     public void createDigitButtons(JPanel jPanel) {
+        JButton jButtonDel = operatorFactory.create("del");
+        jButtonDel.setActionCommand(Operation.DEL.getText());
+        jButtonDel.addActionListener(new DelActionListener(manager, uiManager));
+        jPanel.add(jButtonDel);
+
         JButton jButtonClear = operatorFactory.create("C");
         jButtonClear.setActionCommand(Operation.CLEAR.getText());
+        jButtonClear.addActionListener(new ClearAllActionListener(manager, uiManager));
         jPanel.add(jButtonClear);
 
         JButton jButtonPercent = operatorFactory.create("%");
@@ -39,9 +47,6 @@ public class ButtonCreator {
         jButtonRoot.setActionCommand(Operation.SQRT.getText());
         jButtonRoot.addActionListener(new SqrtActionListener(manager, uiManager));
         jPanel.add(jButtonRoot);
-//        JButton jButtonDel = operatorFactory.create("del");
-//        jButtonDel.setActionCommand(Operation.DEL.getText());
-//        jPanel.add(jButtonDel);
 
         JButton jButtonMultiply = operatorFactory.create("*");
         jButtonMultiply.setActionCommand(Operation.MULTIPLY.getText());

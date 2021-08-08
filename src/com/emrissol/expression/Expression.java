@@ -2,10 +2,12 @@ package com.emrissol.expression;
 
 import com.emrissol.expression.operation.Operation;
 import com.emrissol.expression.operation.PreOperation;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Objects;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,11 +19,18 @@ public class Expression {
     protected PreOperation preOperation;
     protected Operation operation;
 
-    protected Expression parent = null;
-    protected Stack<Expression> expressions = new Stack<>();
+    protected Expression parent;
+
+    @Getter(AccessLevel.NONE)
+    protected Stack<Expression> children;
 
     public Expression() {
         this.id = ID++;
+    }
+
+    public Expression(PreOperation preOperation) {
+        this();
+        this.preOperation = preOperation;
     }
 
     public void applyPreOperation(Number number) {
@@ -41,13 +50,9 @@ public class Expression {
         return null;
     }
 
-//    public void appendValue(String value) {
-//        this.value += value;
-//    }
-
-//    public boolean hasValue(){
-//        return ! value.isEmpty();
-//    }
+    public boolean hasOperation() {
+        return operation != null;
+    }
 
     public boolean hasPreOperation() {
         return preOperation != null;
@@ -57,9 +62,26 @@ public class Expression {
         return parent != null;
     }
 
+    public Stack<Expression> getChildren() {
+        if (this.children == null) {
+            this.children = new Stack<>();
+        }
+        return children;
+    }
+
+    public boolean hasChildren() {
+        return children != null && children.size() > 0;
+    }
+
+    public void removeItselfIfFromParent() {
+        if (hasParent()) {
+            parent.getChildren().remove(this);
+        }
+    }
     public void addExpression(Expression expression) {
         expression.setParent(this);
-        expressions.add(expression);
+        getChildren().add(expression);
+//        System.err.println("ADDING CHILDREN " + expression.getId() + " TO PARENT " + getId());
     }
 
     @Override
@@ -77,19 +99,24 @@ public class Expression {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("[empty]");
-        if ( ! expressions.isEmpty()) {
+        /*StringBuilder stringBuilder = new StringBuilder("");
+        if ( ! getChildren().isEmpty()) {
             stringBuilder.setLength(0);
-            for (Expression expression : expressions) {
+            for (Expression expression : getChildren()) {
                 stringBuilder.append("id=").append(id).append(", value=").append(value).append(", operation=").append(operation).append(", preOperation =").append(preOperation);
             }
-        }
+        }*/
         return "Expression{" +
                 "id=" + id +
                 ", value=" + value +
                 ", operation=" + operation +
                 ", preOperation =" + preOperation +
-                "\n\t\t, expressions =" + stringBuilder.toString() +
+//                "\n\t\texpressions =" + stringBuilder.toString() +
+                ", expressions =" +
+                (getChildren().isEmpty() ? "empty" :
+                        "\n\t\t" + getChildren().stream().map(Expression::toString).collect(Collectors.joining("\n\t\t"))
+                )
+                +
                 '}';
     }
 }

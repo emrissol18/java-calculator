@@ -23,13 +23,18 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
 
         if (manager.hasCurrent()) {
             Expression current = manager.getCurrentExp();
-            manager.setCurrentExp(null);
             current.setOperation(operation);
-            uiManager.addBtnTextToTextField(actionEvent);
+            if (manager.hasCurrentParent() && ! current.equals(manager.getCurrentParentExp())) {
+                manager.getCurrentParentExp().addExpression(current);
+            }
+            
             manager.addExpressionIfHasNoParent(current);
+
+            manager.setCurrentExp(null);
+            uiManager.addBtnTextToTextField(actionEvent);
         }
-        else if (manager.getExpressions().size() > 0 && (manager.hasCurrent() && ! manager.currentHasPreOper())) {
-            manager.getExpressions().peek().setOperation(operation);
+        else if (manager.getExpressionQueue().size() > 0 && (manager.hasCurrent() && ! manager.getCurrentValue().isEmpty() )) {
+            manager.getExpressionQueue().peek().setOperation(operation);
             String f = uiManager.getJTextField().getText();
             f = f.substring(0, f.length()-1);
             uiManager.getJTextField().setText(f + actionEvent.getActionCommand());

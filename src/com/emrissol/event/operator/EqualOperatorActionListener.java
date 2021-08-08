@@ -15,17 +15,28 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
+        System.err.println("\n\tEQUAL");
+        System.out.println("PARENT: " + manager.getCurrentParentExp());
+        System.out.println("CURRENT: " + manager.getCurrentExp());
+        manager.getExpressionQueue().forEach(System.out::println);
+        if (true)
+            return;
         if ( ! manager.hasCurrent() || (manager.hasCurrent() && manager.getCurrentValue().isEmpty())) {
             return;
         }
 
         Expression current = manager.getCurrentExp();
         current.setOperation(Operation.EQUALS);
-        manager.getExpressions().add(current);
+        //temp
+//        if (manager.hasCurrentParent() && current != manager.getCurrentParentExp()) {
+//            manager.getCurrentParentExp().addExpression(current);
+//        }
+        manager.addExpressionIfHasNoParent(current);
 
-        manager.getExpressions().forEach(System.out::println);
-        manager.getExpressions().clear();
+        manager.getExpressionQueue().forEach(System.out::println);
+        manager.getExpressionQueue().clear();
 
+        manager.setCurrentParentExp(null);
         manager.setCurrentExp(null);
         uiManager.getJTextField().setText("");
         // calc at the end
