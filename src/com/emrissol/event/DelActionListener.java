@@ -16,103 +16,66 @@ public class DelActionListener extends AbstractOperatorActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        System.err.println("\n\tDEL");
-        if (uiManager.getJTextField().getText().isEmpty()) {
-            System.out.println("return");
+        if (uiManager.getJTextField().getText().isEmpty() && manager.getExpressionQueue().isEmpty()) {
             return;
         }
 
-        Expression expression = null;
-        int type = 0;
-        if (manager.hasCurrent()) {
-            expression = manager.getCurrentExp();
-            type = 1;
-        }
-        else if (manager.hasCurrentParent()) {
-            if (manager.getCurrentParentExp().hasChildren()) {
-                // get last child of current parent
-                Expression parentPrevChild = manager.getCurrentParentExp().getChildren().peek();
-                // loop hierarchy to obtain parent of last child
-                while (parentPrevChild.hasChildren()) {
-                    parentPrevChild = parentPrevChild.getChildren().peek();
+        if ( ! manager.hasCurrent()) {
+            Expression expression = null;
+
+            if (manager.hasCurrentParent()) {
+
+                if (manager.getCurrentParentExp().hasChildren()) {
+                    expression = manager.getCurrentParentExp().getChildren().pop();
+//                    System.out.println("removed with id: " + expression.getId());
                 }
-                expression = parentPrevChild.getParent().getChildren().pop();
-//                type = 3;
+                else {
+                    expression = manager.getCurrentParentExp();
+                    manager.setCurrentParentExp(expression.hasParent() ? expression.getParent() : null);
+                    // if this parent does not have its parent it means it dwells in global expression list
+                    if ( ! expression.hasParent()) {
+                        manager.getExpressionQueue().remove(expression);
+                    }
+                }
+
             }
             else {
-                expression = manager.getCurrentParentExp();
-                type = 2;
+                expression = manager.getExpressionQueue().pollLast();
             }
-        }
-        else {
-            System.err.println("poll");
-            expression = manager.getExpressionQueue().pollLast();
             manager.setCurrentExp(expression);
-//            type = 3;
+        }
+        else if (manager.getCurrentExp().hasParent()) {
+            manager.getCurrentExp().removeItselfIfFromParent();
         }
 
-        System.out.println("choosen expression (" + type + "):\n" + expression);
-
-        if ( ! expression.getValue().isEmpty()) {
-            if (expression.hasOperation()) {
-                System.out.println("remove operation");
-                expression.setOperation(null);
+        Expression current = manager.getCurrentExp();
+        System.out.println(current);
+        if ( current.hasValue()) {
+            if (current.hasOperation()) {
+                System.out.println("\t\tremove operation");
+                current.setOperation(null);
             }
             else {
+                System.out.println("\t\tremove last digit");
                 stringBuilder.setLength(0);
-                stringBuilder.append(expression.getValue());
+                stringBuilder.append(current.getValue());
                 stringBuilder.setLength(stringBuilder.length()-1);
-                expression.setValue(stringBuilder.toString());
-                System.out.println("remove last");
+                current.setValue(stringBuilder.toString());
 
-                if (expression.getValue().isEmpty() && ! expression.hasPreOperation()) {
-                    System.out.println("value is empty (reset)");
-                    resetCurrent(type);
+                if (current.getValue().isEmpty() && ! current.hasPreOperation()) {
+                    System.out.println("\t\tno digits");
+                    manager.setCurrentExp(null);
+//                    resetCurrent(current);
                 }
             }
             uiManager.trimTextFieldText();
         }
-        else if (expression.hasPreOperation()) {
-            System.out.println("remove PreOperation");
-            int preOperLength = expression.getPreOperation().getText().length();
+        else if (current.hasPreOperation()) {
+            System.out.println("\t\tremove PreOperation");
+//            System.out.println("value: " + current.getValue());
+            int preOperLength = current.getPreOperation().getText().length();
             uiManager.trimTextFieldText(preOperLength);
-            resetCurrent(type);
-        }
-    }
-
-    public void resetCurrent(int type) {
-        System.out.printf("resetCurrent(%d)%n", type);
-        switch (type) {
-            // current, obtained from global list
-            case 1:
-                manager.getCurrentExp().removeItselfIfFromParent();
-                manager.setCurrentExp(null);
-                break;
-            // parent
-            case 2:
-                manager.getExpressionQueue().removeLast(); // remove parent
-                manager.setCurrentParentExp(null);
-                manager.setCurrentExp(null);
-                break;
-            // child of parent
-//            case 3:
-//                manager.getCurrentExp().removeItselfIfFromParent();
-//                manager.setCurrentExp(null);
-//                break;
-
-            default: break;
-        }
-        /*if (type == 1) {
             manager.setCurrentExp(null);
         }
-        else if (type == 2) {
-            manager.getExpressionQueue().removeLast(); // remove parent
-            manager.setCurrentParentExp(null);
-            manager.setCurrentExp(null);
-        }
-        else if (type == 3) {
-            manager.getCurrentExp().removeItselfIfFromParent();
-            manager.setCurrentExp(null);
-        }*/
     }
 }

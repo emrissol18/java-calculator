@@ -3,10 +3,7 @@ package com.emrissol.ui;
 import com.emrissol.Manager;
 import com.emrissol.event.DelActionListener;
 import com.emrissol.event.DigitActionListener;
-import com.emrissol.event.operator.ClearAllActionListener;
-import com.emrissol.event.operator.EqualOperatorActionListener;
-import com.emrissol.event.operator.PostOperatorActionListener;
-import com.emrissol.event.operator.SqrtActionListener;
+import com.emrissol.event.operator.*;
 import com.emrissol.expression.operation.Operation;
 import com.emrissol.ui.factory.JButtonDigitFactory;
 import com.emrissol.ui.factory.JButtonOperatorFactory;
@@ -32,7 +29,7 @@ public class ButtonCreator {
         JButton jButtonDel = operatorFactory.create("del");
         jButtonDel.setActionCommand(Operation.DEL.getText());
         jButtonDel.addActionListener(new DelActionListener(manager, uiManager));
-        jPanel.add(jButtonDel);
+        jPanel.add(jButtonDel, "wrap");
 
         JButton jButtonClear = operatorFactory.create("C");
         jButtonClear.setActionCommand(Operation.CLEAR.getText());
@@ -41,6 +38,7 @@ public class ButtonCreator {
 
         JButton jButtonPercent = operatorFactory.create("%");
         jButtonPercent.setActionCommand(Operation.PERCENT.getText());
+        jButtonPercent.addActionListener(new PercentActionListener(manager, uiManager));
         jPanel.add(jButtonPercent);
 
         JButton jButtonRoot = operatorFactory.create("root");

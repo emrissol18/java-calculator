@@ -50,6 +50,10 @@ public class Expression {
         return null;
     }
 
+    public boolean hasValue() {
+        return ! getValue().isEmpty();
+    }
+
     public boolean hasOperation() {
         return operation != null;
     }
@@ -75,7 +79,7 @@ public class Expression {
 
     public void removeItselfIfFromParent() {
         if (hasParent()) {
-            parent.getChildren().remove(this);
+            getParent().getChildren().remove(this);
         }
     }
     public void addExpression(Expression expression) {
@@ -108,6 +112,7 @@ public class Expression {
         }*/
         return "Expression{" +
                 "id=" + id +
+                ", parentId =" + (parent == null ? "null" : parent.getId()) +
                 ", value=" + value +
                 ", operation=" + operation +
                 ", preOperation =" + preOperation +

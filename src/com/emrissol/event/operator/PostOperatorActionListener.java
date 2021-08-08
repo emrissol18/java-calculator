@@ -21,15 +21,13 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
             return;
         }
 
-        if (manager.hasCurrent()) {
+        if (manager.hasCurrent() && manager.getCurrentExp().hasValue()) {
             Expression current = manager.getCurrentExp();
             current.setOperation(operation);
             if (manager.hasCurrentParent() && ! current.equals(manager.getCurrentParentExp())) {
                 manager.getCurrentParentExp().addExpression(current);
             }
-            
             manager.addExpressionIfHasNoParent(current);
-
             manager.setCurrentExp(null);
             uiManager.addBtnTextToTextField(actionEvent);
         }

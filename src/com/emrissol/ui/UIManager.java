@@ -27,7 +27,7 @@ public class UIManager {
                 "");
 
         JPanel jPanel = new JPanel(migLayout);
-        jPanel.add(createTextArea(), "span 4, pushx, growx, wrap");
+//        jPanel.add(createTextArea(), "span 4, pushx, growx, wrap");
         jPanel.add(getJTextFieldLayout(), "span 4, pushx, growx, wrap");
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
