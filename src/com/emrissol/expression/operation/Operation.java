@@ -1,19 +1,20 @@
 package com.emrissol.expression.operation;
 
+import com.emrissol.expression.LabelText;
 import lombok.Getter;
 
 public enum  Operation {
-    ADD("+"),
-    SUBSTRUCT("—"),
-    DIVIDE("/"),
-    MULTIPLY("*"),
-    SQRT("root("),
-    NEGATIVE("+/-"),
+    ADD(LabelText.SIGN_PLUS),
+    SUBSTRUCT(LabelText.SIGN_MINUS),
+    DIVIDE(LabelText.SIGN_DIVIDE),
+    MULTIPLY(LabelText.SIGN_MULTIPLY),
+    SQRT(""),
+    NEGATIVE(LabelText.NEGATIVE),
     POINT("."),
-    DEL("del"),
-    PERCENT("%"),
-    CLEAR("CA"),
-    EQUALS("=");
+    DEL(LabelText.DEL),
+    PERCENT(LabelText.PERCENT),
+    CLEAR(LabelText.CLEAR),
+    EQUALS(LabelText.EQUAL);
 
     @Getter
     private String text;
