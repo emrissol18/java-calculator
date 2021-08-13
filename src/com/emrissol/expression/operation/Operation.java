@@ -8,7 +8,7 @@ public enum  Operation {
     SUBSTRUCT(LabelText.SIGN_MINUS),
     DIVIDE(LabelText.SIGN_DIVIDE),
     MULTIPLY(LabelText.SIGN_MULTIPLY),
-    SQRT(""),
+    SQRT(LabelText.ROOT + LabelText.PARENTHESIS_LEFT),
     NEGATIVE(LabelText.NEGATIVE),
     POINT("."),
     DEL(LabelText.DEL),
