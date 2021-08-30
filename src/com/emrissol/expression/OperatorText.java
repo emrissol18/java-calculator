@@ -1,11 +1,11 @@
 package com.emrissol.expression;
 
-public class LabelText {
+public class OperatorText {
     public static final String ROOT = "root";
 //    public static final String NEGATIVE = "+/-";
     public static final String NEGATIVE  = "\u00B1";
-    public static final String PARENTHESIS_LEFT = "(";
-    public static final String PARENTHESIS_RIGHT = ")";
+    public static final String PARENTHESES_LEFT = "(";
+    public static final String PARENTHESES_RIGHT = ")";
     public static final String PERCENT = "%";
     public static final String CLEAR = "C";
     public static final String DEL = "del";
@@ -16,4 +16,7 @@ public class LabelText {
     public static final String EQUAL = "=";
     public static final String POINT = ".";
 
+    public static String highlight(String value) {
+        return "<font color='gray'>" + value + "</font>";
+    }
 }

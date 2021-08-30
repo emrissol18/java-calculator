@@ -1,22 +1,36 @@
 package com.emrissol.ui;
 
 import com.emrissol.Manager;
+import com.emrissol.expression.Expression;
+import com.emrissol.expression.operation.Operation;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.util.Iterator;
 
 public class UIManager {
+
+    // wrap html start & end for whole content
+    private static String HTML_START = "<html>";
+    private static String HTML_END = "</html>";
+
+    private StringBuilder stringBuilderOuter = new StringBuilder(HTML_START + HTML_END);
+    private StringBuilder stringBuilderInner = new StringBuilder();
 
     @Getter
     private Manager manager;
 
+//    @Getter
+//    private JTextField jTextField;
     @Getter
-    private JTextField jTextField;
+    private JLabel jLabel = new JLabel();
 
     public UIManager(Manager manager) {
         this.manager = manager;
+        jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
+        jLabel.setPreferredSize(new Dimension(0, 32));
+        jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
     }
 
     public void createLayout() {
@@ -28,7 +42,8 @@ public class UIManager {
 
         JPanel jPanel = new JPanel(migLayout);
 //        jPanel.add(createTextArea(), "span 4, pushx, growx, wrap");
-        jPanel.add(getJTextFieldLayout(), "span 4, pushx, growx, wrap");
+//        jPanel.add(getJTextFieldLayout(), "span 4, pushx, growx, wrap");
+        jPanel.add(jLabel, "span 4, pushx, growx, wrap");
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
         buttonCreator.createDigitButtons(jPanel);
@@ -41,43 +56,99 @@ public class UIManager {
         jFrame.setVisible(true);
     }
 
-    public void addToTextFieldText(String text) {
-        jTextField.setText(jTextField.getText() + text);
+    public void addText(String text) {
+        stringBuilderInner.append(text);
+        aggregateInnerSB();
     }
 
-    public void addBtnTextToTextField(ActionEvent actionEvent) {
-        jTextField.setText(jTextField.getText() + actionEvent.getActionCommand());
+    public void refreshLayout(Expression expression) {
+        int sbInnerLength = stringBuilderInner.length();
+        int offset = sbInnerLength - expression.getLength();
+//        System.out.println("sbInnerLength = " + sbInnerLength);
+//        System.out.println("expression.getLength() = " + expression.getLength());
+//        System.out.println("offset = " + offset);
+//        stringBuilderInner.delete(offset, sbInnerLength);
+        stringBuilderInner.setLength(offset);
+        stringBuilderInner.append(expression.getLayout());
+        aggregateInnerSB();
     }
 
-    public void addBtnTextToTextField(String text) {
-        jTextField.setText(jTextField.getText() + text);
+    public void refreshLayout() {
+        stringBuilderInner.setLength(0);
+        if ( ! manager.getExpressionQueue().isEmpty()) {
+            Iterator<Expression> expressionIterator = manager.getExpressionQueue().iterator();
+            while (expressionIterator.hasNext()) {
+                Expression expression = expressionIterator.next();
+                stringBuilderInner.append(expression.getLayout());
+            }
+        }
+        aggregateInnerSB();
     }
 
-    private JTextField getJTextFieldLayout() {
-        jTextField = new JTextField("");
-        jTextField.setFont(new Font("Monospace", Font.PLAIN, 32));
-        jTextField.setHorizontalAlignment(JTextField.RIGHT);
-        return jTextField;
+    public void setText(Expression expression) {
+        stringBuilderInner.setLength(0);
+        stringBuilderInner.append(expression.getLayout());
+        aggregateInnerSB();
     }
 
-    private JTextArea createTextArea() {
+    public void addText(Expression expression) {
+        stringBuilderInner.append(expression.getLayout());
+        aggregateInnerSB();
+    }
+
+    public void changeSign(Operation operation) {
+        stringBuilderInner.setLength(stringBuilderInner.length() - 1);
+        addText(operation);
+    }
+
+    public void addText(Operation operation) {
+        addText(operation.getText());
+    }
+
+    public boolean hasText() {
+//        return ! jLabel.getText().isEmpty();
+        return stringBuilderInner.length() > 0;
+    }
+
+    public void insertText(String text) {
+        stringBuilderOuter.replace(getStartOffset(), getEndOffset(), text);
+    }
+
+    public void aggregateInnerSB() {
+        stringBuilderOuter.replace(getStartOffset(), getEndOffset(), stringBuilderInner.toString());
+        jLabel.setText(stringBuilderOuter.toString());
+    }
+
+    private int getStartOffset(){
+        return HTML_START.length();
+    }
+
+    private int getEndOffset(){
+        return stringBuilderOuter.length() - HTML_END.length();
+    }
+
+    public void removeLastChar() {
+        stringBuilderInner.deleteCharAt(stringBuilderInner.length() - 1);
+    }
+
+    public void removeCharsByLength(int preOperLength) {
+        int length = stringBuilderInner.length();
+        stringBuilderInner.delete(length - preOperLength, length);
+    }
+
+    public void clearAll() {
+        getJLabel().setText("");
+        stringBuilderInner.setLength(0);
+        stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
+    }
+
+    /*private JTextArea createTextArea() {
         JTextArea jTextArea = new JTextArea("", 6, 0);
-        jTextArea.setFont(new Font("Monospace", Font.PLAIN, 14));
+        jTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         jTextArea.setAutoscrolls(true);
         jTextArea.setEditable(false);
         jTextArea.setBackground(Color.LIGHT_GRAY);
         return jTextArea;
-    }
-
-
-
-    public void trimTextFieldText() {
-        trimTextFieldText(1);
-    }
-
-    public void trimTextFieldText(int length) {
-        String valG = getJTextField().getText();
-        getJTextField().setText(valG.substring(0, valG.length() - length));
-    }
+    }*/
 
 }

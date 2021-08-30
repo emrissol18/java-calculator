@@ -1,8 +1,7 @@
 package com.emrissol;
 
-import net.miginfocom.swing.MigLayout;
+import com.emrissol.ui.UIManager;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +18,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-//        Manager manager = Manager.getInstance();
-//        new UIManager(manager).createLayout();
+        Manager manager = Manager.getInstance();
+        new UIManager(manager).createLayout();
 
-        JPanel jPanel = new JPanel(new MigLayout("wrap 1"));
+        /*JPanel jPanel = new JPanel(new MigLayout("wrap 1"));
 
         JLabel jLabel = new JLabel(stringBuilder.toString());
         jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
@@ -56,7 +55,7 @@ public class Main {
         jFrame.pack();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setLocationRelativeTo(null);
-        jFrame.setVisible(true);
+        jFrame.setVisible(true);*/
     }
 
     static int getOffsetEnd(){
@@ -68,22 +67,15 @@ public class Main {
 //        System.out.println("stringBuilderEnd after length 0 = " + stringBuilderEnd.toString());
         return (actionEvent) -> {
             System.out.println("AL called");
-            stringBuilderEnd.setLength(0);
+//            stringBuilderEnd.setLength(0);
             endGrey.forEach((integer, s) -> {
                 System.out.println(s);
-//                end[0] += "<font color=#292a2d>" + s + "</font>";
                 stringBuilderEnd.append("<font color='gray'>");
                 stringBuilderEnd.append(s);
                 stringBuilderEnd.append("</font>");
             });
-
-//            System.out.println("stringBuilderInner = " + stringBuilderInner.toString());
-//            System.out.println("stringBuilderEnd = " + stringBuilderEnd.toString());
-
             stringBuilder.replace(6, getOffsetEnd(), stringBuilderInner.toString() + stringBuilderEnd.toString());
-//            System.out.println("stringBuilder = " + stringBuilder.toString());
             jLabel.setText(stringBuilder.toString());
-//            System.out.println(stringBuilder.toString());
         };
     }
     /*public void parser(){

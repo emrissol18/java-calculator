@@ -1,6 +1,7 @@
 package com.emrissol.event.operator;
 
 import com.emrissol.Manager;
+import com.emrissol.event.AbstractOperatorActionListener;
 import com.emrissol.expression.Expression;
 import com.emrissol.expression.operation.Operation;
 import com.emrissol.ui.UIManager;
@@ -16,26 +17,31 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        if (uiManager.getJTextField().getText().isEmpty()) {
+    public void actionPerformedHook(ActionEvent actionEvent) {
+        Expression current = manager.getCurrentOrParent();
+        if (current == null || ! uiManager.hasText()) {
             return;
         }
-
-        if (manager.hasCurrent() && manager.getCurrentExp().hasValue()) {
-            Expression current = manager.getCurrentExp();
+//        System.out.println("current = " + current);
+        // TO CLOSE PRE OPERATION
+        // expression should hasValue
+//        if (current.hasValue() || (current.hasPreOperations() && ! current.isLastPreOperOpen())) {
+        if (current.hasValue() || current.isLastPreOperClosed()) {
+//            System.out.println("post: if 1");
             current.setOperation(operation);
-            if (manager.hasCurrentParent() && ! current.equals(manager.getCurrentParentExp())) {
-                manager.getCurrentParentExp().addExpression(current);
+            if (current.equals(manager.getCurrentExp())) {
+                // reset current
+                manager.setCurrentExp(null);
             }
-            manager.addExpressionIfHasNoParent(current);
-            manager.setCurrentExp(null);
-            uiManager.addBtnTextToTextField(actionEvent);
+            else {
+                // reset currentParent
+                manager.resetCurrentParent();
+            }
         }
         else if (manager.getExpressionQueue().size() > 0 && (manager.hasCurrent() && ! manager.getCurrentValue().isEmpty() )) {
+//            System.out.println("post: if 2");
             manager.getExpressionQueue().peek().setOperation(operation);
-            String f = uiManager.getJTextField().getText();
-            f = f.substring(0, f.length()-1);
-            uiManager.getJTextField().setText(f + actionEvent.getActionCommand());
+            uiManager.changeSign(operation);
         }
 
     }

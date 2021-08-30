@@ -2,7 +2,7 @@ package com.emrissol;
 
 import com.emrissol.expression.Expression;
 import com.emrissol.expression.operation.Operation;
-import com.emrissol.expression.operation.PreOperation;
+import com.emrissol.expression.operation.AbstractPrePostOperation;
 import com.emrissol.expression.operation.SqrtOperation;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,10 +14,8 @@ public class Manager {
     private static Manager instance;
 
     private Manager() {
-        for (Operation operation : EnumSet.allOf(Operation.class)) {
-            operations.put(operation.getText(), operation);
-        }
         preOperationMap.put(Operation.SQRT, new SqrtOperation());
+        // here add more
     }
 
     public static Manager getInstance() {
@@ -26,14 +24,6 @@ public class Manager {
         }
         return instance;
     }
-
-    @Getter
-//    private Set<Operation> operations = EnumSet.allOf(Operation.class);
-    private Map<String, Operation> operations = new HashMap<>();
-
-    @Getter
-    @Setter
-    private Operation operationAcc;
 
     @Getter
     @Setter
@@ -46,16 +36,12 @@ public class Manager {
     @Getter
     private Deque<Expression> expressionQueue = new LinkedList<>();
 
-    private Map<Operation, PreOperation> preOperationMap = new HashMap<>();
+    private Map<Operation, AbstractPrePostOperation> preOperationMap = new HashMap<>();
 
     public void addExpressionIfHasNoParent(Expression expression) {
         if (expression.getParent() == null && ! expressionQueue.contains(expression)) {
             expressionQueue.add(expression);
         }
-    }
-
-    public Operation getOperation(String text) {
-        return operations.get(text);
     }
 
     public boolean hasCurrent() {
@@ -70,20 +56,60 @@ public class Manager {
         currentExp.setValue(currentExp.getValue() + text);
     }
 
-    public void addToValueOfCurrentParent(String text) {
-        currentParentExp.setValue(currentParentExp.getValue() + text);
-    }
-
-    public boolean currentHasPreOper() {
-        return currentExp.hasPreOperation();
-    }
-
     public String getCurrentValue() {
         return currentExp.getValue();
     }
 
-
-    public PreOperation getPreOperation(Operation operation) {
+    public AbstractPrePostOperation getPrePostOperation(Operation operation) {
         return preOperationMap.get(operation);
     }
+
+    public Expression peekLastExp() {
+        return getExpressionQueue().peekLast();
+    }
+
+    public Expression pollLastExp() {
+        return getExpressionQueue().pollLast();
+    }
+
+    public void clearAll() {
+        getExpressionQueue().clear();
+        setCurrentParentExp(null);
+        setCurrentExp(null);
+    }
+
+    public void closePreOper(Expression expression) {
+        expression.getLastPreOper().setOpen(false);
+        resetParent(expression);
+    }
+
+    public void resetCurrentParent() {
+        resetParent(getCurrentParentExp());
+    }
+
+    public void resetParent(Expression parent) {
+        if (parent == null) {
+            return;
+        }
+        // set parent's parent as currentParent if present (set previous parent)
+        if (parent.hasParent()) {
+            setCurrentParentExp(parent.getParent());
+        }
+        else {
+            setCurrentParentExp(null);
+        }
+        setCurrentExp(parent);
+    }
+
+    public Expression getCurrentOrParent() {
+        Expression current = null;
+        if (hasCurrent()) {
+            current = getCurrentExp();
+        }
+        else if (hasCurrentParent()) {
+            current = getCurrentParentExp();
+        }
+        return current;
+    }
+
 }

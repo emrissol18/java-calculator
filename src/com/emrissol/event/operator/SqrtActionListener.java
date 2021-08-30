@@ -1,11 +1,11 @@
 package com.emrissol.event.operator;
 
 import com.emrissol.Manager;
+import com.emrissol.event.AbstractOperatorActionListener;
 import com.emrissol.expression.Expression;
-import com.emrissol.expression.operation.Operation;
+import com.emrissol.expression.operation.SqrtOperation;
 import com.emrissol.ui.UIManager;
 import java.awt.event.ActionEvent;
-import java.util.NavigableMap;
 
 public class SqrtActionListener extends AbstractOperatorActionListener {
 
@@ -14,26 +14,27 @@ public class SqrtActionListener extends AbstractOperatorActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
+    public void actionPerformedHook(ActionEvent actionEvent) {
         if (manager.hasCurrent() && ! manager.getCurrentValue().isEmpty()) {
             return;
         }
 
-        Expression expression = new Expression(manager.getPreOperation(Operation.SQRT));
+        Expression expression = new Expression();
+        expression.getPreOperations().add(new SqrtOperation());
 
         if ( manager.hasCurrentParent()) {
-            manager.getCurrentParentExp().addExpression(expression);
+            Expression parent = manager.getCurrentParentExp();
+            parent.addExpression(expression);
         }
-        else {
-            manager.setCurrentParentExp(expression);
-        }
+        manager.setCurrentParentExp(expression);
 
         // add only parent
         manager.addExpressionIfHasNoParent(expression);
 
-        manager.setCurrentExp(expression);
+//        uiManager.refreshLayout();
+//        manager.setCurrentExp(expression);
 
-        uiManager.addBtnTextToTextField(Operation.SQRT.getText());
+//        uiManager.addText(Operation.SQRT);
     }
 
 }

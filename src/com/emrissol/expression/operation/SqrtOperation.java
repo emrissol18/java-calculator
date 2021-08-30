@@ -1,19 +1,21 @@
 package com.emrissol.expression.operation;
 
-public class SqrtOperation implements PreOperation {
+import com.emrissol.expression.OperatorText;
 
-    @Override
-    public void apply(Number number) {
-         number = Math.sqrt(number.doubleValue());
+public class SqrtOperation extends AbstractPrePostOperation {
+
+    public SqrtOperation() {
+        super(
+                OperatorText.ROOT + OperatorText.PARENTHESES_LEFT,
+                OperatorText.PARENTHESES_RIGHT,
+                "",
+                "",
+                Operation.SQRT);
+        isOpen = true;
     }
 
     @Override
-    public String getText() {
-        return Operation.SQRT.getText();
-    }
-
-    @Override
-    public String toString() {
-        return "SqrtOperation";
+    public Number apply(String thisValue) {
+        return 0;
     }
 }

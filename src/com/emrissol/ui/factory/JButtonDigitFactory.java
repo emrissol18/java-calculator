@@ -1,5 +1,7 @@
 package com.emrissol.ui.factory;
 
+import lombok.Getter;
+import lombok.Setter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -7,7 +9,9 @@ import java.util.List;
 
 public class JButtonDigitFactory implements Factory {
 
-    List<? extends ActionListener> listeners;
+    @Setter
+    @Getter
+    private List<? extends ActionListener> listeners;
 
     public JButtonDigitFactory(List<? extends ActionListener> listeners) {
         this.listeners = listeners;

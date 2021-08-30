@@ -1,9 +1,10 @@
 package com.emrissol.ui;
 
 import com.emrissol.Manager;
-import com.emrissol.event.DelActionListener;
-import com.emrissol.event.DigitActionListener;
+import com.emrissol.event.special.*;
+import com.emrissol.event.digit.DigitActionListener;
 import com.emrissol.event.operator.*;
+import com.emrissol.expression.OperatorText;
 import com.emrissol.expression.operation.Operation;
 import com.emrissol.ui.factory.JButtonDigitFactory;
 import com.emrissol.ui.factory.JButtonOperatorFactory;
@@ -29,7 +30,12 @@ public class ButtonCreator {
         JButton jButtonDel = operatorFactory.create("del");
         jButtonDel.setActionCommand(Operation.DEL.getText());
         jButtonDel.addActionListener(new DelActionListener(manager, uiManager));
-        jPanel.add(jButtonDel, "wrap");
+        jPanel.add(jButtonDel);
+
+        JButton jButtonParentheseRight = operatorFactory.create(OperatorText.PARENTHESES_RIGHT);
+        jButtonParentheseRight.setActionCommand(jButtonParentheseRight.getText());
+        jButtonParentheseRight.addActionListener(new ParentheseRightActionListener(manager, uiManager));
+        jPanel.add(jButtonParentheseRight, "wrap");
 
         JButton jButtonClear = operatorFactory.create("C");
         jButtonClear.setActionCommand(Operation.CLEAR.getText());
@@ -41,13 +47,13 @@ public class ButtonCreator {
         jButtonPercent.addActionListener(new PercentActionListener(manager, uiManager));
         jPanel.add(jButtonPercent);
 
-        JButton jButtonRoot = operatorFactory.create("root");
-        jButtonRoot.setActionCommand(Operation.SQRT.getText());
+        JButton jButtonRoot = operatorFactory.create(OperatorText.ROOT);
+        jButtonRoot.setActionCommand(jButtonRoot.getText());
         jButtonRoot.addActionListener(new SqrtActionListener(manager, uiManager));
         jPanel.add(jButtonRoot);
 
-        JButton jButtonMultiply = operatorFactory.create("*");
-        jButtonMultiply.setActionCommand(Operation.MULTIPLY.getText());
+        JButton jButtonMultiply = operatorFactory.create(Operation.MULTIPLY.getText());
+        jButtonMultiply.setActionCommand(jButtonMultiply.getText());
         jButtonMultiply.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.MULTIPLY));
         jPanel.add(jButtonMultiply);
 
@@ -61,8 +67,8 @@ public class ButtonCreator {
         jButton9.setActionCommand("9");
         jPanel.add(jButton9);
 
-        JButton jButtonDivide = operatorFactory.create("/");
-        jButtonDivide.setActionCommand(Operation.DIVIDE.getText());
+        JButton jButtonDivide = operatorFactory.create(Operation.DIVIDE.getText());
+        jButtonDivide.setActionCommand(jButtonDivide.getText());
         jButtonDivide.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.DIVIDE));
         jPanel.add(jButtonDivide);
 
@@ -77,8 +83,8 @@ public class ButtonCreator {
         jButton6.setActionCommand("6");
         jPanel.add(jButton6);
 
-        JButton jButtonSubstruct = operatorFactory.create("-");
-        jButtonSubstruct.setActionCommand(Operation.SUBSTRUCT.getText());
+        JButton jButtonSubstruct = operatorFactory.create(Operation.SUBSTRUCT.getText());
+        jButtonSubstruct.setActionCommand(jButtonSubstruct.getText());
         jButtonSubstruct.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.SUBSTRUCT));
         jPanel.add(jButtonSubstruct);
 
@@ -92,29 +98,30 @@ public class ButtonCreator {
         jButton3.setActionCommand("3");
         jPanel.add(jButton3);
 
-        JButton jButtonAdd = operatorFactory.create("+");
-        jButtonAdd.setActionCommand(Operation.ADD.getText());
+        JButton jButtonAdd = operatorFactory.create(Operation.ADD.getText());
+        jButtonAdd.setActionCommand(jButtonAdd.getText());
         jButtonAdd.addActionListener(new PostOperatorActionListener(manager, uiManager, Operation.ADD));
         jPanel.add(jButtonAdd);
 
-        JButton jButtonNegative = operatorFactory.create("+/-");
-        jButtonNegative.setActionCommand(Operation.NEGATIVE.getText());
+        JButton jButtonNegative = operatorFactory.create(Operation.NEGATIVE.getText());
+        jButtonNegative.setActionCommand(jButtonNegative.getText());
+        jButtonNegative.addActionListener(new NegativeActionListener(manager, uiManager));
         jPanel.add(jButtonNegative);
 
-        JButton jButtonPoint = operatorFactory.create(".");
-        jButtonPoint.setActionCommand(Operation.POINT.getText());
-        jButtonPoint.setActionCommand(".");
+        JButton jButtonPoint = operatorFactory.create(Operation.POINT.getText());
+        jButtonPoint.setActionCommand(jButtonPoint.getText());
         jPanel.add(jButtonPoint);
 
         JButton jButton0 = digitFactory.create("0");
         jButton0.setActionCommand("0");
         jPanel.add(jButton0);
 
-        JButton jButtonEqual = new JButtonDigitFactory(Collections.emptyList()).create("=");
-        jButtonEqual.setActionCommand(Operation.EQUALS.getText());
+//        JButton jButtonEqual = new JButtonDigitFactory(Collections.emptyList()).create(Operation.EQUALS.getText());
+        digitFactory.setListeners(List.of(new EqualOperatorActionListener(manager, uiManager)));
+        JButton jButtonEqual = digitFactory.create(Operation.EQUALS.getText());
+        jButtonEqual.setActionCommand(jButtonEqual.getText());
 //        jButtonEqual.addActionListener(new OperatorActionListener(manager, this));
 //        jButtonEqual.addActionListener( actionEvent -> uiManager.getJTextField().setText(""));
-        jButtonEqual.addActionListener(new EqualOperatorActionListener(manager, uiManager));
         jPanel.add(jButtonEqual);
     }
 
