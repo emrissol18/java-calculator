@@ -1,6 +1,7 @@
 package com.emrissol.ui;
 
 import com.emrissol.Manager;
+import com.emrissol.dev.log.Logger;
 import com.emrissol.expression.Expression;
 import com.emrissol.expression.operation.Operation;
 import lombok.Getter;
@@ -68,6 +69,10 @@ public class UIManager {
 //        System.out.println("expression.getLength() = " + expression.getLength());
 //        System.out.println("offset = " + offset);
 //        stringBuilderInner.delete(offset, sbInnerLength);
+        if (offset < 0) {
+            Logger.log(UIManager.class, "offset is " + offset);
+            Logger.log(UIManager.class, expression.toString());
+        }
         stringBuilderInner.setLength(offset);
         stringBuilderInner.append(expression.getLayout());
         aggregateInnerSB();
@@ -75,7 +80,7 @@ public class UIManager {
 
     public void refreshLayout() {
         stringBuilderInner.setLength(0);
-        if ( ! manager.getExpressionQueue().isEmpty()) {
+        if ( manager.hasExpressions()) {
             Iterator<Expression> expressionIterator = manager.getExpressionQueue().iterator();
             while (expressionIterator.hasNext()) {
                 Expression expression = expressionIterator.next();
@@ -106,7 +111,6 @@ public class UIManager {
     }
 
     public boolean hasText() {
-//        return ! jLabel.getText().isEmpty();
         return stringBuilderInner.length() > 0;
     }
 

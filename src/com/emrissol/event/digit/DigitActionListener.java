@@ -18,7 +18,25 @@ public class DigitActionListener extends AbstractOperatorActionListener {
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
-        String log = "";
+        if (manager.hasCurrent()) {
+            if ( manager.getCurrentExp().isLastPreOperClosed() ) {
+                return;
+            }
+            manager.addToValueOfCurrent(actionEvent.getActionCommand());
+            return;
+        }
+
+        Expression expression = new Expression();
+        expression.setValue(actionEvent.getActionCommand());
+        if (manager.hasCurrentParent()) {
+            manager.getCurrentParentExp().addExpression(expression);
+        }
+        else {
+            manager.addExpressionIfHasNoParent(expression);
+        }
+        manager.setCurrentExp(expression);
+
+        /*String log = "";
         Expression expression = new Expression();
         if (manager.hasCurrentParent() && ! manager.hasCurrent()) {
 //            System.out.println("ADD TO NEW CURRENT");
@@ -30,15 +48,15 @@ public class DigitActionListener extends AbstractOperatorActionListener {
         else {
             log = "ELSE";
             if ( ! manager.hasCurrent()) {
+                manager.getCurrentParentExp().addExpression(expression);
                 manager.setCurrentExp(expression);
-                manager.addExpressionIfHasNoParent(manager.getCurrentExp());
+//                manager.addExpressionIfHasNoParent(manager.getCurrentExp());
                 manager.addToValueOfCurrent(actionEvent.getActionCommand());
                 log += " if";
             }
             else {
                 log += " else";
                 // disalow digit after preOperation's textEnd, i.e. ")".
-//                if ( manager.getCurrentExp().hasPreOperations() && ! manager.getCurrentExp().isLastPreOperOpen()) {
                 if ( manager.getCurrentExp().isLastPreOperClosed() ) {
                     System.out.println("! manager.getCurrentExp().isLastPreOperClosed() (return)");
                     log += " if";
@@ -48,7 +66,7 @@ public class DigitActionListener extends AbstractOperatorActionListener {
                 manager.addToValueOfCurrent(actionEvent.getActionCommand());
             }
         }
-        logger.log(log);
+        logger.log(log);*/
 
     }
 

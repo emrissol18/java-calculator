@@ -39,7 +39,7 @@ public class Manager {
     private Map<Operation, AbstractPrePostOperation> preOperationMap = new HashMap<>();
 
     public void addExpressionIfHasNoParent(Expression expression) {
-        if (expression.getParent() == null && ! expressionQueue.contains(expression)) {
+        if ( ! expression.hasParent() && ! expressionQueue.contains(expression)) {
             expressionQueue.add(expression);
         }
     }
@@ -68,9 +68,6 @@ public class Manager {
         return getExpressionQueue().peekLast();
     }
 
-    public Expression pollLastExp() {
-        return getExpressionQueue().pollLast();
-    }
 
     public void clearAll() {
         getExpressionQueue().clear();
@@ -97,8 +94,8 @@ public class Manager {
         }
         else {
             setCurrentParentExp(null);
+            getExpressionQueue().remove(parent);
         }
-        setCurrentExp(parent);
     }
 
     public Expression getCurrentOrParent() {
@@ -107,9 +104,47 @@ public class Manager {
             current = getCurrentExp();
         }
         else if (hasCurrentParent()) {
-            current = getCurrentParentExp();
+            current = getCurrentParentExp().peekLastChildOrSelf();
         }
         return current;
     }
 
+    public boolean removeExpression(Expression expression) {
+        return getExpressionQueue().remove(expression);
+    }
+
+    public void removeLastPreOperAndResetParent(Expression current) {
+        current.removeLastPreOper();
+        if ( ! current.hasPreOperations()) {
+            resetCurrentParent();
+//            manager.setCurrentParentExp(null);
+        }
+    }
+
+    public void removeLastDigitAndResetCurrent(Expression current) {
+        current.removeLastDigit();
+
+        // expression is empty (valid for deletetion)
+        if ( ! current.hasValue()) {
+            // try to remove from parent
+            if (current.detachFromParent()) {
+                Expression parent = current.getParent();
+                if (parent.hasChildren()) {
+                    // if removed then set current's parent next (last) child
+                    setCurrentExp(parent.peekLastChild());
+                }
+                else {
+                    setCurrentParentExp(parent);
+                }
+            }
+            else {
+                setCurrentParentExp(null);
+            }
+            setCurrentExp(null);
+        }
+    }
+
+    public boolean hasExpressions() {
+        return ! getExpressionQueue().isEmpty();
+    }
 }

@@ -14,49 +14,15 @@ public class ParentheseRightActionListener extends AbstractOperatorActionListene
 
     @Override
     protected void actionPerformedHook(ActionEvent actionEvent) {
-        if ( ! uiManager.hasText()) {
+        if ( ! uiManager.hasText() || ! manager.hasCurrentParent()) {
             return;
         }
 
-        Expression current = manager.getCurrentExp();
-        if (manager.hasCurrent()) {
-            if (current.isCloseAllowed()) {
-                System.out.println("if 1 1");
-                current.getLastPreOper().setOpen(false);
-                manager.resetParent(current);
-            }
-            else if (current.hasParent()) {
-                System.out.println("if 1 2");
-                current = current.getParent();
-                if (current.isCloseAllowed()) {
-                    System.out.println("if 1 3");
-                    manager.closePreOper(current);
-                }
-            }
-        }
-        else if (manager.hasCurrentParent()) {
-            System.out.println("if 2 1");
-            current = manager.getCurrentParentExp();
-            if (current.isCloseAllowed()) {
-                System.out.println("if 2 2");
-                manager.closePreOper(current);
-            }
-        }
-        /*Expression currentOrParent = manager.getCurrentOrParent();
-        if (currentOrParent == null || currentOrParent.hasOperation() || ! currentOrParent.hasParent()) {
-            return;
-        }
-        AbstractPrePostOperation preOperToClose = currentOrParent.getLastPreOper();
-        if ( ! currentOrParent.hasPreOperations() && currentOrParent.hasParent() ) {
-            currentOrParent = currentOrParent.getParent();
-            if (currentOrParent.hasChildren() && currentOrParent.getChildren().peekLast().hasValue()) {
-                preOperToClose = currentOrParent.getParent().getLastPreOper();
-            }
-        }
-        if (preOperToClose != null) {
-            preOperToClose.setClosed(true);
+        Expression current = manager.getCurrentParentExp();
+
+        if (current.isCloseAllowed()) {
+            current.setLastPreOperOpen(false);
             manager.setCurrentExp(null);
-            manager.resetCurrentParent();
-        }*/
+        }
     }
 }

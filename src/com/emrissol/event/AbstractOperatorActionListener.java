@@ -26,6 +26,10 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
     }
 
     private void refreshLayout() {
+        if (manager.getExpressionQueue().isEmpty()) {
+            uiManager.clearAll();
+            return;
+        }
         Optional<Expression> expression = Optional.empty();
         if (manager.hasCurrentParent()) {
 //            System.out.println("optional parent");
@@ -41,5 +45,6 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
         }
 
         expression.ifPresentOrElse(exp -> uiManager.refreshLayout(exp), () -> System.out.println("expression is not present"));
+
     }
 }

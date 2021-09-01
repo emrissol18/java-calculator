@@ -19,90 +19,55 @@ public class DelActionListener extends AbstractOperatorActionListener {
 
     @Override
     protected void actionPerformedHook(ActionEvent actionEvent) {
-        if ( manager.getExpressionQueue().isEmpty() || manager.getExpressionQueue().isEmpty()) {
+        if ( ! manager.hasExpressions()) {
             logger.log("return");
             return;
         }
 
-        resolveCurrent();
-
-        Expression current = manager.getCurrentExp();
-
-        if (current.hasOperation()) {
-            current.setOperation(null);
-        }
-
-        // first check  IF current has postOperation (right most data)
-        else if (current.hasPostOperations()) {
-            // SUP_MODE involved
-            logger.log("remove PreOperation");
-            current.getPreOperations().pollLast();
-        }
-
-        // then check if there preOperation any pre operation
-        else if (current.hasPreOperations()) {
-            // if closed i.e. has ")",  (right most data after post operations)
-            if (current.isLastPreOperClosed()) {
-                logger.log("preOperation is closed");
-                current.setLastPreOperOpen(true);
-                // here current MUST HAVE  chilren > 0, so set current's last child as new current
-                manager.setCurrentExp(current.peekLastChild());
+        // RESOLVE CURRENT
+        Expression current = manager.getCurrentOrParent();
+        System.out.println("CURRENT (before): " + current.getLayout());
+        // ELSE get from GLOBAL QUEUE
+        if (current == null) {
+            current = manager.getExpressionQueue().peekLast();
+            if (current.isParent()) {
+                manager.setCurrentParentExp(current);
             }
             else {
-                current.removeLastPreOper(manager);
-                resetCurrent(current);
+                // simple expression
+                manager.setCurrentExp(current);
             }
         }
+        System.out.println("CURRENT (after): " + current.getLayout());
+        boolean isParent = current.isParent();
+        System.out.println("isParent = " + isParent);
 
-        // remove one digit character
-        else if ( current.hasValue()) {
-            logger.log("value not empty");
-            // if expression has value then it could has postOperation or Operation
-            logger.log("\tremove last digit");
-            try {
-                current.removeLastDigit();
-            }
-            catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
-            }
-//          if (current.getValue().isEmpty() && ! current.hasPreOperations()) {
-            if (current.getValue().isEmpty()) {
-                logger.log("\t\texpression is empty");
-                resetCurrent(current);
-            }
-
+        // parent or child
+        if (current.hasOperation()) {
+            logger.log("remove operation");
+            current.setOperation(null);
         }
-    }
-
-    public void resetCurrent(Expression current) {
-        if (current.hasParent()) {
-            logger.log("[resetCurrent]: CURRENT HAS PARENT");
-            Expression parent = current.getParent();
-            parent.removeChild(current);
-            manager.setCurrentExp(parent.peekLastChildOrSelf()); // set next (last) child or parent itself
-            manager.setCurrentParentExp(parent.getParent()); // might be null, we don't care if so
+        // parent
+        else if (isParent && current.hasPreOperations()) {
+            if (current.isLastPreOperOpen()) {
+                // remove last pre oper and if it was last pre oper then set currentParent as current's parent or null
+                manager.removeLastPreOperAndResetParent(current);
+            }
+            else {
+                current.setLastPreOperOpen(true);
+                manager.setCurrentExp(current.peekLastChild());
+                logger.log("remove last pre operation");
+            }
         }
+        // child
         else {
-            logger.log("[resetCurrent]: CURRENT HAS NOT PARENT");
-            manager.setCurrentExp(null);
-            manager.setCurrentParentExp(null);
+            logger.log("remove last digit");
+//            current.removeLastDigitAndReset(manager);
+            manager.removeLastDigitAndResetCurrent(current);
         }
+//        logger.log("current: " + (manager.hasCurrent() ? manager.getCurrentExp().getLayout() : null));
+//        logger.log("currentParent: " + (manager.hasCurrentParent() ? manager.getCurrentParentExp().getLayout() : null));
+
     }
 
-//    private Optional<Expression> resolveCurrent() {
-    private void resolveCurrent() {
-        if (manager.hasCurrent()) {
-            return;
-        }
-        Expression current = null;
-        if (manager.hasCurrentParent()) {
-            current = manager.getCurrentParentExp().peekLastChildOrSelf();
-        }
-        else {
-            // get from global list
-            current = manager.getExpressionQueue().peekLast().peekLastChildOrSelf();
-            manager.setCurrentParentExp(current.getParent());
-        }
-        manager.setCurrentExp(current);
-    }
 }

@@ -19,29 +19,24 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
         Expression current = manager.getCurrentOrParent();
-        if (current == null || ! uiManager.hasText()) {
+        if ( ! manager.hasExpressions()) {
             return;
         }
-//        System.out.println("current = " + current);
-        // TO CLOSE PRE OPERATION
-        // expression should hasValue
-//        if (current.hasValue() || (current.hasPreOperations() && ! current.isLastPreOperOpen())) {
-        if (current.hasValue() || current.isLastPreOperClosed()) {
-//            System.out.println("post: if 1");
+
+        if (current == null) {
+            System.out.println("Change sign");
+            manager.getExpressionQueue().peekLast().setOperation(operation);
+        }
+        else if (current.hasValue() || current.isLastPreOperClosed() || current.hasChildren()) {
             current.setOperation(operation);
-            if (current.equals(manager.getCurrentExp())) {
-                // reset current
-                manager.setCurrentExp(null);
+
+            // reset
+            if (current.isParent()) {
+                manager.setCurrentParentExp(null);
             }
             else {
-                // reset currentParent
-                manager.resetCurrentParent();
+                manager.setCurrentExp(null);
             }
-        }
-        else if (manager.getExpressionQueue().size() > 0 && (manager.hasCurrent() && ! manager.getCurrentValue().isEmpty() )) {
-//            System.out.println("post: if 2");
-            manager.getExpressionQueue().peek().setOperation(operation);
-            uiManager.changeSign(operation);
         }
 
     }

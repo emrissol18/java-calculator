@@ -12,7 +12,7 @@ public class PercentActionListener extends AbstractOperatorActionListener {
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
-        if ( ! manager.getExpressionQueue().isEmpty()) {
+        if ( manager.hasExpressions()) {
             manager.getExpressionQueue().forEach(System.out::println);
         }
 //        if (manager.hasCurrentParent() && manager.getCurrentParentExp().hasChildren()) {

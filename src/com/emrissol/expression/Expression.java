@@ -1,6 +1,7 @@
 package com.emrissol.expression;
 
 import com.emrissol.Manager;
+import com.emrissol.dev.log.Logger;
 import com.emrissol.expression.operation.AbstractPrePostOperation;
 import com.emrissol.expression.operation.Operation;
 import lombok.AccessLevel;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @Setter
 public class Expression {
 
+    private static final Logger logger = new Logger(Expression.class);
     static short ID = 0;
     protected short id;
     protected String value = "";
@@ -63,7 +65,7 @@ public class Expression {
     }
 
     public boolean hasPreOperations() {
-        return getPreOperations() != null && ! getPreOperations().isEmpty();
+        return preOperations != null && ! getPreOperations().isEmpty();
     }
 
     public Deque<AbstractPrePostOperation> getPreOperations() {
@@ -98,7 +100,7 @@ public class Expression {
     }
 
     public boolean hasPostOperations() {
-        return getPostOperations() != null && ! getPostOperations().isEmpty();
+        return postOperations != null && ! getPostOperations().isEmpty();
     }
 
     public boolean hasParent() {
@@ -116,10 +118,12 @@ public class Expression {
         return children != null && children.size() > 0;
     }
 
-    public void detachFromParent() {
+    public boolean detachFromParent() {
         if (hasParent()) {
-            getParent().getChildren().remove(this);
+            getParent().removeChild(this);
+            return true;
         }
+        return false;
     }
     public void addExpression(Expression expression) {
         expression.setParent(this);
@@ -182,6 +186,7 @@ public class Expression {
         length = (short) stringBuilder.length();
 //        System.out.println("expression#"+ id+" length: " + length);
 //        System.out.printf("expression#%d length: %d (%s)\n", id, length, stringBuilder.toString());
+//        logger.logError(id + " stringBuilder to RETURN: " + stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -251,7 +256,7 @@ public class Expression {
             Expression lastChild = getChildren().peekLast();
             if (hasChildren() ) {
                 // allow only IF value in preOperation is not empty and expression has no operation
-                // ( i.e. root() - here in root function no value present || NOT operation as last char, e.i. root(1+) )
+                // ( i.e. NOT root() - here in root function no value present || NOT root(1+) - operation as last char)
                 if ( ! lastChild.hasValue() || ! lastChild.hasOperation()) {
                     return true;
                 }
@@ -264,7 +269,12 @@ public class Expression {
 
 
     public void removeLastDigit() {
-        value = value.substring(0, value.length() - 1);
+        if (hasValue()) {
+            setValue( value.substring(0, value.length() - 1) );
+        }
+        else {
+            logger.logError("removeLastDigit(): value.length() is <= 0");
+        }
     }
 
     public Expression peekLastChild() {
@@ -272,10 +282,10 @@ public class Expression {
     }
 
     public Expression peekLastChildOrSelf() {
-        if (hasChildren()) {
-            return peekLastChild();
+        if (hasOperation() || ! hasChildren()) {
+            return this;
         }
-        return this;
+        return peekLastChild();
     }
 
     public void removeChild(Expression expression) {
@@ -286,10 +296,15 @@ public class Expression {
         removeChild(peekLastChild());
     }
 
-    public void removeLastPreOper(Manager manager) {
+    public void removeLastPreOper() {
         getPreOperations().pollLast();
-        if ( ! hasPreOperations()) {
-            manager.setCurrentExp(null);
-        }
+    }
+
+    public Expression getParentOrSelf() {
+        return hasParent() ? getParent() : this;
+    }
+
+    public boolean isParent() {
+        return hasPreOperations() || hasChildren();
     }
 }

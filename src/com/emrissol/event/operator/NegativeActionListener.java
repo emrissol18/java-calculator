@@ -28,11 +28,13 @@ public class NegativeActionListener extends AbstractOperatorActionListener {
         if (manager.hasCurrent()) {
             cv = manager.getCurrentExp().getLayout();
         }
-        else if (manager.hasCurrentParent()) {
+        if (manager.hasCurrentParent()) {
             pv = manager.getCurrentParentExp().getLayout();
         }
-        logger.log("current: " + cv);
         logger.log("parent: " + pv);
+        logger.log("current: " + cv);
+//        logger.log("currentObj: " + (manager.getCurrentExp() != null ? manager.getCurrentExp().getId() : null));
+//        logger.log("currentParentObj: " + (manager.getCurrentParentExp() != null ? manager.getCurrentParentExp().getId() : null));
 //        logger.log("manager.getCurrentExp() = " + (manager.hasCurrent() ?  manager.getCurrentExp().getLayout() : null));
 //        logger.log("manager.getCurrentParentExp() = " + (manager.hasCurrentParent() ? manager.getCurrentParentExp().getLayout() : null));
     }
