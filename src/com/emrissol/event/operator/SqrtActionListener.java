@@ -23,18 +23,17 @@ public class SqrtActionListener extends AbstractOperatorActionListener {
         expression.getPreOperations().add(new SqrtOperation());
 
         if ( manager.hasCurrentParent()) {
-            Expression parent = manager.getCurrentParentExp();
-            parent.addExpression(expression);
+            manager.getCurrentParentExp().addExpression(expression);
+            manager.setCurrentExp(expression);
         }
-        manager.setCurrentParentExp(expression);
+        else {
+            manager.setCurrentParentExp(expression);
+            manager.addExpression(expression);
+        }
 
         // add only parent
-        manager.addExpressionIfHasNoParent(expression);
+//        manager.addExpressionIfHasNoParent(expression);
 
-//        uiManager.refreshLayout();
-//        manager.setCurrentExp(expression);
-
-//        uiManager.addText(Operation.SQRT);
     }
 
 }

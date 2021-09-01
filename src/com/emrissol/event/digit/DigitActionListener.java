@@ -18,55 +18,34 @@ public class DigitActionListener extends AbstractOperatorActionListener {
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
-        if (manager.hasCurrent()) {
-            if ( manager.getCurrentExp().isLastPreOperClosed() ) {
-                return;
-            }
-            manager.addToValueOfCurrent(actionEvent.getActionCommand());
+
+        if ( ! actionFilter.isDigitsAllowed()) {
+            logger.log("digits not allowed");
             return;
         }
 
-        Expression expression = new Expression();
-        expression.setValue(actionEvent.getActionCommand());
-        if (manager.hasCurrentParent()) {
-            manager.getCurrentParentExp().addExpression(expression);
-        }
-        else {
-            manager.addExpressionIfHasNoParent(expression);
-        }
-        manager.setCurrentExp(expression);
+        Expression newExpression = new Expression();
+        newExpression.setValue(actionEvent.getActionCommand());
 
-        /*String log = "";
-        Expression expression = new Expression();
-        if (manager.hasCurrentParent() && ! manager.hasCurrent()) {
-//            System.out.println("ADD TO NEW CURRENT");
-            expression.setValue(actionEvent.getActionCommand());
-            manager.getCurrentParentExp().addExpression(expression);
-            manager.setCurrentExp(expression);
-            log ="IF";
-        }
-        else {
-            log = "ELSE";
-            if ( ! manager.hasCurrent()) {
-                manager.getCurrentParentExp().addExpression(expression);
-                manager.setCurrentExp(expression);
-//                manager.addExpressionIfHasNoParent(manager.getCurrentExp());
-                manager.addToValueOfCurrent(actionEvent.getActionCommand());
-                log += " if";
+        if (manager.hasCurrent()) {
+            Expression current = manager.getCurrentExp();
+            if (current.isParent()) {
+                current.addExpression(newExpression);
+                manager.setCurrentParentExp(current);
+                manager.setCurrentExp(newExpression);
             }
             else {
-                log += " else";
-                // disalow digit after preOperation's textEnd, i.e. ")".
-                if ( manager.getCurrentExp().isLastPreOperClosed() ) {
-                    System.out.println("! manager.getCurrentExp().isLastPreOperClosed() (return)");
-                    log += " if";
-                    return;
-                }
-//                System.out.println("ADD TO CURRENT");
-                manager.addToValueOfCurrent(actionEvent.getActionCommand());
+                current.addToValue(actionEvent.getActionCommand());
             }
         }
-        logger.log(log);*/
+        else if (manager.hasCurrentParent()) {
+            manager.getCurrentParentExp().addExpression(newExpression);
+            manager.setCurrentExp(newExpression);
+        }
+        else {
+            manager.addExpression(newExpression);
+            manager.setCurrentExp(newExpression);
+        }
 
     }
 

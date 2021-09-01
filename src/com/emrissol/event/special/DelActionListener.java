@@ -26,7 +26,7 @@ public class DelActionListener extends AbstractOperatorActionListener {
 
         // RESOLVE CURRENT
         Expression current = manager.getCurrentOrParent();
-        System.out.println("CURRENT (before): " + current.getLayout());
+        System.out.println("CURRENT (before): " + (current != null ? current.getLayout() : null));
         // ELSE get from GLOBAL QUEUE
         if (current == null) {
             current = manager.getExpressionQueue().peekLast();

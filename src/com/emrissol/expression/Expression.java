@@ -7,6 +7,7 @@ import com.emrissol.expression.operation.Operation;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import java.awt.event.ActionEvent;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Objects;
@@ -75,8 +76,11 @@ public class Expression {
         return preOperations;
     }
 
-    public void setLastPreOperOpen(boolean isClosed) {
-        getPreOperations().peekLast().setOpen(isClosed);
+    public void closeLastPreOper() {
+        setLastPreOperOpen(false);
+    }
+    public void setLastPreOperOpen(boolean isOpen) {
+        getPreOperations().peekLast().setOpen(isOpen);
     }
     public AbstractPrePostOperation getLastPreOper() {
         return getPreOperations().peekLast();
@@ -257,7 +261,7 @@ public class Expression {
             if (hasChildren() ) {
                 // allow only IF value in preOperation is not empty and expression has no operation
                 // ( i.e. NOT root() - here in root function no value present || NOT root(1+) - operation as last char)
-                if ( ! lastChild.hasValue() || ! lastChild.hasOperation()) {
+                if ( lastChild.hasValue() && ! lastChild.hasOperation() && lastChild.isLastPreOperClosed()) {
                     return true;
                 }
             }
@@ -306,5 +310,9 @@ public class Expression {
 
     public boolean isParent() {
         return hasPreOperations() || hasChildren();
+    }
+
+    public void addToValue(String value) {
+        setValue(getValue() + value);
     }
 }

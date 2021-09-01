@@ -25,7 +25,7 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
 
         if (current == null) {
             System.out.println("Change sign");
-            manager.getExpressionQueue().peekLast().setOperation(operation);
+            manager.changeOperationOfLast(operation);
         }
         else if (current.hasValue() || current.isLastPreOperClosed() || current.hasChildren()) {
             current.setOperation(operation);
@@ -36,6 +36,9 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
             }
             else {
                 manager.setCurrentExp(null);
+            }
+            if (current.isLastPreOperClosed()) {
+                manager.setLastExp(current);
             }
         }
 

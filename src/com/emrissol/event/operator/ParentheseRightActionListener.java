@@ -14,15 +14,23 @@ public class ParentheseRightActionListener extends AbstractOperatorActionListene
 
     @Override
     protected void actionPerformedHook(ActionEvent actionEvent) {
-        if ( ! uiManager.hasText() || ! manager.hasCurrentParent()) {
+
+        Expression current = manager.getCurrentOrParent();
+
+        if (current == null) {
             return;
         }
 
-        Expression current = manager.getCurrentParentExp();
-
-        if (current.isCloseAllowed()) {
-            current.setLastPreOperOpen(false);
-            manager.setCurrentExp(null);
+        if (current.isParent() && current.isCloseAllowed()) {
+            current.closeLastPreOper();
+            manager.setCurrentParentExp(current.getParent());
         }
+        else if (current.hasParent() && current.getParent().isCloseAllowed()){
+            Expression parent = current.getParent();
+            parent.closeLastPreOper();
+            manager.setCurrentExp(parent);
+            manager.setCurrentParentExp(parent.getParent());
+        }
+
     }
 }

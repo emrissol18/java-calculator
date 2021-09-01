@@ -2,6 +2,7 @@ package com.emrissol.event;
 
 import com.emrissol.Manager;
 import com.emrissol.expression.Expression;
+import com.emrissol.filter.ActionFilter;
 import com.emrissol.ui.UIManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,10 +12,12 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
 
     protected Manager manager;
     protected UIManager uiManager;
+    protected static ActionFilter actionFilter;
 
     public AbstractOperatorActionListener(Manager manager, UIManager uiManager) {
         this.manager = manager;
         this.uiManager = uiManager;
+        actionFilter = new ActionFilter(manager);
     }
 
     protected abstract void actionPerformedHook(ActionEvent actionEvent);

@@ -34,13 +34,19 @@ public class Manager {
     private Expression currentExp = null;
 
     @Getter
+    private Expression lastExp = null;
+
+    @Getter
     private Deque<Expression> expressionQueue = new LinkedList<>();
 
     private Map<Operation, AbstractPrePostOperation> preOperationMap = new HashMap<>();
 
+    public void addExpression(Expression expression) {
+        getExpressionQueue().add(expression);
+    }
     public void addExpressionIfHasNoParent(Expression expression) {
         if ( ! expression.hasParent() && ! expressionQueue.contains(expression)) {
-            expressionQueue.add(expression);
+            addExpression(expression);
         }
     }
 
@@ -73,6 +79,7 @@ public class Manager {
         getExpressionQueue().clear();
         setCurrentParentExp(null);
         setCurrentExp(null);
+        lastExp = null;
     }
 
     public void closePreOper(Expression expression) {
@@ -99,14 +106,16 @@ public class Manager {
     }
 
     public Expression getCurrentOrParent() {
-        Expression current = null;
-        if (hasCurrent()) {
+        return hasCurrent() ? getCurrentExp() : getCurrentParentExp();
+//        Expression current = null;
+        /*if (hasCurrent()) {
             current = getCurrentExp();
         }
         else if (hasCurrentParent()) {
-            current = getCurrentParentExp().peekLastChildOrSelf();
+//            current = getCurrentParentExp().peekLastChildOrSelf();
+            current = getCurrentParentExp();
         }
-        return current;
+        return current;*/
     }
 
     public boolean removeExpression(Expression expression) {
@@ -146,5 +155,19 @@ public class Manager {
 
     public boolean hasExpressions() {
         return ! getExpressionQueue().isEmpty();
+    }
+
+    public void setLastExp(Expression lastExp) {
+        if (lastExp != null) {
+            this.lastExp = lastExp;
+        }
+    }
+
+    public void changeOperationOfLast(Operation operation) {
+        if (lastExp == null) {
+            System.out.println("lastExp is null");
+            return;
+        }
+        lastExp.setOperation(operation);
     }
 }
