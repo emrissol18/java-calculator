@@ -15,9 +15,6 @@ public class SqrtActionListener extends AbstractOperatorActionListener {
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
-//        if (manager.hasCurrent() && ! manager.getCurrentValue().isEmpty()) {
-//            return;
-//        }
         if ( ! actionFilter.isPreOperationAllowed()) {
             return;
         }
