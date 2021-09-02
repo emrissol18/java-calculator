@@ -87,7 +87,10 @@ public class Expression {
     }
 
     public boolean isLastPreOperClosed() {
-        return hasPreOperations() && ! isLastPreOperOpen();
+        if ( ! hasPreOperations()) {
+            return true;
+        }
+        return ! isLastPreOperOpen();
     }
     public boolean isLastPreOperOpen() {
         return getLastPreOper().isOpen();
@@ -254,23 +257,6 @@ public class Expression {
                 '}';
     }
 
-    public boolean isCloseAllowed() {
-        // allowed IF there is open preOperation
-        if (hasPreOperations() && isLastPreOperOpen()) {
-            Expression lastChild = getChildren().peekLast();
-            if (hasChildren() ) {
-                // allow only IF value in preOperation is not empty and expression has no operation
-                // ( i.e. NOT root() - here in root function no value present || NOT root(1+) - operation as last char)
-                if ( lastChild.hasValue() && ! lastChild.hasOperation() && lastChild.isLastPreOperClosed()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        // not allowed by default
-        return false;
-    }
-
 
     public void removeLastDigit() {
         if (hasValue()) {
@@ -285,6 +271,9 @@ public class Expression {
         return getChildren().peekLast();
     }
 
+    public boolean lastChildHasOperation() {
+        return hasChildren() && peekLastChild().hasOperation();
+    }
     public Expression peekLastChildOrSelf() {
         if (hasOperation() || ! hasChildren()) {
             return this;

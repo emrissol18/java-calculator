@@ -34,9 +34,6 @@ public class Manager {
     private Expression currentExp = null;
 
     @Getter
-    private Expression lastExp = null;
-
-    @Getter
     private Deque<Expression> expressionQueue = new LinkedList<>();
 
     private Map<Operation, AbstractPrePostOperation> preOperationMap = new HashMap<>();
@@ -79,7 +76,6 @@ public class Manager {
         getExpressionQueue().clear();
         setCurrentParentExp(null);
         setCurrentExp(null);
-        lastExp = null;
     }
 
     public void closePreOper(Expression expression) {
@@ -105,8 +101,8 @@ public class Manager {
         }
     }
 
-    public Expression getCurrentOrParent() {
-        return hasCurrent() ? getCurrentExp() : getCurrentParentExp();
+    public Optional<Expression> getCurrentOrParent() {
+        return hasCurrent() ? Optional.ofNullable(getCurrentExp()) : Optional.ofNullable(getCurrentParentExp());
 //        Expression current = null;
         /*if (hasCurrent()) {
             current = getCurrentExp();
@@ -157,17 +153,4 @@ public class Manager {
         return ! getExpressionQueue().isEmpty();
     }
 
-    public void setLastExp(Expression lastExp) {
-        if (lastExp != null) {
-            this.lastExp = lastExp;
-        }
-    }
-
-    public void changeOperationOfLast(Operation operation) {
-        if (lastExp == null) {
-            System.out.println("lastExp is null");
-            return;
-        }
-        lastExp.setOperation(operation);
-    }
 }

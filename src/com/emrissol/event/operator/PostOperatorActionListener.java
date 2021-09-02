@@ -6,6 +6,7 @@ import com.emrissol.expression.Expression;
 import com.emrissol.expression.operation.Operation;
 import com.emrissol.ui.UIManager;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 public class PostOperatorActionListener extends AbstractOperatorActionListener {
 
@@ -18,28 +19,31 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
-        Expression current = manager.getCurrentOrParent();
         if ( ! manager.hasExpressions()) {
             return;
         }
 
-        if (current == null) {
-            System.out.println("Change sign");
-            manager.changeOperationOfLast(operation);
-        }
-        else if (current.hasValue() || current.isLastPreOperClosed() || current.hasChildren()) {
-            current.setOperation(operation);
+        Optional<Expression> current = manager.getCurrentOrParent();
 
-            // reset
-            if (current.isParent()) {
-                manager.setCurrentParentExp(null);
-            }
-            else {
-                manager.setCurrentExp(null);
-            }
-            if (current.isLastPreOperClosed()) {
-                manager.setLastExp(current);
-            }
+        Optional<Expression> expToChangeSign = Optional.empty();
+        // last child of current parent
+        if (current.isPresent() && current.get().lastChildHasOperation()) {
+            expToChangeSign = Optional.of(current.get().peekLastChild());
+        }
+        // or last expression from global queue
+        else if (manager.peekLastExp().hasOperation()) {
+            expToChangeSign = Optional.of(manager.peekLastExp());
+        }
+        // change sign if present and return
+        if (expToChangeSign.isPresent()) {
+            expToChangeSign.get().setOperation(operation);
+            return;
+        }
+
+        // else just add sign to current expression
+        if (manager.hasCurrent()) {
+            manager.getCurrentExp().setOperation(operation);
+            manager.setCurrentExp(null);
         }
 
     }
