@@ -74,12 +74,10 @@ public class Expression {
         return preOperations;
     }
 
-    public void closeLastPreOper() {
-        setLastPreOperOpen(false);
-    }
     public void setLastPreOperOpen(boolean isOpen) {
         getPreOperations().peekLast().setOpen(isOpen);
     }
+
     public AbstractPrePostOperation getLastPreOper() {
         return getPreOperations().peekLast();
     }
@@ -213,6 +211,17 @@ public class Expression {
         return this;
     }
 
+    public Expression getDescendantChild() {
+        if (hasChildren()) {
+            Expression child = peekLastChild();
+            while (child.hasChildren()) {
+                child = child.peekLastChild();
+            }
+            return child;
+        }
+        return this;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -256,12 +265,20 @@ public class Expression {
     }
 
 
+    public boolean removeLastDigitTrueIfEmpty() {
+        removeLastDigit();
+        if ( ! hasValue()) {
+            return true;
+        }
+        return false;
+    }
+
     public void removeLastDigit() {
         if (hasValue()) {
             setValue( value.substring(0, value.length() - 1) );
         }
         else {
-            logger.logError("removeLastDigit(): value.length() is <= 0");
+            logger.logError("removeLastDigit(): no has value");
         }
     }
 
@@ -287,6 +304,10 @@ public class Expression {
         removeChild(peekLastChild());
     }
 
+    public boolean removeLastPreOperIfHasPreOperations() {
+        removeLastPreOper();
+        return hasPreOperations();
+    }
     public void removeLastPreOper() {
         getPreOperations().pollLast();
     }
@@ -296,7 +317,7 @@ public class Expression {
     }
 
     public boolean isParent() {
-        return hasPreOperations() || hasChildren();
+        return hasPreOperations() || hasPostOperations() || hasChildren();
     }
 
     public void addToValue(String value) {
