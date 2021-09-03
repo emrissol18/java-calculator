@@ -306,7 +306,7 @@ public class Expression {
 
     public boolean removeLastPreOperIfHasPreOperations() {
         removeLastPreOper();
-        return hasPreOperations();
+        return ! hasPreOperations();
     }
     public void removeLastPreOper() {
         getPreOperations().pollLast();
