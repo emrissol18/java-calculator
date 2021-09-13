@@ -167,21 +167,20 @@ public class Expression {
             chunkStart = new StringBuilder();
             chunkEnd = new StringBuilder();
 
+            // POST OPERATIONS
+            if (hasPostOperations()) {
+                getPostOperations().forEach( e -> {
+                    chunkStart.append(e.getHtmlStart().concat(e.getTextStart()));
+                    chunkEnd.append(e.getConcatEnd());
+                });
+            }
+
             // PRE OPERATIONS
             if (hasPreOperations()) {
                 getPreOperations().forEach( e -> {
                     chunkStart.append(e.getHtmlStart().concat(e.getTextStart()));
                     chunkEnd.insert(0, e.getConcatEnd());
 //                    chunkEnd.insert(0, e.getConcatEnd().concat(getOperationText()));
-                });
-            }
-
-//            chunkStart.append(thisValue);
-            // POST OPERATIONS
-            if (hasPostOperations()) {
-                getPostOperations().forEach( e -> {
-                    chunkStart.append(e.getHtmlStart().concat(e.getTextStart()));
-                    chunkEnd.insert(0, e.getConcatEnd());
                 });
             }
 
