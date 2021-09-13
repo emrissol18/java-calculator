@@ -3,16 +3,16 @@ package com.emrissol.calc.event.operator;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.operation.Operation;
+import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 
 public class PostOperatorActionListener extends AbstractOperatorActionListener {
 
-    private Operation operation;
+    private SimplePostOperation operation;
 
-    public PostOperatorActionListener(Manager manager, UIManager uiManager, Operation operation) {
+    public PostOperatorActionListener(Manager manager, UIManager uiManager, SimplePostOperation operation) {
         super(manager, uiManager);
         this.operation = operation;
     }

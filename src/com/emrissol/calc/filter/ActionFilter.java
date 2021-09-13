@@ -15,7 +15,11 @@ public class ActionFilter {
     public boolean isDigitsAllowed() {
         Expression current = manager.getCurrentExp();
         // disallow digits in case of root(1) - here after ')' only post operations are allowed
-        if (current != null && current.isParent() && current.isLastPreOperClosed()) {
+//        boolean isFactorialAllowed = isFactorialAllowed();
+//        System.out.println("isFactorialAllowed = " + isFactorialAllowed);
+        if (current != null
+                &&
+                (current.isParent() && current.isLastPreOperClosed() || current.hasFactorial()) ) {
             return false;
         }
         return true;
@@ -44,5 +48,23 @@ public class ActionFilter {
             return false;
         }
         return true;
+    }
+
+    public boolean isFactorialAllowed() {
+        if ( ! manager.hasCurrent()) {
+            return false;
+        }
+        Expression current = manager.getCurrentExp();
+        boolean hasFactorial = current.hasFactorial();
+        System.out.println("hasFactorial = " + hasFactorial);
+        return  ! hasFactorial
+                &&
+                (
+                        // current is not parent, has value and has no operation
+                        ( ! current.isParent() && current.hasValue() && ! current.hasOperation())
+                        ||
+                        // parent
+                        (current.isLastPreOperClosed() && ! current.hasOperation())
+                );
     }
 }

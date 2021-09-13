@@ -1,12 +1,8 @@
 package com.emrissol.calc;
 
-import com.emrissol.calc.expression.operation.SqrtOperation;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.operation.Operation;
-import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import java.util.*;
 
 // singleton
@@ -15,7 +11,6 @@ public class Manager {
     private static Manager instance;
 
     private Manager() {
-        preOperationMap.put(Operation.SQRT, new SqrtOperation());
         // here add more
     }
 
@@ -36,8 +31,6 @@ public class Manager {
     @Getter
     private Deque<Expression> expressionQueue = new LinkedList<>();
 
-    private Map<Operation, AbstractPrePostOperation> preOperationMap = new HashMap<>();
-
     public void addExpression(Expression expression) {
         getExpressionQueue().add(expression);
     }
@@ -48,11 +41,11 @@ public class Manager {
         }
     }
 
-    public void setCurrentExp(Expression currentExp) {
-        if (currentExp == null && hasCurrent()) {
-            this.currentExp.parseValue();
+    public void setCurrentExp(Expression newCurrent) {
+        if (newCurrent == null && hasCurrent()) {
+            currentExp.parseValue();
         }
-        this.currentExp = currentExp;
+        this.currentExp = newCurrent;
     }
 
     /**
@@ -83,10 +76,6 @@ public class Manager {
 
     public String getCurrentValue() {
         return currentExp.getValue();
-    }
-
-    public AbstractPrePostOperation getPrePostOperation(Operation operation) {
-        return preOperationMap.get(operation);
     }
 
     public Expression peekLastExp() {

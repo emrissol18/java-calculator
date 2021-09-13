@@ -3,23 +3,27 @@ package com.emrissol.calc.expression.operation;
 import com.emrissol.calc.expression.OperatorText;
 import lombok.Getter;
 
-public enum  Operation {
+public enum SimplePostOperation {
+
     ADD(OperatorText.SIGN_PLUS),
     SUBSTRUCT(OperatorText.SIGN_MINUS),
     DIVIDE(OperatorText.SIGN_DIVIDE),
     MULTIPLY(OperatorText.SIGN_MULTIPLY),
+
+    POINT("."),
+    EQUALS(OperatorText.EQUAL),
+    DEL(OperatorText.DEL),
+    CLEAR(OperatorText.CLEAR),
+
     SQRT(OperatorText.ROOT + OperatorText.PARENTHESES_LEFT),
     NEGATIVE(OperatorText.NEGATIVE),
-    POINT("."),
-    DEL(OperatorText.DEL),
     PERCENT(OperatorText.PERCENT),
-    CLEAR(OperatorText.CLEAR),
-    EQUALS(OperatorText.EQUAL);
+    FACTORIAL(OperatorText.FACTORIAL);
 
     @Getter
     private String text;
 
-    Operation(String text) {
+    SimplePostOperation(String text) {
         this.text = text;
     }
     //    , SUB_EXP_START //parenthesis open

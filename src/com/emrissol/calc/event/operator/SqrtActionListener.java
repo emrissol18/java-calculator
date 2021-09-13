@@ -1,6 +1,6 @@
 package com.emrissol.calc.event.operator;
 
-import com.emrissol.calc.expression.operation.SqrtOperation;
+import com.emrissol.calc.expression.operation.pre.SqrtPreOperation;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
@@ -21,7 +21,7 @@ public class SqrtActionListener extends AbstractOperatorActionListener {
 
         Expression current = manager.getCurrentExp();
         Expression expression = new Expression();
-        expression.getPreOperations().add(new SqrtOperation());
+        expression.getPreOperations().add(new SqrtPreOperation());
 
         // add new expression to current if current is parent (e.g. parent( child( 2 + 2 + [new expression]) ) )
         if (manager.hasCurrent() && current.isParent()) {

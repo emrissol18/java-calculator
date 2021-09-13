@@ -3,7 +3,7 @@ package com.emrissol.calc.event.operator;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.operation.Operation;
+import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 
@@ -25,7 +25,7 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
         }
 
         Expression current = manager.getCurrentExp();
-        current.setOperation(Operation.EQUALS);
+        current.setOperation(SimplePostOperation.EQUALS);
         //temp
 //        if (manager.hasCurrentParent() && current != manager.getCurrentParentExp()) {
 //            manager.getCurrentParentExp().addExpression(current);

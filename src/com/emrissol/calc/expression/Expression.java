@@ -1,11 +1,12 @@
 package com.emrissol.calc.expression;
 
 import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
-import com.emrissol.calc.expression.operation.Operation;
+import com.emrissol.calc.expression.operation.post.FactorialPostOperation;
+import com.emrissol.calc.expression.operation.SimplePostOperation;
+import com.emrissol.calc.expression.operation.pre.NegativePreOperation;
 import com.emrissol.calc.log.Logger;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -20,11 +21,11 @@ public class Expression {
     static short ID = 0;
     protected short id;
 
-    private Double numberValue;
+    private double numberValue;
 
     protected String value = "";
 //    protected PreOperation preOperation;
-    protected Operation operation;
+    protected SimplePostOperation operation;
 
     // how much chars expression takes in context
     @Getter
@@ -49,7 +50,7 @@ public class Expression {
         this.value = value;
     }
 
-    public Expression(String value, Operation operation) {
+    public Expression(String value, SimplePostOperation operation) {
         this.value = value;
         this.operation = operation;
     }
@@ -62,7 +63,7 @@ public class Expression {
     }
 
     public boolean hasPoint() {
-        return hasValue() && (getValue().contains(Operation.POINT.getText()));
+        return hasValue() && (getValue().contains(SimplePostOperation.POINT.getText()));
     }
 
     public boolean hasOperation() {
@@ -333,10 +334,13 @@ public class Expression {
 
     public boolean isNegative() {
 //        return value.startsWith(Operation.NEGATIVE.getText());
-        return hasValue() && value.charAt(0) == Operation.NEGATIVE.getText().charAt(0);
+        return hasValue() && value.charAt(0) == SimplePostOperation.NEGATIVE.getText().charAt(0);
+    }
+    public boolean isEffectivelyNegative() {
+        return isNegative() && getValue().length() == 1;
     }
 
-    public void toggleNegative() {
+    public void toggleNegativeOld() {
         String negativeLayout = OperatorText.NEGATIVE_LAYOUT;
         if ( isNegative()) {
             setValue(value.replaceFirst(negativeLayout, ""));
@@ -346,8 +350,18 @@ public class Expression {
         }
     }
 
+    public void toggleNegative() {
+        if (hasPreOperations() && getPreOperations().stream().anyMatch( o -> o instanceof NegativePreOperation)) {
+            getPreOperations().removeIf( o -> o instanceof NegativePreOperation);
+        }
+        else {
+            getPreOperations().add(new NegativePreOperation());
+        }
+    }
+
     public void parseValue() {
-        if (value.isEmpty() || numberValue != null) {
+        logger.log("parsing value start: " + numberValue);
+        if (value.isEmpty()) {
             numberValue = 0.d;
             return;
         }
@@ -356,5 +370,11 @@ public class Expression {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
+        logger.log("parsing value end: " + numberValue);
     }
+
+    public boolean hasFactorial() {
+        return hasPostOperations() && getPostOperations().stream().anyMatch( o -> o instanceof FactorialPostOperation);
+    }
+
 }

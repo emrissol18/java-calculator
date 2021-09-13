@@ -1,14 +1,12 @@
 package com.emrissol.calc.ui;
 
 import com.emrissol.calc.Manager;
-import com.emrissol.calc.log.Logger;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.operation.Operation;
+import com.emrissol.calc.expression.operation.SimplePostOperation;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class UIManager {
@@ -147,12 +145,12 @@ public class UIManager {
         aggregateInnerSB();
     }
 
-    public void changeSign(Operation operation) {
+    public void changeSign(SimplePostOperation operation) {
         stringBuilderInner.setLength(stringBuilderInner.length() - 1);
         addText(operation);
     }
 
-    public void addText(Operation operation) {
+    public void addText(SimplePostOperation operation) {
         addText(operation.getText());
     }
 

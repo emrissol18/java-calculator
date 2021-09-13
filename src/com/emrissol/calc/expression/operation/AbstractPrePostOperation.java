@@ -4,6 +4,7 @@ import com.emrissol.calc.expression.OperatorText;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -16,15 +17,15 @@ public abstract class AbstractPrePostOperation {
     protected String htmlEnd;
     protected boolean isOpen;
 //    protected String value; // digits as string
-    protected Operation operation;
+//    protected Operation operation;
 
-    public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd, Operation operation) {
+    public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd) {
         this.textStart = textStart;
         this.textEnd = textEnd;
         this.htmlStart = htmlStart;
         this.htmlEnd = htmlEnd;
 //        this.value = value;
-        this.operation = operation;
+//        this.operation = operation;
     }
 
     public String getHtmlEnd() {
@@ -48,7 +49,7 @@ public abstract class AbstractPrePostOperation {
 //    public abstract String getValue();
 //    public abstract Operation getOperation();
 
-    public abstract Number apply(String thisValue);
+    public abstract double apply(double value);
 
     @Override
     public String toString() {
@@ -59,7 +60,20 @@ public abstract class AbstractPrePostOperation {
                 ", htmlEnd='" + htmlEnd + '\'' +
                 ", isOpen='" + isOpen + '\'' +
 //                ", value='" + value + '\'' +
-                ", operation=" + operation +
+//                ", operation=" + operation +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null) return false;
+        if (getClass().equals(object.getClass())) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isOpen);
     }
 }
