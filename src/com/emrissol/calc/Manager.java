@@ -5,6 +5,7 @@ import com.emrissol.calc.expression.Expression;
 import com.emrissol.calc.expression.operation.Operation;
 import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import java.util.*;
 
@@ -25,12 +26,11 @@ public class Manager {
         return instance;
     }
 
-    @Getter
-    @Setter
-    private Expression currentParentExp = null;
+//    @Getter
+//    @Setter
+//    private Expression currentParentExp = null;
 
     @Getter
-    @Setter
     private Expression currentExp = null;
 
     @Getter
@@ -41,19 +41,41 @@ public class Manager {
     public void addExpression(Expression expression) {
         getExpressionQueue().add(expression);
     }
+
     public void addExpressionIfHasNoParent(Expression expression) {
         if ( ! expression.hasParent() && ! expressionQueue.contains(expression)) {
             addExpression(expression);
         }
     }
 
+    public void setCurrentExp(Expression currentExp) {
+        if (currentExp == null && hasCurrent()) {
+            this.currentExp.parseValue();
+        }
+        this.currentExp = currentExp;
+    }
+
+    /**
+     * Add non null newExpression to current if present or add to global list and set newExpression as current.
+     * @param newExpression expression
+     */
+    public void setAndAddCurrentExp(@NonNull Expression newExpression) {
+        if (hasCurrent()) {
+            getCurrentExp().addExpression(newExpression);
+        }
+        else {
+            addExpressionIfHasNoParent(newExpression);
+        }
+        setCurrentExp(newExpression);
+    }
+
     public boolean hasCurrent() {
         return currentExp != null;
     }
 
-    public boolean hasCurrentParent() {
-        return currentParentExp != null;
-    }
+//    public boolean hasCurrentParent() {
+//        return currentParentExp != null;
+//    }
 
     public void addToValueOfCurrent(String text) {
         currentExp.setValue(currentExp.getValue() + text);
@@ -74,11 +96,11 @@ public class Manager {
 
     public void clearAll() {
         getExpressionQueue().clear();
-        setCurrentParentExp(null);
+//        setCurrentParentExp(null);
         setCurrentExp(null);
     }
 
-    public void closePreOper(Expression expression) {
+    /*public void closePreOper(Expression expression) {
         expression.getLastPreOper().setOpen(false);
         resetParent(expression);
     }
@@ -99,34 +121,34 @@ public class Manager {
             setCurrentParentExp(null);
             getExpressionQueue().remove(parent);
         }
-    }
+    }*/
 
-    public Optional<Expression> getCurrentOrParent() {
+    /*public Optional<Expression> getCurrentOrParent() {
         return hasCurrent() ? Optional.ofNullable(getCurrentExp()) : Optional.ofNullable(getCurrentParentExp());
 //        Expression current = null;
-        /*if (hasCurrent()) {
+        *//*if (hasCurrent()) {
             current = getCurrentExp();
         }
         else if (hasCurrentParent()) {
 //            current = getCurrentParentExp().peekLastChildOrSelf();
             current = getCurrentParentExp();
         }
-        return current;*/
-    }
+        return current;*//*
+    }*/
 
     public boolean removeExpression(Expression expression) {
         return getExpressionQueue().remove(expression);
     }
 
-    public void removeLastPreOperAndResetParent(Expression current) {
+    /*public void removeLastPreOperAndResetParent(Expression current) {
         current.removeLastPreOper();
         if ( ! current.hasPreOperations()) {
             resetCurrentParent();
 //            manager.setCurrentParentExp(null);
         }
-    }
+    }*/
 
-    public void removeLastDigitAndResetCurrent(Expression current) {
+    /*public void removeLastDigitAndResetCurrent(Expression current) {
         current.removeLastDigit();
 
         // expression is empty (valid for deletetion)
@@ -147,10 +169,18 @@ public class Manager {
             }
             setCurrentExp(null);
         }
-    }
+    }*/
 
     public boolean hasExpressions() {
         return ! getExpressionQueue().isEmpty();
     }
 
+    /*public Optional<Expression> getLastWithOperation() {
+        Expression lastExpression = getExpressionQueue().peekLast();
+        if (lastExpression.isParent()) {
+            Expression descendant = lastExpression.getDescendantChild();
+            while (descendant.hasParent() && ! descendant.hasOperation())
+        }
+        return lastExpression.hasOperation() ? Optional.of(lastExpression) : Optional.empty();
+    }*/
 }

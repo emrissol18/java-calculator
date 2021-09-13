@@ -7,6 +7,9 @@ public class Logger {
     private static final int LEVEL_INFO = 1;
     private static final int LEVEL_ERROR = 3;
 
+    @Setter
+    private boolean active = true;
+
     private Class<?> aClass;
 
     @Setter
@@ -38,10 +41,12 @@ public class Logger {
     }
 
     public void log(String message) {
+        if (!active) return;
         System.out.println(getLogData(message));
     }
 
     public void logError(String message) {
+        if (!active) return;
         System.err.println(getLogData(message));
     }
 

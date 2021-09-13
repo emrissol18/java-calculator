@@ -23,16 +23,17 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
             return;
         }
 
-        Optional<Expression> current = manager.getCurrentOrParent();
+        Expression current = manager.getCurrentExp();
 
         Optional<Expression> expToChangeSign = Optional.empty();
         // last child of current parent
-        if (current.isPresent() && current.get().lastChildHasOperation()) {
-            expToChangeSign = Optional.of(current.get().peekLastChild());
+        if (manager.hasCurrent() && current.lastChildHasOperation()) {
+            expToChangeSign = Optional.of(current.peekLastChild());
         }
         // or last expression from global queue
-        else if (manager.peekLastExp().hasOperation()) {
-            expToChangeSign = Optional.of(manager.peekLastExp());
+        else if (manager.peekLastExp().peekLastChildOrSelf().hasOperation()) {
+            Expression last = manager.peekLastExp().peekLastChildOrSelf();
+            expToChangeSign = Optional.of(last);
         }
         // change sign if present and return
         if (expToChangeSign.isPresent()) {
@@ -40,10 +41,12 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
             return;
         }
 
-        // else just add sign to current expression
-        if (manager.hasCurrent()) {
+        // else add operation to current expression
+        // (if current present (thus it has value) or if current is parent and has children > 0)
+        if (manager.hasCurrent() && ( ! current.isParent() || current.hasChildren()) ) {
             manager.getCurrentExp().setOperation(operation);
-            manager.setCurrentExp(null);
+            // set parent if has or null
+            manager.setCurrentExp(manager.getCurrentExp().getParent());
         }
 
     }

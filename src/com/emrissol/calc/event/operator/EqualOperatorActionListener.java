@@ -34,7 +34,7 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
 
         manager.getExpressionQueue().forEach(System.out::println);
 
-        manager.setCurrentParentExp(null);
+//        manager.setCurrentParentExp(null);
         manager.setCurrentExp(null);
         uiManager.clearAll();
         // calc at the end

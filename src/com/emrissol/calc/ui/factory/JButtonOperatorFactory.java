@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class JButtonOperatorFactory implements Factory {
+public class JButtonOperatorFactory implements JComponentFactory {
 
     List<? extends ActionListener> listeners;
 

@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class JButtonDigitFactory implements Factory {
+public class JButtonDigitFactory implements JComponentFactory {
 
     @Setter
     @Getter

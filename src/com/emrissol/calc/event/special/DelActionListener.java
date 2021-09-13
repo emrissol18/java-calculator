@@ -24,81 +24,77 @@ public class DelActionListener extends AbstractOperatorActionListener {
             return;
         }
 
-        Expression current = null;
+//        logger.setActive(false);
+        // can be null
+        Expression current = manager.getCurrentExp();
 
-        if ( ! manager.hasCurrent() && ! manager.hasCurrentParent()) {
-            logger.log("resolve current");
+        // take peek last expression from global list if no current present
+        if ( ! manager.hasCurrent() ) {
+            logger.log("peek last");
             current = manager.peekLastExp();
-            if (current.isParent() && current.isLastPreOperClosed()) {
-                manager.setCurrentExp(current.peekLastChild());
-                manager.setCurrentParentExp(current);
-            }
-            else {
-                manager.setCurrentExp(current);
-            }
+            manager.setCurrentExp(current.getDescendantChildOrItself());
         }
 
-//        System.out.println("current = " + (current != null ? current.getLayout() : null));
-        System.out.println(current);
-        if (current != null && current.hasOperation()) {
+        if (current.hasOperation()) {
             logger.log("remove operation");
             current.setOperation(null);
             return;
         }
 
-//        if (true) return;
-        if (manager.hasCurrent()) {
-            logger.log("current");
-            current = manager.getCurrentExp();
+        // TO_DO POST OPERATIONS GO HERE
 
-            if (current.isParent() ) {
-                logger.log("isParent");
-                // open pre opeartion
-                if ( current.isLastPreOperClosed()) {
-                    logger.log("open pre operation");
-                    current.setLastPreOperOpen(true);
-                    manager.setCurrentExp(current.peekLastChild());
-                    manager.setCurrentParentExp(current);
-                }
-                // try to remove one pre operation
-                else if ( ! current.hasChildren()) {
-                    if (current.removeLastPreOperIfHasPreOperations()) {
-                        logger.log("remove last pre operation");
-                        logger.log("no more pre operations");
-                        manager.setCurrentExp(null);
-                        current.detachFromParent();
-                        if (manager.hasCurrentParent()) {
-                            manager.setCurrentParentExp(current.getParent());
-                        }
-                    }
-                }
+        if (current.hasPreOperations() ) {
+            logger.log("isParent");
+
+            // open pre operation
+            if ( current.isLastPreOperClosed()) {
+                logger.log("open pre operation");
+                current.setLastPreOperOpen(true);
+                manager.setCurrentExp(current.peekLastChild());
+//                    manager.setCurrentParentExp(current);
             }
-            else {
-                logger.log("remove last digit");
-                current = manager.getCurrentParentExp();
-                if (current.removeLastDigitTrueIfEmpty()) {
-                    logger.log("expression is empty, remove from parent");
-                    current.detachFromParent();
+
+            // try to remove last one preOoperation
+            else if ( ! current.hasChildren()) {
+                logger.log("current has no children");
+                // here last preOperation looks like combination of opreOper.htmlStart + opreOper.textStart
+                // remove from parent or global list if has no preOperations
+                logger.log("remove last pre operation");
+                current.removeLastPreOper();
+//                if (current.removeLastPreOperAndIsHasNoPreOperations()) {
+                if ( ! current.hasPostOperations()) {
+                    logger.log("no more pre operations");
                     manager.setCurrentExp(null);
                     if ( ! current.detachFromParent()) {
-                        logger.log("no parent present, remove from global lsit");
+                        logger.log("remove from global list (last preOperation)");
                         manager.removeExpression(current);
                     }
                 }
             }
+            else if (current.lastChildHasOperation()) {
+                logger.log("current's last child has operation");
+                Expression lastChild = current.peekLastChild();
+                lastChild.setOperation(null);
+                manager.setCurrentExp(lastChild);
+            }
         }
         else {
-            current = manager.getCurrentParentExp();
-            logger.log("currentParent");
-            if (current.hasPreOperations() && current.removeLastPreOperIfHasPreOperations()) {
-                manager.removeExpression(current);
-//                manager.setCurrentExp(null);
-                manager.setCurrentParentExp(null);
+            logger.log("remove last digit");
+            // remove last digit
+            if (current.removeLastDigitAndIsEmpty()) {
+                logger.log("expression is empty, remove from parent");
+                // set parent or null
+                manager.setCurrentExp(current.getParent());
+                // try remove from parent, if current has no parent then remove current from global list
+                if ( ! current.detachFromParent()) {
+                    logger.log("no parent present, remove from global list");
+                    manager.removeExpression(current);
+                }
             }
         }
 
 //        System.out.println("CURRENT AFTER = " + current);
-        System.out.println("current = " + (current != null ? current.getLayout() : null));
+//        logger.log("current = " + (current != null ? current.getLayout() : null));
     }
 
 }

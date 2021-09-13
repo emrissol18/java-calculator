@@ -3,7 +3,8 @@ package com.emrissol.calc.expression;
 public class OperatorText {
     public static final String ROOT = "root";
 //    public static final String NEGATIVE = "+/-";
-    public static final String NEGATIVE  = "\u00B1";
+    public static final String NEGATIVE = "\u00B1"; // +/-
+    public static final String NEGATIVE_LAYOUT = "-"; // +/-
     public static final String PARENTHESES_LEFT = "(";
     public static final String PARENTHESES_RIGHT = ")";
     public static final String PERCENT = "%";

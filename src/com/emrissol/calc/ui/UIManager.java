@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 public class UIManager {
 
@@ -18,6 +19,9 @@ public class UIManager {
 
     private StringBuilder stringBuilderOuter = new StringBuilder(HTML_START + HTML_END);
     private StringBuilder stringBuilderInner = new StringBuilder();
+
+    // Short id -> String layout
+    private LinkedHashMap<Short, String> expressionsLayouts = new LinkedHashMap<>(4);
 
     @Getter
     private Manager manager;
@@ -62,19 +66,25 @@ public class UIManager {
         aggregateInnerSB();
     }
 
-    public void refreshLayout(Expression expression) {
+    /*public void refreshLayout(Expression expression) {
         int sbInnerLength = stringBuilderInner.length();
+        System.out.println(stringBuilderInner);
         int offset = sbInnerLength - expression.getLength();
-//        System.out.println("sbInnerLength = " + sbInnerLength);
-//        System.out.println("expression.getLength() = " + expression.getLength());
+
+        // get layout and recalculate length (expansion case)
+        String newLayout = expression.getLayout();
+
+        System.out.println("sbInnerLength = " + sbInnerLength);
+        System.out.println("PREV expression.getLength() = " + expression.getLength());
 //        System.out.println("offset = " + offset);
 //        stringBuilderInner.delete(offset, sbInnerLength);
         if (offset < 0) {
             Logger.log(UIManager.class, "offset is " + offset);
-            Logger.log(UIManager.class, expression.toString());
+//            Logger.log(UIManager.class, expression.toString());
+            offset = Math.abs(offset) + sbInnerLength;
         }
         stringBuilderInner.setLength(offset);
-        stringBuilderInner.append(expression.getLayout());
+        stringBuilderInner.append(newLayout);
         aggregateInnerSB();
     }
 
@@ -86,6 +96,42 @@ public class UIManager {
                 Expression expression = expressionIterator.next();
                 stringBuilderInner.append(expression.getLayout());
             }
+        }
+        aggregateInnerSB();
+    }*/
+
+
+    public String getLayouts() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (expressionsLayouts.isEmpty()) {
+            return "";
+        }
+        expressionsLayouts.values().forEach(  (layout) -> stringBuilder.append(layout));
+        return stringBuilder.toString();
+    }
+
+    public void refreshLayout(Expression expression) {
+        // put or replace new layout
+        expressionsLayouts.put(expression.getId(), expression.getLayout());
+
+        stringBuilderInner.setLength(0);
+        stringBuilderInner.append(getLayouts());
+
+        aggregateInnerSB();
+    }
+
+    public void refreshExpressionsLayouts() {
+        expressionsLayouts.clear();
+        for (Expression expression : manager.getExpressionQueue()) {
+            expressionsLayouts.put(expression.getId(), expression.getLayout());
+        }
+    }
+
+    public void refreshLayout() {
+        refreshExpressionsLayouts();
+        stringBuilderInner.setLength(0);
+        if ( manager.hasExpressions()) {
+            expressionsLayouts.values().forEach( (layout) -> stringBuilderInner.append(layout));
         }
         aggregateInnerSB();
     }
@@ -144,6 +190,7 @@ public class UIManager {
         getJLabel().setText("");
         stringBuilderInner.setLength(0);
         stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
+        expressionsLayouts.clear();
     }
 
     /*private JTextArea createTextArea() {

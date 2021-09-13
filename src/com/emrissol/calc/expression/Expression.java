@@ -5,6 +5,7 @@ import com.emrissol.calc.expression.operation.Operation;
 import com.emrissol.calc.log.Logger;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -18,6 +19,9 @@ public class Expression {
     private static final Logger logger = new Logger(Expression.class);
     static short ID = 0;
     protected short id;
+
+    private Double numberValue;
+
     protected String value = "";
 //    protected PreOperation preOperation;
     protected Operation operation;
@@ -40,23 +44,25 @@ public class Expression {
         this.id = ID++;
     }
 
+    public Expression(String value) {
+        this();
+        this.value = value;
+    }
+
     public Expression(String value, Operation operation) {
         this.value = value;
         this.operation = operation;
     }
-
-//    public Number calc(Number number2) {
-//        if (preOperation != null) {
-//
-//        }
-//        return null;
-//    }
 
     public static void resetID() {
         ID = 0;
     }
     public boolean hasValue() {
         return ! getValue().isEmpty();
+    }
+
+    public boolean hasPoint() {
+        return hasValue() && (getValue().contains(Operation.POINT.getText()));
     }
 
     public boolean hasOperation() {
@@ -98,6 +104,7 @@ public class Expression {
         }
         return postOperations;
     }
+
     public AbstractPrePostOperation getLastPostOper() {
         return getPostOperations().getLast();
     }
@@ -128,6 +135,7 @@ public class Expression {
         }
         return false;
     }
+
     public void addExpression(Expression expression) {
         expression.setParent(this);
         getChildren().add(expression);
@@ -185,11 +193,7 @@ public class Expression {
         else {
             stringBuilder.append(getOperationText());
         }
-
         length = (short) stringBuilder.length();
-//        System.out.println("expression#"+ id+" length: " + length);
-//        System.out.printf("expression#%d length: %d (%s)\n", id, length, stringBuilder.toString());
-//        logger.logError(id + " stringBuilder to RETURN: " + stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -200,7 +204,7 @@ public class Expression {
     }
 
     // find most top parent in expression hierarchy tree
-    public Expression getAncestorParent() {
+    public Expression getAncestorParentOrSelf() {
         if (hasParent()) {
             Expression parent = getParent();
             while (parent.hasParent()) {
@@ -211,7 +215,13 @@ public class Expression {
         return this;
     }
 
-    public Expression getDescendantChild() {
+    /**
+     * Get most last expression (most lower) in expression hierarchy,<br>
+     * i.e.: this -> last_child -> last_child...<br/>
+     * or itself.
+     * @return Expression object
+     */
+    public Expression getDescendantChildOrItself() {
         if (hasChildren()) {
             Expression child = peekLastChild();
             while (child.hasChildren()) {
@@ -265,7 +275,7 @@ public class Expression {
     }
 
 
-    public boolean removeLastDigitTrueIfEmpty() {
+    public boolean removeLastDigitAndIsEmpty() {
         removeLastDigit();
         if ( ! hasValue()) {
             return true;
@@ -278,7 +288,7 @@ public class Expression {
             setValue( value.substring(0, value.length() - 1) );
         }
         else {
-            logger.logError("removeLastDigit(): no has value");
+            logger.logError("removeLastDigit(): has no value");
         }
     }
 
@@ -304,10 +314,6 @@ public class Expression {
         removeChild(peekLastChild());
     }
 
-    public boolean removeLastPreOperIfHasPreOperations() {
-        removeLastPreOper();
-        return ! hasPreOperations();
-    }
     public void removeLastPreOper() {
         getPreOperations().pollLast();
     }
@@ -317,10 +323,38 @@ public class Expression {
     }
 
     public boolean isParent() {
-        return hasPreOperations() || hasPostOperations() || hasChildren();
+//        return hasPreOperations() || hasPostOperations() || hasChildren();
+        return hasPreOperations() || hasChildren();
     }
 
     public void addToValue(String value) {
         setValue(getValue() + value);
+    }
+
+    public boolean isNegative() {
+//        return value.startsWith(Operation.NEGATIVE.getText());
+        return hasValue() && value.charAt(0) == Operation.NEGATIVE.getText().charAt(0);
+    }
+
+    public void toggleNegative() {
+        String negativeLayout = OperatorText.NEGATIVE_LAYOUT;
+        if ( isNegative()) {
+            setValue(value.replaceFirst(negativeLayout, ""));
+        }
+        else {
+            setValue(negativeLayout.concat(getValue()));
+        }
+    }
+
+    public void parseValue() {
+        if (value.isEmpty() || numberValue != null) {
+            numberValue = 0.d;
+            return;
+        }
+        try {
+            numberValue = Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 }
