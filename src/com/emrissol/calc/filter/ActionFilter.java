@@ -47,7 +47,7 @@ public class ActionFilter {
 
     public boolean isPreOperationAllowed() {
         Expression current = manager.getCurrentExp();
-        if (manager.hasCurrent() && current.hasValue() && ! current.hasOperation()) {
+        if (manager.hasCurrent() && (current.hasValue() || current.hasPostOperations())) {
             return false;
         }
         return true;

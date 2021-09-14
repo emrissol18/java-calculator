@@ -47,7 +47,7 @@ public class DelActionListener extends AbstractOperatorActionListener {
         }
         // TO_DO POST OPERATIONS GO HERE
 
-        else if (current.isLastPreOperClosable() ) {
+        else if (current.hasChildren() || current.isLastPreOperClosable() ) {
             logger.log("isParent");
 
             // open pre operation

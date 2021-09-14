@@ -387,6 +387,7 @@ public class Expression {
         try {
             numberValue = Double.parseDouble(value);
         } catch (NumberFormatException e) {
+            numberValue = 0.d;
             e.printStackTrace();
         }
 //        logger.log("parsing value end: " + numberValue);
