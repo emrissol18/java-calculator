@@ -1,6 +1,6 @@
 package com.emrissol.calc;
 
-import com.emrissol.calc.expression.Expression;
+
 import com.emrissol.calc.ui.UIManager;
 import javax.swing.*;
 import java.awt.event.ActionListener;
