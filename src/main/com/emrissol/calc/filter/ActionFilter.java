@@ -17,8 +17,7 @@ public class ActionFilter {
         // disallow digits in case of root(1) - here after ')' only post operations are allowed
 //        boolean isFactorialAllowed = isFactorialAllowed();
 //        System.out.println("isFactorialAllowed = " + isFactorialAllowed);
-        if (current != null)
-            System.out.println("current.isLastPreOperClosed() = " + current.isLastPreOperClosed());
+
         if (current != null
                 &&
                 (current.hasPostOperations() || current.isParent() && current.isLastPreOperClosed()) ) {
