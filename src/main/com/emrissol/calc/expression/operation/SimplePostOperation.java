@@ -10,15 +10,8 @@ public enum SimplePostOperation {
     DIVIDE(OperatorText.SIGN_DIVIDE),
     MULTIPLY(OperatorText.SIGN_MULTIPLY),
 
-    POINT("."),
-    EQUALS(OperatorText.EQUAL),
-    DEL(OperatorText.DEL),
-    CLEAR(OperatorText.CLEAR),
-
-    SQRT(OperatorText.ROOT + OperatorText.PARENTHESES_LEFT),
-    NEGATIVE(OperatorText.NEGATIVE),
-    PERCENT(OperatorText.PERCENT),
-    FACTORIAL(OperatorText.FACTORIAL);
+    POINT(OperatorText.POINT),
+    EQUALS(OperatorText.EQUAL);
 
     @Getter
     private String text;

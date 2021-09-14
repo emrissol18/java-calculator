@@ -362,7 +362,7 @@ public class Expression {
 
     public boolean isNegative() {
 //        return value.startsWith(Operation.NEGATIVE.getText());
-        return hasValue() && value.charAt(0) == SimplePostOperation.NEGATIVE.getText().charAt(0);
+        return hasValue() && value.charAt(0) == OperatorText.NEGATIVE.charAt(0);
     }
     public boolean isEffectivelyNegative() {
         return isNegative() && getValue().length() == 1;

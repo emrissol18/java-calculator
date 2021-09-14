@@ -31,7 +31,7 @@ public class ButtonCreator {
 
     public void createDigitButtons(JPanel jPanel) {
         JButton jButtonDel = operatorFactory.create("del");
-        jButtonDel.setActionCommand(SimplePostOperation.DEL.getText());
+        jButtonDel.setActionCommand(OperatorText.DEL);
         jButtonDel.addActionListener(new DelActionListener(manager, uiManager));
         jPanel.add(jButtonDel);
 
@@ -58,12 +58,12 @@ public class ButtonCreator {
         jPanel.add(jButtonCurrentStatus, "wrap");
 
         JButton jButtonClear = operatorFactory.create("C");
-        jButtonClear.setActionCommand(SimplePostOperation.CLEAR.getText());
+        jButtonClear.setActionCommand(OperatorText.CLEAR);
         jButtonClear.addActionListener(new ClearAllActionListener(manager, uiManager));
         jPanel.add(jButtonClear);
 
         JButton jButtonPercent = operatorFactory.create("%");
-        jButtonPercent.setActionCommand(SimplePostOperation.PERCENT.getText());
+        jButtonPercent.setActionCommand(OperatorText.PERCENT);
         jButtonPercent.addActionListener(new PercentActionListener(manager, uiManager));
         jPanel.add(jButtonPercent);
 
@@ -125,7 +125,7 @@ public class ButtonCreator {
         jButtonAdd.addActionListener(postOperationFactory.create(SimplePostOperation.ADD));
         jPanel.add(jButtonAdd);
 
-        JButton jButtonNegative = operatorFactory.create(SimplePostOperation.NEGATIVE.getText());
+        JButton jButtonNegative = operatorFactory.create(OperatorText.NEGATIVE);
         jButtonNegative.setActionCommand(jButtonNegative.getText());
         jButtonNegative.addActionListener(new NegativeOperatorActionListener(manager, uiManager));
         jPanel.add(jButtonNegative);
