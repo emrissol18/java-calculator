@@ -17,9 +17,11 @@ public class ActionFilter {
         // disallow digits in case of root(1) - here after ')' only post operations are allowed
 //        boolean isFactorialAllowed = isFactorialAllowed();
 //        System.out.println("isFactorialAllowed = " + isFactorialAllowed);
+        if (current != null)
+            System.out.println("current.isLastPreOperClosed() = " + current.isLastPreOperClosed());
         if (current != null
                 &&
-                (current.isParent() && current.isLastPreOperClosed() || current.hasFactorial()) ) {
+                (current.hasPostOperations() || current.isParent() && current.isLastPreOperClosed()) ) {
             return false;
         }
         return true;
@@ -27,7 +29,7 @@ public class ActionFilter {
 
     public boolean isCloseAllowed(Expression expression) {
         // pre check
-        if (expression.hasPreOperations() && expression.hasChildren() && expression.isLastPreOperOpen()) {
+        if (expression.hasPreOperations() && expression.hasChildren() && ! expression.isLastPreOperClosed()) {
             Expression lastChild = expression.getChildren().peekLast();
             // NOT root() - here in root function no value present
             // &&
@@ -44,7 +46,8 @@ public class ActionFilter {
 
 
     public boolean isPreOperationAllowed() {
-        if (manager.hasCurrent() && manager.getCurrentExp().hasValue()) {
+        Expression current = manager.getCurrentExp();
+        if (manager.hasCurrent() && current.hasValue() && ! current.hasOperation()) {
             return false;
         }
         return true;

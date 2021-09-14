@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -74,6 +75,18 @@ public class Expression {
         return preOperations != null && ! getPreOperations().isEmpty();
     }
 
+    public boolean hasClosablePreOperations() {
+        if ( ! hasPreOperations() ) {
+            return false;
+        }
+        for (AbstractPrePostOperation o : getPreOperations()) {
+            if (o.isClosable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Deque<AbstractPrePostOperation> getPreOperations() {
         if (preOperations == null) {
             preOperations = new LinkedList<>();
@@ -82,21 +95,36 @@ public class Expression {
     }
 
     public void setLastPreOperOpen(boolean isOpen) {
-        getPreOperations().peekLast().setOpen(isOpen);
+//        getPreOperations().peekLast().setOpen(isOpen);
+        getLastClosablePreOper().setOpen(isOpen);
+    }
+
+    public boolean isLastPreOperClosable() {
+        return hasPreOperations() && getPreOperations().peekLast().isClosable();
     }
 
     public AbstractPrePostOperation getLastPreOper() {
         return getPreOperations().peekLast();
     }
 
+    public AbstractPrePostOperation getLastClosablePreOper() {
+        AbstractPrePostOperation last = getLastPreOper();
+        if ( ! last.isClosable()) {
+            Iterator<AbstractPrePostOperation> iterator = getPreOperations().descendingIterator();
+            iterator.next(); // skip last
+            while ( iterator.hasNext() && ! last.isClosable()) {
+                last = iterator.next();
+            }
+        }
+        return last;
+    }
+
     public boolean isLastPreOperClosed() {
         if ( ! hasPreOperations()) {
             return true;
         }
-        return ! isLastPreOperOpen();
-    }
-    public boolean isLastPreOperOpen() {
-        return getLastPreOper().isOpen();
+//        return getLastPreOper().isClosable() && ! isLastPreOperOpen();
+        return ! getLastClosablePreOper().isOpen();
     }
 
     public Deque<AbstractPrePostOperation> getPostOperations() {
@@ -144,7 +172,6 @@ public class Expression {
     }
 
     public String getLayout() {
-//        System.out.println("getLayout() of "+id);
         StringBuilder stringBuilder = new StringBuilder();
         if (hasChildren()) {
             getChildren().forEach( e -> {
@@ -153,11 +180,7 @@ public class Expression {
         }
 
         String thisValue = getValue();
-//        if ( hasOperation() && ! getOperation().equals(Operation.SQRT)) {
-//            thisValue = thisValue.concat(getOperation().getText());
-//        }
         stringBuilder.append(thisValue);
-//        System.err.println("thisValue = " + thisValue);
 
         StringBuilder chunkStart;
         StringBuilder chunkEnd;
@@ -167,20 +190,23 @@ public class Expression {
             chunkStart = new StringBuilder();
             chunkEnd = new StringBuilder();
 
-            // POST OPERATIONS
-            if (hasPostOperations()) {
-                getPostOperations().forEach( e -> {
-                    chunkStart.append(e.getHtmlStart().concat(e.getTextStart()));
+            // PRE OPERATIONS
+            if (hasPreOperations()) {
+                getPreOperations().forEach( e -> {
+                    // append to left
+                    chunkStart.insert(0, e.getHtmlStart().concat(e.getTextStart()));
+                    // append to right
                     chunkEnd.append(e.getConcatEnd());
                 });
             }
 
-            // PRE OPERATIONS
-            if (hasPreOperations()) {
-                getPreOperations().forEach( e -> {
-                    chunkStart.append(e.getHtmlStart().concat(e.getTextStart()));
-                    chunkEnd.insert(0, e.getConcatEnd());
-//                    chunkEnd.insert(0, e.getConcatEnd().concat(getOperationText()));
+            // POST OPERATIONS
+            if (hasPostOperations()) {
+                getPostOperations().forEach( e -> {
+                    // append to left
+                    chunkStart.insert(0, e.getHtmlStart().concat(e.getTextStart()));
+                    // append to right
+                    chunkEnd.append(e.getConcatEnd());
                 });
             }
 
@@ -216,12 +242,15 @@ public class Expression {
     }
 
     /**
-     * Get most last expression (most lower) in expression hierarchy,<br>
+     * Get most last expression (most lower) in expression hierarchy if its parent does not have post operations,<br>
      * i.e.: this -> last_child -> last_child...<br/>
      * or itself.
      * @return Expression object
      */
     public Expression getDescendantChildOrItself() {
+        if (hasPostOperations()) {
+            return this;
+        }
         if (hasChildren()) {
             Expression child = peekLastChild();
             while (child.hasChildren()) {
@@ -324,7 +353,7 @@ public class Expression {
 
     public boolean isParent() {
 //        return hasPreOperations() || hasPostOperations() || hasChildren();
-        return hasPreOperations() || hasChildren();
+        return (hasClosablePreOperations() && getPreOperations().stream().anyMatch( o -> o.isClosable())) || hasChildren();
     }
 
     public void addToValue(String value) {
@@ -349,17 +378,8 @@ public class Expression {
         }
     }
 
-    public void toggleNegative() {
-        if (hasPreOperations() && getPreOperations().stream().anyMatch( o -> o instanceof NegativePreOperation)) {
-            getPreOperations().removeIf( o -> o instanceof NegativePreOperation);
-        }
-        else {
-            getPreOperations().add(new NegativePreOperation());
-        }
-    }
-
     public void parseValue() {
-        logger.log("parsing value start: " + numberValue);
+//        logger.log("parsing value start: " + numberValue);
         if (value.isEmpty()) {
             numberValue = 0.d;
             return;
@@ -369,11 +389,14 @@ public class Expression {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        logger.log("parsing value end: " + numberValue);
+//        logger.log("parsing value end: " + numberValue);
     }
 
     public boolean hasFactorial() {
         return hasPostOperations() && getPostOperations().stream().anyMatch( o -> o instanceof FactorialPostOperation);
     }
 
+    public void removeLastPostOper() {
+        getPostOperations().remove(getLastPostOper());
+    }
 }

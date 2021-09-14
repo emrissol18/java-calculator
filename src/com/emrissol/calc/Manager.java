@@ -49,7 +49,7 @@ public class Manager {
     }
 
     /**
-     * Add non null newExpression to current if present or add to global list and set newExpression as current.
+     * Add non null newExpression to current if present or add to global list and set newExpression as new current.
      * @param newExpression expression
      */
     public void setAndAddCurrentExp(@NonNull Expression newExpression) {

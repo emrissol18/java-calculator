@@ -13,4 +13,9 @@ public class FactorialPostOperation extends AbstractPrePostOperation {
     public double apply(double value) {
         return 0;
     }
+
+    @Override
+    public boolean isClosable() {
+        return false;
+    }
 }

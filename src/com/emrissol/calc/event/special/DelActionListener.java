@@ -41,9 +41,13 @@ public class DelActionListener extends AbstractOperatorActionListener {
             return;
         }
 
+        if (current.hasPostOperations()) {
+            logger.log("remove last post operation");
+            current.removeLastPostOper();
+        }
         // TO_DO POST OPERATIONS GO HERE
 
-        if (current.hasPreOperations() ) {
+        else if (current.isLastPreOperClosable() ) {
             logger.log("isParent");
 
             // open pre operation
@@ -64,7 +68,7 @@ public class DelActionListener extends AbstractOperatorActionListener {
 //                if (current.removeLastPreOperAndIsHasNoPreOperations()) {
                 if ( ! current.hasPostOperations()) {
                     logger.log("no more pre operations");
-                    manager.setCurrentExp(null);
+                    manager.setCurrentExp(current.getParent());
                     if ( ! current.detachFromParent()) {
                         logger.log("remove from global list (last preOperation)");
                         manager.removeExpression(current);

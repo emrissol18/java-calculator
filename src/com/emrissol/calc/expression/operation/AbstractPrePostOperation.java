@@ -12,6 +12,7 @@ public abstract class AbstractPrePostOperation {
 
     protected String textStart;
     protected String textEnd;
+    // as option make as placeholder instead. e.g. <tag>{$text}</tag>
     protected String htmlStart;
     @Getter(AccessLevel.NONE)
     protected String htmlEnd;
@@ -51,6 +52,7 @@ public abstract class AbstractPrePostOperation {
 
     public abstract double apply(double value);
 
+    public abstract boolean isClosable();
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{" +
