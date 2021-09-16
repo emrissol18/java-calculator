@@ -30,6 +30,11 @@ public class ButtonCreator {
     }
 
     public void createDigitButtons(JPanel jPanel) {
+        JButton jButtonPow = operatorFactory.create(OperatorText.POW);
+        jButtonPow.setActionCommand(jButtonPow.getText());
+        jButtonPow.addActionListener(new PowOperatorActionListener(manager, uiManager));
+        jPanel.add(jButtonPow, "wrap");
+
         JButton jButtonDel = operatorFactory.create("del");
         jButtonDel.setActionCommand(OperatorText.DEL);
         jButtonDel.addActionListener(new DelActionListener(manager, uiManager));
@@ -41,7 +46,7 @@ public class ButtonCreator {
         jPanel.add(jButtonParentheseRight);
 
         JButton jButtonFactorial = operatorFactory.create(OperatorText.FACTORIAL);
-        jButtonFactorial.setActionCommand(jButtonParentheseRight.getText());
+        jButtonFactorial.setActionCommand(jButtonFactorial.getText());
         jButtonFactorial.addActionListener(new FactorialOperatorActionListener(manager, uiManager));
         jPanel.add(jButtonFactorial);
 

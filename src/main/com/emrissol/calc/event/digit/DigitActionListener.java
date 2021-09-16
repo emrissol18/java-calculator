@@ -3,6 +3,7 @@ package com.emrissol.calc.event.digit;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
+import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 import com.emrissol.calc.log.Logger;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
@@ -26,11 +27,15 @@ public class DigitActionListener extends AbstractOperatorActionListener {
 
         Expression newExpression = new Expression();
         newExpression.setValue(actionEvent.getActionCommand());
+        Expression current = manager.getCurrentExp();
 
         if (manager.hasCurrent()) {
             logger.log("hasCurrent");
-            Expression current = manager.getCurrentExp();
-            if (current.isParent()) {
+            if (current.hasPostOperations() && current.getLastPostOper().isValueAvailable()) {
+                AbstractPrePostOperation lastPost = current.getLastPostOper();
+                lastPost.setValue(lastPost.getValue().concat(actionEvent.getActionCommand()).trim());
+            }
+            else if (current.isParent()) {
                 logger.log("parent");
 //                current.addExpression(newExpression);
 //                manager.setCurrentParentExp(current);

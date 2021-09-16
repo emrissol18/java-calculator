@@ -2,25 +2,24 @@ package com.emrissol.calc;
 
 
 import com.emrissol.calc.ui.UIManager;
+import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
 
-    static StringBuilder stringBuilder = new StringBuilder("<html></html>");
+    /*static StringBuilder stringBuilder = new StringBuilder("<html></html>");
     static StringBuilder stringBuilderEnd = new StringBuilder();
     static StringBuilder stringBuilderInner = new StringBuilder();
     static Map<Integer, String> endGrey = new HashMap<>();
     static {
         endGrey.put(1, ")");
         endGrey.put(2, ")");
-    }
+    }*/
 
     public static void main(String[] args) {
         Manager manager = Manager.getInstance();
         new UIManager(manager).createLayout();
+        JPanel jPanel = new JPanel(new MigLayout("wrap 1"));
 
         /*JPanel jPanel = new JPanel(new MigLayout("wrap 1"));
 
@@ -59,7 +58,7 @@ public class Main {
         jFrame.setVisible(true);*/
     }
 
-    static int getOffsetEnd(){
+    /*static int getOffsetEnd(){
         return stringBuilder.length() - 7;
     }
 
@@ -78,7 +77,7 @@ public class Main {
             stringBuilder.replace(6, getOffsetEnd(), stringBuilderInner.toString() + stringBuilderEnd.toString());
             jLabel.setText(stringBuilder.toString());
         };
-    }
+    }*/
     /*public void parser(){
 
         String rawExp = "2+";

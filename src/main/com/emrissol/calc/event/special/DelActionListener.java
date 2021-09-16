@@ -42,8 +42,18 @@ public class DelActionListener extends AbstractOperatorActionListener {
         }
 
         if (current.hasPostOperations()) {
-            logger.log("remove last post operation");
-            current.removeLastPostOper();
+            if (current.getLastPostOper().isValueAvailable() && current.getLastPostOper().hasValue()) {
+                logger.log("remove last digit of last post operation");
+                final String value = current.getLastPostOper().getValue();
+                current.getLastPostOper().setValue(value.substring(0, (value.length() - 1)));
+//                if ( ! current.getLastPostOper().hasValue()) {
+//                    current.removeLastPostOper();
+//                }
+            }
+            else {
+                logger.log("remove last post operation");
+                current.removeLastPostOper();
+            }
         }
         // TO_DO POST OPERATIONS GO HERE
 

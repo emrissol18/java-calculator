@@ -1,8 +1,9 @@
 package com.emrissol.calc.expression.operation;
 
-import com.emrissol.calc.expression.OperatorText;
+import com.emrissol.calc.ui.HtmlWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import java.util.Objects;
 
@@ -17,16 +18,33 @@ public abstract class AbstractPrePostOperation {
     @Getter(AccessLevel.NONE)
     protected String htmlEnd;
     protected boolean isOpen;
+
+    protected String value;
+
 //    protected String value; // digits as string
 //    protected Operation operation;
+
+    public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd, @NonNull String value) {
+        this.textStart = textStart;
+        this.textEnd = textEnd;
+        this.htmlStart = htmlStart;
+        this.htmlEnd = htmlEnd;
+        this.value = value;
+    }
 
     public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd) {
         this.textStart = textStart;
         this.textEnd = textEnd;
         this.htmlStart = htmlStart;
         this.htmlEnd = htmlEnd;
-//        this.value = value;
-//        this.operation = operation;
+    }
+
+    public AbstractPrePostOperation(String value) {
+        this.textStart = "";
+        this.textEnd = "";
+        this.htmlStart = "";
+        this.htmlEnd = "";
+        this.value = value;
     }
 
     public String getHtmlEnd() {
@@ -36,13 +54,14 @@ public abstract class AbstractPrePostOperation {
     // highlight textEnd by default (for root, cos and sin etc.)
     public String getTextEnd() {
         if (isOpen) {
-            return OperatorText.highlight(textEnd);
+            return HtmlWrapper.fontGrey(textEnd);
         }
         return textEnd;
     }
 
     public String getConcatEnd() {
-        return getTextEnd().concat(getHtmlEnd());
+        String value = isValueAvailable() ? getValue() : "";
+        return value.concat(getTextEnd()).concat(getHtmlEnd());
     }
 
     //    public abstract String getTextStart();
@@ -51,6 +70,14 @@ public abstract class AbstractPrePostOperation {
 //    public abstract Operation getOperation();
 
     public abstract double apply(double value);
+
+    public boolean isValueAvailable() {
+        return value != null;
+    }
+
+    public boolean hasValue() {
+        return ! value.isEmpty() && ! value.isBlank();
+    }
 
     public abstract boolean isClosable();
     @Override
@@ -61,7 +88,7 @@ public abstract class AbstractPrePostOperation {
                 ", htmlStart='" + htmlStart + '\'' +
                 ", htmlEnd='" + htmlEnd + '\'' +
                 ", isOpen='" + isOpen + '\'' +
-//                ", value='" + value + '\'' +
+                ", value='" + value + '\'' +
 //                ", operation=" + operation +
                 '}';
     }

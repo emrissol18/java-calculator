@@ -18,9 +18,16 @@ public class ActionFilter {
 //        boolean isFactorialAllowed = isFactorialAllowed();
 //        System.out.println("isFactorialAllowed = " + isFactorialAllowed);
 
-        if (current != null
-                &&
-                (current.hasPostOperations() || current.isParent() && current.isLastPreOperClosed()) ) {
+        if (current == null || (current.hasPostOperations() && current.getLastPostOper().isValueAvailable())) {
+            return true;
+        }
+        else if (
+                       current.hasPostOperations()
+                            ||
+                            current.isParent()
+                                &&
+                                (current.isLastPreOperClosable() && current.isLastPreOperClosed())
+        ) {
             return false;
         }
         return true;

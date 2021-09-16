@@ -85,8 +85,7 @@ public class Manager {
 
     public void clearAll() {
         getExpressionQueue().clear();
-//        setCurrentParentExp(null);
-        setCurrentExp(null);
+        currentExp = null;
     }
 
     /*public void closePreOper(Expression expression) {

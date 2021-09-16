@@ -46,7 +46,7 @@ public class UIManager {
         JPanel jPanel = new JPanel(migLayout);
 //        jPanel.add(createTextArea(), "span 4, pushx, growx, wrap");
 //        jPanel.add(getJTextFieldLayout(), "span 4, pushx, growx, wrap");
-        jPanel.add(jLabel, "span 4, pushx, growx, wrap");
+        jPanel.add(jLabel, "span 4, pushx, growx, height :60:, wrap");
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
         buttonCreator.createDigitButtons(jPanel);
