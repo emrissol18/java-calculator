@@ -41,23 +41,5 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
         else {
             uiManager.refreshLayout();
         }
-//        Optional<Expression> expression = Optional.empty();
-        /*if (manager.hasCurrentParent()) {
-//            System.out.println("optional parent");
-            expression = Optional.ofNullable(manager.getCurrentParentExp().getAncestorParent());
-        }
-        else*/
-//        if (manager.hasCurrent()) {
-////            System.out.println("optional current");
-//            expression = Optional.ofNullable(manager.getCurrentExp());
-//        }
-//        else {
-//            System.out.println("optional peekLast");
-//            expression = Optional.ofNullable(manager.peekLastExp());
-//        System.out.println(expression.get().getLayout());
-//        }
-
-//        expression.ifPresentOrElse(exp -> uiManager.refreshLayout(exp), () -> System.out.println("expression is not present"));
-
     }
 }

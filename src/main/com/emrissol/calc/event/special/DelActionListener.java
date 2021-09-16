@@ -28,7 +28,7 @@ public class DelActionListener extends AbstractOperatorActionListener {
         // can be null
         Expression current = manager.getCurrentExp();
 
-        // take peek last expression from global list if no current present
+        // peek last expression from global list if no current present
         if ( ! manager.hasCurrent() ) {
             logger.log("peek last");
             current = manager.peekLastExp();
@@ -55,7 +55,6 @@ public class DelActionListener extends AbstractOperatorActionListener {
                 current.removeLastPostOper();
             }
         }
-        // TO_DO POST OPERATIONS GO HERE
 
         else if (current.hasChildren() || current.isLastPreOperClosable() ) {
             logger.log("isParent");
@@ -107,8 +106,6 @@ public class DelActionListener extends AbstractOperatorActionListener {
             }
         }
 
-//        System.out.println("CURRENT AFTER = " + current);
-//        logger.log("current = " + (current != null ? current.getLayout() : null));
     }
 
 }

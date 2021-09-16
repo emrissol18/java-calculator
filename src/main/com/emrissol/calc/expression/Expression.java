@@ -1,9 +1,8 @@
 package com.emrissol.calc.expression;
 
 import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
-import com.emrissol.calc.expression.operation.post.FactorialPostOperation;
 import com.emrissol.calc.expression.operation.SimplePostOperation;
-import com.emrissol.calc.expression.operation.pre.NegativePreOperation;
+import com.emrissol.calc.expression.operation.post.FactorialPostOperation;
 import com.emrissol.calc.log.Logger;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -103,12 +102,8 @@ public class Expression {
         return hasPreOperations() && getPreOperations().peekLast().isClosable();
     }
 
-    public AbstractPrePostOperation getLastPreOper() {
-        return getPreOperations().peekLast();
-    }
-
     public AbstractPrePostOperation getLastClosablePreOper() {
-        AbstractPrePostOperation last = getLastPreOper();
+        AbstractPrePostOperation last = getPreOperations().peekLast();
         if ( ! last.isClosable()) {
             Iterator<AbstractPrePostOperation> iterator = getPreOperations().descendingIterator();
             iterator.next(); // skip last
@@ -229,7 +224,12 @@ public class Expression {
         return "";
     }
 
-    // find most top parent in expression hierarchy tree
+    /**
+     * Find most top parent (most upper) in expression hierarchy,<br>
+     * i.e.: this -> parent -> parent...<br/>
+     * or itself.
+     * @return Expression object
+     */
     public Expression getAncestorParentOrSelf() {
         if (hasParent()) {
             Expression parent = getParent();
@@ -242,7 +242,7 @@ public class Expression {
     }
 
     /**
-     * Get most last expression (most lower) in expression hierarchy if its parent does not have post operations,<br>
+     * Find most last expression (most lower) in expression hierarchy if its parent does not have post operations,<br>
      * i.e.: this -> last_child -> last_child...<br/>
      * or itself.
      * @return Expression object

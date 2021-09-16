@@ -20,7 +20,7 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
 //        System.out.println("PARENT: " + manager.getCurrentParentExp());
 //        System.out.println("CURRENT: " + manager.getCurrentExp());
 //        manager.getExpressionQueue().forEach(System.out::println);
-        if ( ! manager.hasCurrent() || (manager.hasCurrent() && manager.getCurrentValue().isEmpty())) {
+        if ( ! manager.hasCurrent() || (manager.hasCurrent() && manager.getCurrentExp().hasValue())) {
             return;
         }
 
