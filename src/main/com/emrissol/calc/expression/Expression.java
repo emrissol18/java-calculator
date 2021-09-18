@@ -4,6 +4,7 @@ import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.expression.operation.post.FactorialPostOperation;
 import com.emrissol.calc.log.Logger;
+import com.emrissol.calc.ui.HtmlStringUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -242,13 +243,17 @@ public class Expression {
     }
 
     /**
-     * Find most last expression (most lower) in expression hierarchy if its parent does not have post operations,<br>
+     * Find most last expression (most lower) in expression hierarchy if its parent does not have post operations<br>
+     * OR its last preOperation is open,<br>
      * i.e.: this -> last_child -> last_child...<br/>
      * or itself.
      * @return Expression object
      */
     public Expression getDescendantChildOrItself() {
-        if (hasPostOperations()) {
+        // if it has post operation(s) then they need be removed first
+        // OR
+        // if it has closable pre operation(s) and they are closed, should be opened first ( e.g. cos(root(2+2)) <-- open first left parenthese )
+        if (hasPostOperations() || isLastPreOperClosed()) {
             return this;
         }
         if (hasChildren()) {
@@ -305,7 +310,7 @@ public class Expression {
 
 
     public boolean removeLastDigitAndIsEmpty() {
-        removeLastDigit();
+        HtmlStringUtil.removeLastChar(value);
         if ( ! hasValue()) {
             return true;
         }

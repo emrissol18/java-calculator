@@ -33,7 +33,12 @@ public class ButtonCreator {
         JButton jButtonPow = operatorFactory.create(OperatorText.POW);
         jButtonPow.setActionCommand(jButtonPow.getText());
         jButtonPow.addActionListener(new PowOperatorActionListener(manager, uiManager));
-        jPanel.add(jButtonPow, "wrap");
+        jPanel.add(jButtonPow);
+
+        JButton jButtonParentheseLeft = operatorFactory.create(OperatorText.PARENTHESES_LEFT);
+        jButtonParentheseLeft.setActionCommand(jButtonParentheseLeft.getText());
+        jButtonParentheseLeft.addActionListener(new ParentheseLeftActionListener(manager, uiManager));
+        jPanel.add(jButtonParentheseLeft, "wrap");
 
         JButton jButtonDel = operatorFactory.create("del");
         jButtonDel.setActionCommand(OperatorText.DEL);

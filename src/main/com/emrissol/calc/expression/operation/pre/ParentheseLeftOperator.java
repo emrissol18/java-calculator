@@ -6,7 +6,8 @@ import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 public class ParentheseLeftOperator extends AbstractPrePostOperation {
 
     public ParentheseLeftOperator() {
-        super(OperatorText.PARENTHESES_LEFT, OperatorText.PARENTHESES_RIGHT, "", "");
+        super(OperatorText.PARENTHESES_LEFT, OperatorText.PARENTHESES_RIGHT,
+                "<span style='line-height:40px;'>", "</span>", true);
     }
 
     @Override

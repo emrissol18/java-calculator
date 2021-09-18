@@ -1,6 +1,6 @@
 package com.emrissol.calc.expression.operation;
 
-import com.emrissol.calc.ui.HtmlWrapper;
+import com.emrissol.calc.ui.HtmlStringUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -24,19 +24,22 @@ public abstract class AbstractPrePostOperation {
 //    protected String value; // digits as string
 //    protected Operation operation;
 
-    public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd, @NonNull String value) {
-        this.textStart = textStart;
-        this.textEnd = textEnd;
-        this.htmlStart = htmlStart;
-        this.htmlEnd = htmlEnd;
-        this.value = value;
-    }
 
     public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd) {
         this.textStart = textStart;
         this.textEnd = textEnd;
         this.htmlStart = htmlStart;
         this.htmlEnd = htmlEnd;
+    }
+
+    public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd, @NonNull String value) {
+        this(textStart, textEnd, htmlStart, htmlEnd);
+        this.value = value;
+    }
+
+    public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd, boolean isOpen) {
+        this(textStart, textEnd, htmlStart, htmlEnd);
+        this.isOpen = isOpen;
     }
 
     public AbstractPrePostOperation(String value) {
@@ -54,7 +57,7 @@ public abstract class AbstractPrePostOperation {
     // highlight textEnd by default (for root, cos and sin etc.)
     public String getTextEnd() {
         if (isOpen) {
-            return HtmlWrapper.fontGrey(textEnd);
+            return HtmlStringUtil.fontGrey(textEnd);
         }
         return textEnd;
     }
