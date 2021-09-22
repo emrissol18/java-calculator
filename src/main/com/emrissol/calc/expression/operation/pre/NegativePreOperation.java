@@ -11,7 +11,7 @@ public class NegativePreOperation extends AbstractPrePostOperation {
 
     @Override
     public double apply(double value) {
-        return 0;
+        return -value;
     }
 
     @Override

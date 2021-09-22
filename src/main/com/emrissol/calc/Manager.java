@@ -38,7 +38,13 @@ public class Manager {
     }
 
     public void setCurrentExp(Expression newCurrent) {
-        if (newCurrent == null && hasCurrent()) {
+        // if current not null
+        if ( hasCurrent()
+                &&
+                // AND is newCurrent is parent of current
+                ( newCurrent == null || (currentExp.hasParent() && currentExp.getParent().equals(newCurrent)))) {
+
+            // parse current's value if newCurrent == null OR right after its parent is closed
             currentExp.parseValue();
         }
         this.currentExp = newCurrent;
@@ -69,6 +75,7 @@ public class Manager {
     public void clearAll() {
         getExpressionQueue().clear();
         currentExp = null;
+        Expression.resetID();
     }
 
     public boolean removeExpression(Expression expression) {

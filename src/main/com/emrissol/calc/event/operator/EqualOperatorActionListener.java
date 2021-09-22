@@ -3,7 +3,8 @@ package com.emrissol.calc.event.operator;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.operation.SimplePostOperation;
+import com.emrissol.calc.result.ResultFormatter;
+import com.emrissol.calc.result.ResultResolver;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 
@@ -17,28 +18,33 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
     public void actionPerformedHook(ActionEvent actionEvent) {
 
         System.err.println("\n\tEQUAL");
-//        System.out.println("PARENT: " + manager.getCurrentParentExp());
-//        System.out.println("CURRENT: " + manager.getCurrentExp());
-//        manager.getExpressionQueue().forEach(System.out::println);
-        if ( ! manager.hasCurrent() || (manager.hasCurrent() && manager.getCurrentExp().hasValue())) {
+
+        if ( ! manager.hasCurrent() && manager.hasExpressions()) {
+            System.out.println("equal return");
             return;
         }
 
-        Expression current = manager.getCurrentExp();
-        current.setOperation(SimplePostOperation.EQUALS);
-        //temp
-//        if (manager.hasCurrentParent() && current != manager.getCurrentParentExp()) {
-//            manager.getCurrentParentExp().addExpression(current);
-//        }
-        manager.addExpressionIfHasNoParent(current);
+        // parse value for last expression (cast string to double)
+        manager.getCurrentExp().parseValue();
 
-        manager.getExpressionQueue().forEach(System.out::println);
+        // calculate all expressions
+        ResultResolver resultResolver = new ResultResolver();
+        Double result = resultResolver.calcAll(manager.getExpressionQueue());
 
-//        manager.setCurrentParentExp(null);
-        manager.setCurrentExp(null);
+        // reset all
         uiManager.clearAll();
-        // calc at the end
-        System.err.println("CALC ALL");
+        manager.clearAll();
+        Expression.resetID();
+
+        // format result value
+        ResultFormatter resultFormatter = new ResultFormatter();
+        String formattedResult = resultFormatter.format(result);
+
+        // create expression with result value, which will serve as start expreesion in new chain
+        Expression resultExpression = new Expression(formattedResult);
+
+        // set as current and add (single) expression into global deque
+        manager.setAndAddCurrentExp(resultExpression);
     }
 
 }

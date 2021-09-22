@@ -8,10 +8,7 @@ import com.emrissol.calc.ui.HtmlStringUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -53,6 +50,12 @@ public class Expression {
 
     public Expression(String value, SimplePostOperation operation) {
         this.value = value;
+        this.operation = operation;
+    }
+
+    public Expression(double numberValue, SimplePostOperation operation) {
+        this.value = String.valueOf(numberValue);
+        this.numberValue = numberValue;
         this.operation = operation;
     }
 
@@ -106,10 +109,10 @@ public class Expression {
     public AbstractPrePostOperation getLastClosablePreOper() {
         AbstractPrePostOperation last = getPreOperations().peekLast();
         if ( ! last.isClosable()) {
-            Iterator<AbstractPrePostOperation> iterator = getPreOperations().descendingIterator();
-            iterator.next(); // skip last
-            while ( iterator.hasNext() && ! last.isClosable()) {
-                last = iterator.next();
+            Iterator<AbstractPrePostOperation> descIterator = getPreOperations().descendingIterator();
+            descIterator.next(); // skip last
+            while ( descIterator.hasNext() && ! last.isClosable()) {
+                last = descIterator.next();
             }
         }
         return last;
@@ -226,7 +229,7 @@ public class Expression {
     }
 
     /**
-     * Find most top parent (most upper) in expression hierarchy,<br>
+     * Find most top parent expression (most upper) in expression hierarchy,<br>
      * i.e.: this -> parent -> parent...<br/>
      * or itself.
      * @return Expression object
@@ -281,26 +284,18 @@ public class Expression {
 
     @Override
     public String toString() {
-        /*StringBuilder stringBuilder = new StringBuilder("");
-        if ( ! getChildren().isEmpty()) {
-            stringBuilder.setLength(0);
-            for (Expression expression : getChildren()) {
-                stringBuilder.append("id=").append(id).append(", value=").append(value).append(", operation=").append(operation).append(", preOperation =").append(preOperation);
-            }
-        }*/
         return "\n=====================================\nExpression#"+id+"{" +
                 ", parentId =" + (parent == null ? "null" : parent.getId()) +
                 ", value=" + value +
+                ", numberValue=" + numberValue +
                 ", length=" + length +
                 ", operation=" + operation +
-//                ", preOperation =" + preOperation +
                 ",\npreOperations =" + (getPreOperations().isEmpty() ? "empty" :
                 "\n\t\t" + getPreOperations().stream().map(AbstractPrePostOperation::toString).collect(Collectors.joining("\n\t\t"))
         ) +
                 ",\npostOperations =" + (getPostOperations().isEmpty() ? "empty" :
                 "\n\t\t" + getPostOperations().stream().map(AbstractPrePostOperation::toString).collect(Collectors.joining("\n\t\t"))
         ) +
-//                "\n\t\texpressions =" + stringBuilder.toString() +
                 ",\nexpressions =" +
                 (getChildren().isEmpty() ? "empty" :
                         "\n\t\t" + getChildren().stream().map(Expression::toString).collect(Collectors.joining("\n\t\t"))
@@ -308,22 +303,13 @@ public class Expression {
                 '}';
     }
 
-
     public boolean removeLastDigitAndIsEmpty() {
         HtmlStringUtil.removeLastChar(value);
         if ( ! hasValue()) {
+            numberValue = 0d;
             return true;
         }
         return false;
-    }
-
-    public void removeLastDigit() {
-        if (hasValue()) {
-            setValue( value.substring(0, value.length() - 1) );
-        }
-        else {
-            logger.logError("removeLastDigit(): has no value");
-        }
     }
 
     public Expression peekLastChild() {
@@ -404,5 +390,20 @@ public class Expression {
 
     public void removeLastPostOper() {
         getPostOperations().remove(getLastPostOper());
+    }
+
+    public double resolveValue() {
+        applyPrePostOperations(getPostOperations());
+        applyPrePostOperations(getPreOperations());
+        return numberValue;
+    }
+
+    public void applyPrePostOperations(Collection<AbstractPrePostOperation> operations) {
+        if (operations == null || operations.isEmpty()) {
+            return;
+        }
+        for (AbstractPrePostOperation o : operations) {
+            numberValue = o.apply(numberValue);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class SqrtPreOperation extends AbstractPrePostOperation {
 
     @Override
     public double apply(double value) {
-        return 0;
+        return Math.sqrt(value);
     }
 
     @Override

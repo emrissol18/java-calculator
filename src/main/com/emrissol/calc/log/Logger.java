@@ -1,6 +1,8 @@
 package com.emrissol.calc.log;
 
 import lombok.Setter;
+import java.util.StringJoiner;
+import java.util.stream.Stream;
 
 public class Logger {
 

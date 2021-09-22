@@ -34,8 +34,6 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
         }
         if (manager.hasCurrent()) {
             Expression ancestor = manager.getCurrentExp().getAncestorParentOrSelf();
-//            System.out.println("ancestor = " + ancestor.getId());
-//            uiManager.refreshLayout(manager.getCurrentExp().getAncestorParentOrSelf());
             uiManager.refreshLayout(ancestor);
         }
         else {
