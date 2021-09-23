@@ -2,8 +2,6 @@ package com.emrissol.calc;
 
 
 import com.emrissol.calc.ui.UIManager;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.*;
 
 public class Main {
 
@@ -18,8 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         Manager manager = Manager.getInstance();
-        new UIManager(manager).createLayout();
-        JPanel jPanel = new JPanel(new MigLayout("wrap 1"));
+        UIManager uiManager = new UIManager(manager);
 
         /*JPanel jPanel = new JPanel(new MigLayout("wrap 1"));
 

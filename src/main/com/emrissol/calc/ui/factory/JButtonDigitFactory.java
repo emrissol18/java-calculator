@@ -21,6 +21,7 @@ public class JButtonDigitFactory implements JComponentFactory {
     public JButton create(String text) {
         JButton jButton = new JButton(text);
         jButton.setFont(new Font("Monospace", Font.PLAIN, 20));
+        jButton.setActionCommand(text);
 //        jButton.setSize(60, 60);
         for (ActionListener listener : listeners) {
             jButton.addActionListener(listener);

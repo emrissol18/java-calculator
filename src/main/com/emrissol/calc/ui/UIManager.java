@@ -29,23 +29,26 @@ public class UIManager {
     @Getter
     private JLabel jLabel = new JLabel();
 
+    @Getter
+    private JPanel jPanel;
+
     public UIManager(Manager manager) {
         this.manager = manager;
         jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
         jLabel.setPreferredSize(new Dimension(0, 32));
         jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    }
 
-    public void createLayout() {
         // 4col x 7row
         MigLayout migLayout = new MigLayout(
                 "wrap 4",
                 "",
                 "");
+        jPanel = new JPanel(migLayout);
 
-        JPanel jPanel = new JPanel(migLayout);
-//        jPanel.add(createTextArea(), "span 4, pushx, growx, wrap");
-//        jPanel.add(getJTextFieldLayout(), "span 4, pushx, growx, wrap");
+        createLayout();
+    }
+
+    public void createLayout() {
         jPanel.add(jLabel, "span 4, pushx, growx, height :60:, wrap");
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
@@ -63,41 +66,6 @@ public class UIManager {
         stringBuilderInner.append(text);
         aggregateInnerSB();
     }
-
-    /*public void refreshLayout(Expression expression) {
-        int sbInnerLength = stringBuilderInner.length();
-        System.out.println(stringBuilderInner);
-        int offset = sbInnerLength - expression.getLength();
-
-        // get layout and recalculate length (expansion case)
-        String newLayout = expression.getLayout();
-
-        System.out.println("sbInnerLength = " + sbInnerLength);
-        System.out.println("PREV expression.getLength() = " + expression.getLength());
-//        System.out.println("offset = " + offset);
-//        stringBuilderInner.delete(offset, sbInnerLength);
-        if (offset < 0) {
-            Logger.log(UIManager.class, "offset is " + offset);
-//            Logger.log(UIManager.class, expression.toString());
-            offset = Math.abs(offset) + sbInnerLength;
-        }
-        stringBuilderInner.setLength(offset);
-        stringBuilderInner.append(newLayout);
-        aggregateInnerSB();
-    }
-
-    public void refreshLayout() {
-        stringBuilderInner.setLength(0);
-        if ( manager.hasExpressions()) {
-            Iterator<Expression> expressionIterator = manager.getExpressionQueue().iterator();
-            while (expressionIterator.hasNext()) {
-                Expression expression = expressionIterator.next();
-                stringBuilderInner.append(expression.getLayout());
-            }
-        }
-        aggregateInnerSB();
-    }*/
-
 
     public String getLayouts() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -190,14 +158,5 @@ public class UIManager {
         stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
         expressionsLayouts.clear();
     }
-
-    /*private JTextArea createTextArea() {
-        JTextArea jTextArea = new JTextArea("", 6, 0);
-        jTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
-        jTextArea.setAutoscrolls(true);
-        jTextArea.setEditable(false);
-        jTextArea.setBackground(Color.LIGHT_GRAY);
-        return jTextArea;
-    }*/
 
 }
