@@ -17,6 +17,6 @@ public class OperatorText {
     public static final String EQUAL = "=";
     public static final String POINT = ".";
     public static final String FACTORIAL = "\u0021"; // !
-    public static final String POW = "<html>x<sup><font size='5'>y</font></sup></html>";
+    public static final String POW = "<html>x<sup><font size='4'>y</font></sup></html>";
 
 }
