@@ -3,6 +3,7 @@ package com.emrissol.calc.event;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.expression.Expression;
 import com.emrissol.calc.filter.ActionFilter;
+import com.emrissol.calc.ui.FontReducer;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

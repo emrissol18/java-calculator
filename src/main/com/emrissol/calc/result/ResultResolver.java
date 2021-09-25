@@ -13,7 +13,7 @@ public class ResultResolver {
     private double value;
 
     public ResultResolver() {
-//        logger.setActive(false);
+        logger.setActive(false);
     }
 
     /** Add expValue to global value depending on operation.
@@ -55,7 +55,7 @@ public class ResultResolver {
     }
 
 
-    /** Calculate total result of expressions that dwell in deque calling {@link #calcExpression(Expression)} for each.
+    /** Calculate total result of all expressions that dwell in deque calling<br>{@link #calcExpression(Expression)} for each.
      * @param expressions expressions
      * @return final result
      */
@@ -65,7 +65,7 @@ public class ResultResolver {
             logger.log("return");
             return 0d;
         }
-        // calc 1st and only one expression
+        // calc 1st (and only one) expression
         if (expressions.size() == 1) {
             logger.log("calc 1st expression");
             return calcExpression(expressions.peek());
@@ -98,7 +98,7 @@ public class ResultResolver {
             else {
                 logger.log("simple exp block");
                 double expValue = calcExpression(exp1);
-                value = calcOperation(value, exp1.resolveValue(), lastOperation1);
+                value = calcOperation(value, expValue, lastOperation1);
                 lastOperation1 = exp1.getOperation();
             }
         }

@@ -20,6 +20,7 @@ public class DigitActionListener extends AbstractOperatorActionListener {
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
 
+        logger.setActive(false);
         if ( ! actionFilter.isDigitsAllowed()) {
             logger.log("digits not allowed");
             return;

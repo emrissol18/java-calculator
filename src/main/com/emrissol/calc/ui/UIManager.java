@@ -11,9 +11,10 @@ import java.util.LinkedHashMap;
 
 public class UIManager {
 
+    public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
     // wrap html start & end for whole content
-    private static String HTML_START = "<html>";
-    private static String HTML_END = "</html>";
+    private static String HTML_START = "<html><body style='overflow-x: hidden;'>";
+    private static String HTML_END = "</body></html>";
 
     private StringBuilder stringBuilderOuter = new StringBuilder(HTML_START + HTML_END);
     private StringBuilder stringBuilderInner = new StringBuilder();
@@ -34,8 +35,7 @@ public class UIManager {
 
     public UIManager(Manager manager) {
         this.manager = manager;
-        jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
-        jLabel.setPreferredSize(new Dimension(0, 32));
+        jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
         jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
         // 4col x 7row
@@ -43,16 +43,18 @@ public class UIManager {
                 "wrap 4",
                 "",
                 "");
-        jPanel = new JPanel(migLayout);
 
+        jPanel = new JPanel(migLayout);
         createLayout();
     }
 
     public void createLayout() {
-        jPanel.add(jLabel, "span 4, pushx, growx, height :60:, wrap");
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.add(jLabel);
+        jPanel.add(scrollPane, "span 4, growx");
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
-        buttonCreator.createDigitButtons(jPanel);
+        buttonCreator.createButtons(jPanel);
 
         JFrame jFrame = new JFrame();
         jFrame.add(jPanel);
@@ -157,6 +159,7 @@ public class UIManager {
         stringBuilderInner.setLength(0);
         stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
         expressionsLayouts.clear();
+        jLabel.setFont(jLabel.getFont().deriveFont(20f));
     }
 
 }

@@ -1,7 +1,7 @@
 package com.emrissol.calc.expression;
 
 public class OperatorText {
-    public static final String ROOT = "root";
+    public static final String ROOT = "\u221A"; //221A
 //    public static final String NEGATIVE = "+/-";
     public static final String NEGATIVE = "\u00B1"; // +/-
     public static final String NEGATIVE_LAYOUT = "-";

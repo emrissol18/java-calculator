@@ -26,8 +26,8 @@ public class Expression {
     protected SimplePostOperation operation;
 
     // how much chars expression takes in context
-    @Getter
-    private short length = 0;
+//    @Getter
+//    private short length = 0;
 
     @Getter(AccessLevel.NONE)
     protected Deque<AbstractPrePostOperation> preOperations;
@@ -173,21 +173,17 @@ public class Expression {
     public String getLayout() {
         StringBuilder stringBuilder = new StringBuilder();
         if (hasChildren()) {
-            getChildren().forEach( e -> {
-                stringBuilder.append(e.getLayout());
-            });
+            getChildren().forEach( e -> stringBuilder.append(e.getLayout()) );
         }
 
         String thisValue = getValue();
         stringBuilder.append(thisValue);
 
-        StringBuilder chunkStart;
-        StringBuilder chunkEnd;
         boolean operationAppended = false;
 
         if (hasPreOperations() || hasPostOperations()) {
-            chunkStart = new StringBuilder();
-            chunkEnd = new StringBuilder();
+            StringBuilder chunkStart = new StringBuilder();
+            StringBuilder chunkEnd = new StringBuilder();
 
             // PRE OPERATIONS
             if (hasPreOperations()) {
@@ -218,7 +214,7 @@ public class Expression {
         else {
             stringBuilder.append(getOperationText());
         }
-        length = (short) stringBuilder.length();
+//        length = (short) stringBuilder.length();
         return stringBuilder.toString();
     }
 
@@ -288,7 +284,7 @@ public class Expression {
                 ", parentId =" + (parent == null ? "null" : parent.getId()) +
                 ", value=" + value +
                 ", numberValue=" + numberValue +
-                ", length=" + length +
+//                ", length=" + length +
                 ", operation=" + operation +
                 ",\npreOperations =" + (getPreOperations().isEmpty() ? "empty" :
                 "\n\t\t" + getPreOperations().stream().map(AbstractPrePostOperation::toString).collect(Collectors.joining("\n\t\t"))
@@ -304,7 +300,7 @@ public class Expression {
     }
 
     public boolean removeLastDigitAndIsEmpty() {
-        HtmlStringUtil.removeLastChar(value);
+        value = HtmlStringUtil.removeLastChar(value);
         if ( ! hasValue()) {
             numberValue = 0d;
             return true;
@@ -395,6 +391,7 @@ public class Expression {
     public double resolveValue() {
         applyPrePostOperations(getPostOperations());
         applyPrePostOperations(getPreOperations());
+        logger.log("resolved exp value: " + numberValue);
         return numberValue;
     }
 
