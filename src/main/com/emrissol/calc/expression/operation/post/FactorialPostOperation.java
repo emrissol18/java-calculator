@@ -11,11 +11,22 @@ public class FactorialPostOperation extends AbstractPrePostOperation {
 
     @Override
     public double apply(double value) {
-        return 0;
+        return factorial(value);
     }
 
     @Override
     public boolean isClosable() {
         return false;
+    }
+
+    private double factorial(double v) {
+        if (v < 2) {
+            return 1;
+        }
+        double v1 = v;
+        while (v > 1) {
+            v1 *= (--v);
+        }
+        return v1;
     }
 }

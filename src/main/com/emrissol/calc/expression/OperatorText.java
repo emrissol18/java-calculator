@@ -1,7 +1,7 @@
 package com.emrissol.calc.expression;
 
 public class OperatorText {
-    public static final String ROOT = "root";
+    public static final String ROOT = "\u221A"; //221A
 //    public static final String NEGATIVE = "+/-";
     public static final String NEGATIVE = "\u00B1"; // +/-
     public static final String NEGATIVE_LAYOUT = "-";
@@ -17,6 +17,6 @@ public class OperatorText {
     public static final String EQUAL = "=";
     public static final String POINT = ".";
     public static final String FACTORIAL = "\u0021"; // !
-    public static final String POW = "<html>x<sup><font size='5'>y</font></sup></html>";
+    public static final String POW = "<html>x<sup><font size='4'>y</font></sup></html>";
 
 }

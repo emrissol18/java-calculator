@@ -4,6 +4,7 @@ import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
 import com.emrissol.calc.log.Logger;
+import com.emrissol.calc.ui.HtmlStringUtil;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 
@@ -44,11 +45,10 @@ public class DelActionListener extends AbstractOperatorActionListener {
         if (current.hasPostOperations()) {
             if (current.getLastPostOper().isValueAvailable() && current.getLastPostOper().hasValue()) {
                 logger.log("remove last digit of last post operation");
-                final String value = current.getLastPostOper().getValue();
-                current.getLastPostOper().setValue(value.substring(0, (value.length() - 1)));
-//                if ( ! current.getLastPostOper().hasValue()) {
-//                    current.removeLastPostOper();
-//                }
+                current.getLastPostOper().setValue(HtmlStringUtil.removeLastChar(current.getLastPostOper().getValue()));
+                if ( ! current.getLastPostOper().hasValue()) {
+                    current.removeLastPostOper();
+                }
             }
             else {
                 logger.log("remove last post operation");
@@ -63,8 +63,9 @@ public class DelActionListener extends AbstractOperatorActionListener {
             if ( current.isLastPreOperClosed()) {
                 logger.log("open pre operation");
                 current.setLastPreOperOpen(true);
-                manager.setCurrentExp(current.peekLastChild());
-//                    manager.setCurrentParentExp(current);
+                if ( ! current.hasValue() && current.hasChildren()) {
+                    manager.setCurrentExp(current.peekLastChild());
+                }
             }
 
             // try to remove last one preOoperation

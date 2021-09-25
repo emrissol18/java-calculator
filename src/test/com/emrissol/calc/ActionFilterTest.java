@@ -2,11 +2,8 @@ package com.emrissol.calc;
 
 import com.emrissol.calc.expression.Expression;
 import com.emrissol.calc.expression.operation.SimplePostOperation;
-
 import com.emrissol.calc.filter.ActionFilter;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-
 import org.junit.Test;
 
 public class ActionFilterTest {

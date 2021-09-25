@@ -11,9 +11,10 @@ import java.util.LinkedHashMap;
 
 public class UIManager {
 
+    public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
     // wrap html start & end for whole content
-    private static String HTML_START = "<html>";
-    private static String HTML_END = "</html>";
+    private static String HTML_START = "<html><body style='overflow-x: hidden;'>";
+    private static String HTML_END = "</body></html>";
 
     private StringBuilder stringBuilderOuter = new StringBuilder(HTML_START + HTML_END);
     private StringBuilder stringBuilderInner = new StringBuilder();
@@ -29,27 +30,31 @@ public class UIManager {
     @Getter
     private JLabel jLabel = new JLabel();
 
+    @Getter
+    private JPanel jPanel;
+
     public UIManager(Manager manager) {
         this.manager = manager;
-        jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
-        jLabel.setPreferredSize(new Dimension(0, 32));
+        jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
         jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    }
 
-    public void createLayout() {
         // 4col x 7row
         MigLayout migLayout = new MigLayout(
                 "wrap 4",
                 "",
                 "");
 
-        JPanel jPanel = new JPanel(migLayout);
-//        jPanel.add(createTextArea(), "span 4, pushx, growx, wrap");
-//        jPanel.add(getJTextFieldLayout(), "span 4, pushx, growx, wrap");
-        jPanel.add(jLabel, "span 4, pushx, growx, height :60:, wrap");
+        jPanel = new JPanel(migLayout);
+        createLayout();
+    }
+
+    public void createLayout() {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.add(jLabel);
+        jPanel.add(scrollPane, "span 4, growx");
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
-        buttonCreator.createDigitButtons(jPanel);
+        buttonCreator.createButtons(jPanel);
 
         JFrame jFrame = new JFrame();
         jFrame.add(jPanel);
@@ -63,41 +68,6 @@ public class UIManager {
         stringBuilderInner.append(text);
         aggregateInnerSB();
     }
-
-    /*public void refreshLayout(Expression expression) {
-        int sbInnerLength = stringBuilderInner.length();
-        System.out.println(stringBuilderInner);
-        int offset = sbInnerLength - expression.getLength();
-
-        // get layout and recalculate length (expansion case)
-        String newLayout = expression.getLayout();
-
-        System.out.println("sbInnerLength = " + sbInnerLength);
-        System.out.println("PREV expression.getLength() = " + expression.getLength());
-//        System.out.println("offset = " + offset);
-//        stringBuilderInner.delete(offset, sbInnerLength);
-        if (offset < 0) {
-            Logger.log(UIManager.class, "offset is " + offset);
-//            Logger.log(UIManager.class, expression.toString());
-            offset = Math.abs(offset) + sbInnerLength;
-        }
-        stringBuilderInner.setLength(offset);
-        stringBuilderInner.append(newLayout);
-        aggregateInnerSB();
-    }
-
-    public void refreshLayout() {
-        stringBuilderInner.setLength(0);
-        if ( manager.hasExpressions()) {
-            Iterator<Expression> expressionIterator = manager.getExpressionQueue().iterator();
-            while (expressionIterator.hasNext()) {
-                Expression expression = expressionIterator.next();
-                stringBuilderInner.append(expression.getLayout());
-            }
-        }
-        aggregateInnerSB();
-    }*/
-
 
     public String getLayouts() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -189,15 +159,7 @@ public class UIManager {
         stringBuilderInner.setLength(0);
         stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
         expressionsLayouts.clear();
+        jLabel.setFont(jLabel.getFont().deriveFont(20f));
     }
-
-    /*private JTextArea createTextArea() {
-        JTextArea jTextArea = new JTextArea("", 6, 0);
-        jTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
-        jTextArea.setAutoscrolls(true);
-        jTextArea.setEditable(false);
-        jTextArea.setBackground(Color.LIGHT_GRAY);
-        return jTextArea;
-    }*/
 
 }
