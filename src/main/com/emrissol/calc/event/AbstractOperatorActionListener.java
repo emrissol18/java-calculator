@@ -7,6 +7,10 @@ import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Abstract action listeners for all button action listeners.
+ * Its children must implement actionPerformedHook() method to be performed before layout refresh.
+ */
 public abstract class AbstractOperatorActionListener implements ActionListener {
 
     protected Manager manager;
@@ -39,5 +43,6 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
         else {
             uiManager.refreshLayout();
         }
+        uiManager.scrollToEnd();
     }
 }

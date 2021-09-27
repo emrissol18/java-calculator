@@ -20,7 +20,7 @@ public class FactorialPostOperation extends AbstractPrePostOperation {
     }
 
     private double factorial(double v) {
-        if (v < 2) {
+        if (v < 2 && v >= 0) {
             return 1;
         }
         double v1 = v;

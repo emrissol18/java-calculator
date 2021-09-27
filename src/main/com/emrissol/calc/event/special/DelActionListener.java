@@ -74,7 +74,7 @@ public class DelActionListener extends AbstractOperatorActionListener {
                 // here last preOperation looks like combination of opreOper.htmlStart + opreOper.textStart
                 // remove from parent or global list if has no preOperations
                 logger.log("remove last pre operation");
-                current.removeLastPreOper();
+                current.getPreOperations().pollLast();
 //                if (current.removeLastPreOperAndIsHasNoPreOperations()) {
                 if ( ! current.hasPostOperations()) {
                     logger.log("no more pre operations");

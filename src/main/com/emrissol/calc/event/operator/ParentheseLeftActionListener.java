@@ -15,7 +15,7 @@ public class ParentheseLeftActionListener extends AbstractOperatorActionListener
 
     @Override
     protected void actionPerformedHook(ActionEvent actionEvent) {
-        if (manager.hasCurrent() && ! manager.getCurrentExp().lastChildHasOperation()) {
+        if ( ! actionFilter.isPreOperationAllowed()) {
             return;
         }
 

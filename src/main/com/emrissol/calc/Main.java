@@ -2,6 +2,11 @@ package com.emrissol.calc;
 
 
 import com.emrissol.calc.ui.UIManager;
+import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 
@@ -15,9 +20,51 @@ public class Main {
     }*/
 
     public static void main(String[] args) {
+        /*try {
+            javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         Manager manager = Manager.getInstance();
-        UIManager uiManager = new UIManager(manager);
+        SwingUtilities.invokeLater( () -> {
+            UIManager uiManager = new UIManager(manager);
+        });
 
+        /*Double nD = 0.12345;
+        String n = nD.toString();
+        float remainder = (float) Math.abs(nD - nD.intValue());
+
+        int length = String.valueOf(remainder).length()-1;
+        System.out.println("length = " + length);
+
+        char lastchar = n.charAt(length);
+
+        while (lastchar == '0' && lastchar != '.') {
+            System.out.println("lastchar = " + lastchar);
+            lastchar = n.charAt(--length);
+        }
+        System.out.println(length-1);*/
+
+//        jFrame.setResizable(false);
+
+        /*ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPreferredSize(new Dimension(200, 140));
+        JLabel label = new JLabel("sad as asdjg lksd kg9 ijakl jlksa jklasjfhgjkl as f231 sfa as");
+        scrollPane.add(label);
+
+        JPanel jPanel = new JPanel();
+        jPanel.add(scrollPane);
+//        jframe.setPreferredSize(new Dimension(200, 50));
+
+        JFrame jFrame = new JFrame();
+        jFrame.add(jPanel);
+//        jFrame.setPreferredSize(new Dimension(400, 200));
+        jFrame.pack();
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
+
+        scrollPane.setScrollPosition((int) label.getPreferredSize().getWidth(), scrollPane.getHeight());*/
         /*JPanel jPanel = new JPanel(new MigLayout("wrap 1"));
 
         String moreText = " more";
@@ -79,7 +126,7 @@ public class Main {
         });*/
     }
 
-    private static int fz = 20;
+    /*private static int fz = 20;
     public static String getLabelText(String text) {
         String sbStart = getSbStart(fz);
         String sbEnd = "</body></html>";
@@ -89,7 +136,7 @@ public class Main {
     private static String getSbStart(float fz) {
 //        return "<html><body style='font-size:" + fz + "px'>";
         return "<html><body>";
-    }
+    }*/
 
     /*static int getOffsetEnd(){
         return stringBuilder.length() - 7;
@@ -146,4 +193,20 @@ public class Main {
 //        Font font = new Font("Tahoma", Font.PLAIN, 12);
 //        int textwidth = (int)(font.getStringBounds(text, frc).getWidth());
 //        int textheight = (int)(font.getStringBounds(text, frc).getHeight());
+    /*Executable Java Wrappers
+    They take your Java app as input and wrap them in an executable (for a specified platform). 
+    You can customize them as you like; and if the user doesn't have 
+    Java installed, the download page will open.
+
+    Some examples are Launch4J, JSmooth and Jar2EXE.
+     
+
+    Installers
+    They are independent applications configured to copy your app files to the user's 
+    computer and (optionally) create a shortcut.
+
+    Some installers are written in Java, so they're multiplatform. In this case, the installer is a .jar.
+    Some others are platform-dependent, but you have the advantage that you don't need to wrap them.
+
+    Java installers: IzPack, Packlet, PackJacket, Antigen, …*/
 }

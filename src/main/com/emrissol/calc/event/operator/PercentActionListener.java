@@ -17,10 +17,5 @@ public class PercentActionListener extends AbstractOperatorActionListener {
                 System.out.println("global- " + exp);
             });
         }
-//        if (manager.hasCurrentParent() && manager.getCurrentParentExp().hasChildren()) {
-//            System.out.println("parent");
-//            manager.getCurrentParentExp().getChildren().forEach(System.out::println);
-//        }
-
     }
 }

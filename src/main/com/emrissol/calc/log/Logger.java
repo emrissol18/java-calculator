@@ -45,11 +45,6 @@ public class Logger {
         System.out.println(getLogData(message));
     }
 
-    public void logError(String message) {
-        if (!active) return;
-        System.err.println(getLogData(message));
-    }
-
     public static void log(Class<?> aClass, String message) {
         System.out.println(getLogData(aClass, "", message));
     }

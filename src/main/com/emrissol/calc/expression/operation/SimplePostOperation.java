@@ -19,8 +19,5 @@ public enum SimplePostOperation {
     SimplePostOperation(String text) {
         this.text = text;
     }
-    //    , SUB_EXP_START //parenthesis open
-//    , SUB_EXP_END   //parenthesis close
-
 
 }

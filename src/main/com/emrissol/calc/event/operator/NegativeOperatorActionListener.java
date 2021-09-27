@@ -32,11 +32,6 @@ public class NegativeOperatorActionListener extends AbstractOperatorActionListen
                 toggleNegative(manager.getCurrentExp());
             }
         }
-        /*else {
-            Expression newExpression = new Expression();
-            toggleNegative(newExpression);
-            manager.setAndAddCurrentExp(newExpression);
-        }*/
 
     }
 

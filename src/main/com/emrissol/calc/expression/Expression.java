@@ -2,7 +2,6 @@ package com.emrissol.calc.expression;
 
 import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 import com.emrissol.calc.expression.operation.SimplePostOperation;
-import com.emrissol.calc.expression.operation.post.FactorialPostOperation;
 import com.emrissol.calc.log.Logger;
 import com.emrissol.calc.ui.HtmlStringUtil;
 import lombok.AccessLevel;
@@ -11,6 +10,10 @@ import lombok.Setter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Represents expression object. Expressions objects could be structured hierarchically.
+ * Each expression structure can consist from one or more pre-post operations, value (digits) or simple post operation (sign).
+ */
 @Getter
 @Setter
 public class Expression {
@@ -20,14 +23,8 @@ public class Expression {
     protected short id;
 
     private double numberValue;
-
     protected String value = "";
-//    protected PreOperation preOperation;
     protected SimplePostOperation operation;
-
-    // how much chars expression takes in context
-//    @Getter
-//    private short length = 0;
 
     @Getter(AccessLevel.NONE)
     protected Deque<AbstractPrePostOperation> preOperations;
@@ -98,7 +95,6 @@ public class Expression {
     }
 
     public void setLastPreOperOpen(boolean isOpen) {
-//        getPreOperations().peekLast().setOpen(isOpen);
         getLastClosablePreOper().setOpen(isOpen);
     }
 
@@ -122,7 +118,6 @@ public class Expression {
         if ( ! hasPreOperations()) {
             return true;
         }
-//        return getLastPreOper().isClosable() && ! isLastPreOperOpen();
         return ! getLastClosablePreOper().isOpen();
     }
 
@@ -158,7 +153,7 @@ public class Expression {
 
     public boolean detachFromParent() {
         if (hasParent()) {
-            getParent().removeChild(this);
+            getParent().getChildren().remove(this);
             return true;
         }
         return false;
@@ -167,9 +162,14 @@ public class Expression {
     public void addExpression(Expression expression) {
         expression.setParent(this);
         getChildren().add(expression);
-//        System.err.println("ADDING CHILDREN " + expression.getId() + " TO PARENT " + getId());
     }
 
+    /**
+     * Create expression layout. If expression has children the layout of each children will be extracted recursively.<br>
+     * <i>Note: </i> Usually the first call of this method in recurive chain will be performed by expressions
+     * that has children (get itslef layout and its children) or has no parent (get itslef layout).
+     * @return expression layout.
+     */
     public String getLayout() {
         StringBuilder stringBuilder = new StringBuilder();
         if (hasChildren()) {
@@ -180,6 +180,8 @@ public class Expression {
         stringBuilder.append(thisValue);
 
         boolean operationAppended = false;
+
+        String operationText = hasOperation() ? getOperation().getText() : "";
 
         if (hasPreOperations() || hasPostOperations()) {
             StringBuilder chunkStart = new StringBuilder();
@@ -205,23 +207,16 @@ public class Expression {
                 });
             }
 
-            // apend post operator (sign)
-            chunkEnd.append(getOperationText());
+            chunkEnd.append(operationText);
+            // concat chunks
             stringBuilder
                     .insert(0, chunkStart.toString())
                     .append(chunkEnd.toString());
         }
         else {
-            stringBuilder.append(getOperationText());
+            stringBuilder.append(operationText);
         }
-//        length = (short) stringBuilder.length();
         return stringBuilder.toString();
-    }
-
-    private String getOperationText() {
-        if (hasOperation())
-            return getOperation().getText();
-        return "";
     }
 
     /**
@@ -269,8 +264,7 @@ public class Expression {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        Expression that = (Expression) object;
-        return id == that.id;
+        return id == ((Expression) object).id;
     }
 
     @Override
@@ -280,11 +274,10 @@ public class Expression {
 
     @Override
     public String toString() {
-        return "\n=====================================\nExpression#"+id+"{" +
+        return "\n=====================================Expression#"+id+"{\n" +
                 ", parentId =" + (parent == null ? "null" : parent.getId()) +
                 ", value=" + value +
                 ", numberValue=" + numberValue +
-//                ", length=" + length +
                 ", operation=" + operation +
                 ",\npreOperations =" + (getPreOperations().isEmpty() ? "empty" :
                 "\n\t\t" + getPreOperations().stream().map(AbstractPrePostOperation::toString).collect(Collectors.joining("\n\t\t"))
@@ -315,6 +308,7 @@ public class Expression {
     public boolean lastChildHasOperation() {
         return hasChildren() && peekLastChild().hasOperation();
     }
+
     public Expression peekLastChildOrSelf() {
         if (hasOperation() || ! hasChildren()) {
             return this;
@@ -322,47 +316,12 @@ public class Expression {
         return peekLastChild();
     }
 
-    public void removeChild(Expression expression) {
-        getChildren().remove(expression);
-    }
-
-    public void removeLastChild() {
-        removeChild(peekLastChild());
-    }
-
-    public void removeLastPreOper() {
-        getPreOperations().pollLast();
-    }
-
-    public Expression getParentOrSelf() {
-        return hasParent() ? getParent() : this;
-    }
-
     public boolean isParent() {
-//        return hasPreOperations() || hasPostOperations() || hasChildren();
         return (hasClosablePreOperations() && getPreOperations().stream().anyMatch( o -> o.isClosable())) || hasChildren();
     }
 
     public void addToValue(String value) {
         setValue(getValue() + value);
-    }
-
-    public boolean isNegative() {
-//        return value.startsWith(Operation.NEGATIVE.getText());
-        return hasValue() && value.charAt(0) == OperatorText.NEGATIVE.charAt(0);
-    }
-    public boolean isEffectivelyNegative() {
-        return isNegative() && getValue().length() == 1;
-    }
-
-    public void toggleNegativeOld() {
-        String negativeLayout = OperatorText.NEGATIVE_LAYOUT;
-        if ( isNegative()) {
-            setValue(value.replaceFirst(negativeLayout, ""));
-        }
-        else {
-            setValue(negativeLayout.concat(getValue()));
-        }
     }
 
     public void parseValue() {
@@ -378,10 +337,6 @@ public class Expression {
             e.printStackTrace();
         }
 //        logger.log("parsing value end: " + numberValue);
-    }
-
-    public boolean hasFactorial() {
-        return hasPostOperations() && getPostOperations().stream().anyMatch( o -> o instanceof FactorialPostOperation);
     }
 
     public void removeLastPostOper() {

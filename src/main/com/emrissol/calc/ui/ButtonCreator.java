@@ -144,7 +144,6 @@ public class ButtonCreator {
         jPanel.add(jButtonNegative, "sg btn");
 
         JButton jButtonPoint = operatorFactory.create(SimplePostOperation.POINT.getText());
-//        jButtonPoint.addActionListener(new DigitActionListener(manager, uiManager));
         jButtonPoint.addActionListener(new PointActionListener(manager, uiManager));
         jPanel.add(jButtonPoint, "sg btn");
         keyListenerDispatcher.addButton(KeyEvent.VK_DECIMAL, jButtonPoint);
@@ -153,7 +152,6 @@ public class ButtonCreator {
         jPanel.add(jButton0, "sg btn");
         keyListenerDispatcher.addButton(KeyEvent.VK_NUMPAD0, jButton0);
 
-//        JButton jButtonEqual = new JButtonDigitFactory(Collections.emptyList()).create(Operation.EQUALS.getText());
         digitFactory.setListeners(List.of(new EqualOperatorActionListener(manager, uiManager)));
         JButton jButtonEqual = digitFactory.create(SimplePostOperation.EQUALS.getText());
         keyListenerDispatcher.addButton(KeyEvent.VK_ENTER, jButtonEqual);

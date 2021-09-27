@@ -5,6 +5,9 @@ import com.emrissol.calc.event.operator.PostOperatorActionListener;
 import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.ui.UIManager;
 
+/**
+ * Factory for simple post operation (+,-,/,*) action listeners.
+ */
 public class PostOperationActionListenerFactory {
 
     private Manager manager;

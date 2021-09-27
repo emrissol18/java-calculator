@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 public class UIManager {
 
     public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
+    
     // wrap html start & end for whole content
     private static String HTML_START = "<html><body style='overflow-x: hidden;'>";
     private static String HTML_END = "</body></html>";
@@ -25,10 +26,11 @@ public class UIManager {
     @Getter
     private Manager manager;
 
-//    @Getter
-//    private JTextField jTextField;
     @Getter
     private JLabel jLabel = new JLabel();
+
+    @Getter
+    private ScrollPane scrollPane = new ScrollPane();
 
     @Getter
     private JPanel jPanel;
@@ -38,9 +40,8 @@ public class UIManager {
         jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
         jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        // 4col x 7row
         MigLayout migLayout = new MigLayout(
-                "wrap 4",
+                "wrap 4", // 4 components for each row
                 "",
                 "");
 
@@ -49,14 +50,14 @@ public class UIManager {
     }
 
     public void createLayout() {
-        ScrollPane scrollPane = new ScrollPane();
         scrollPane.add(jLabel);
         jPanel.add(scrollPane, "span 4, growx");
+        System.out.println("scrollPane.getWidth() = " + scrollPane.getWidth());
 
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
         buttonCreator.createButtons(jPanel);
 
-        JFrame jFrame = new JFrame();
+        JFrame jFrame = new JFrame("Calculator");
         jFrame.add(jPanel);
         jFrame.pack();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,7 +160,17 @@ public class UIManager {
         stringBuilderInner.setLength(0);
         stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
         expressionsLayouts.clear();
-        jLabel.setFont(jLabel.getFont().deriveFont(20f));
+    }
+
+    /**
+     * Try to scroll scrollPane to end if <code>jLabel</code> width <code>scrollPane</code> pane viewport.
+     */
+    public void scrollToEnd() {
+        scrollPane.validate();
+        int labelWidth = (int) jLabel.getPreferredSize().getWidth();
+        if (labelWidth >= scrollPane.getWidth()) {
+            scrollPane.setScrollPosition(labelWidth, 0);
+        }
     }
 
 }

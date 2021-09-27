@@ -42,7 +42,7 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
         }
 
         // else add operation to current expression
-        // (if current present (thus it has value) or if current is parent and has children > 0)
+        // (if current present (thus it has value) or if current is parent and has children)
         if (manager.hasCurrent() && ( ! current.isParent() || current.hasChildren()) ) {
             manager.getCurrentExp().setOperation(operation);
             // set parent if has or null

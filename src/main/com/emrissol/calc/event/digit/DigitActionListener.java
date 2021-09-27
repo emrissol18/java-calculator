@@ -8,19 +8,19 @@ import com.emrissol.calc.log.Logger;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 
-// action listener for digit buttons
+// action listener for digit buttons (0-9)
 public class DigitActionListener extends AbstractOperatorActionListener {
 
     private static final Logger logger = new Logger(DigitActionListener.class);
 
     public DigitActionListener(Manager manager, UIManager uiManager) {
         super(manager, uiManager);
+        logger.setActive(false);
     }
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
 
-        logger.setActive(false);
         if ( ! actionFilter.isDigitsAllowed()) {
             logger.log("digits not allowed");
             return;
@@ -38,9 +38,6 @@ public class DigitActionListener extends AbstractOperatorActionListener {
             }
             else if (current.isParent()) {
                 logger.log("parent");
-//                current.addExpression(newExpression);
-//                manager.setCurrentParentExp(current);
-//                manager.setCurrentExp(newExpression);
                 manager.setAndAddCurrentExp(newExpression);
             }
             else {
@@ -48,15 +45,9 @@ public class DigitActionListener extends AbstractOperatorActionListener {
                 current.addToValue(actionEvent.getActionCommand());
             }
         }
-        /*else if (manager.hasCurrentParent()) {
-            manager.getCurrentParentExp().addExpression(newExpression);
-            manager.setCurrentExp(newExpression);
-        }*/
         else {
             logger.log(" ! hasCurrent");
-//            manager.addExpression(newExpression);
             manager.setAndAddCurrentExp(newExpression);
-//            manager.setCurrentExp(newExpression);
         }
 
     }

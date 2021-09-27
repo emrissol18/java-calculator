@@ -31,7 +31,7 @@ public class Manager {
         getExpressionQueue().add(expression);
     }
 
-    public void addExpressionIfHasNoParent(Expression expression) {
+    public void addOrphanExpression(Expression expression) {
         if ( ! expression.hasParent() && ! expressionQueue.contains(expression)) {
             addExpression(expression);
         }
@@ -59,7 +59,7 @@ public class Manager {
             getCurrentExp().addExpression(newExpression);
         }
         else {
-            addExpressionIfHasNoParent(newExpression);
+            addOrphanExpression(newExpression);
         }
         setCurrentExp(newExpression);
     }

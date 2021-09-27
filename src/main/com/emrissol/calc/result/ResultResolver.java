@@ -6,6 +6,9 @@ import com.emrissol.calc.log.Logger;
 import java.util.Deque;
 import java.util.Iterator;
 
+/**
+ * Class for calculation final result of all expressions hierarchy.
+ */
 public class ResultResolver {
 
     private static Logger logger = new Logger(ResultResolver.class);
@@ -16,7 +19,9 @@ public class ResultResolver {
         logger.setActive(false);
     }
 
-    /** Add expValue to global value depending on operation.
+    /**
+     * Add expValue to global value depending on operation.
+     *
      * @param value global value
      * @param expValue resolved expression value
      * @param operation expression's operation
@@ -35,9 +40,10 @@ public class ResultResolver {
     }
 
 
-    /** Calculate result of particular expression.<br>
-     *  If an expression has children then {@link #calcAll(Deque)} will be called<br>
-     *  and each children would be calculated by this method and so on.
+    /**
+     * Calculate result of particular expression.<br/>
+     * If an expression has children then {@link #calcAll(Deque)} will be called<br/>
+     * and each children would be calculated by this method and so on.
      *
      * @param expression expression
      * @return expression's result
@@ -55,7 +61,9 @@ public class ResultResolver {
     }
 
 
-    /** Calculate total result of all expressions that dwell in deque calling<br>{@link #calcExpression(Expression)} for each.
+    /**
+     * Calculate total result of all expressions that dwell in deque appling {@link #calcExpression(Expression)} method for each.
+     *
      * @param expressions expressions
      * @return final result
      */
@@ -86,14 +94,15 @@ public class ResultResolver {
 
             System.out.println();
             logger.log("iterate");
-            // end of expression set (last expression has simplePostOperation as NULL)
+            // end of expression (sub) set, last expression has no operation
             if (lastOperation1 == null) {
                 logger.log("break");
                 break;
             }
             // calc expressions that has operations with higher priority
             else if (exp1.hasOperation() && isOperationMultOrDivide(exp1.getOperation())) {
-                value = calcPriorOperationsChain(value, iterator, exp1, lastOperation1);
+                double accMult = calcPriorOperationsChain(iterator, exp1);
+                value = calcOperation(value, accMult, lastOperation1);
             }
             else {
                 logger.log("simple exp block");
@@ -107,18 +116,18 @@ public class ResultResolver {
     }
 
 
-    /** Calculate chain of expressions that followed by MULTIPLE or DIVIDE operation, which have higher priority.<br>
+    /**
+     * Calculate chain of expressions that followed by MULTIPLE or DIVIDE operation, which have higher priority.<br/>
      *
-     * e.g.: if we have such expression "1 + 2 + 3 / 4 * 2"<br>
-     * then sub expression of "3 / 4 * 2" must be calclulated first<br>
+     * e.g.: if we have such expression "1 + 2 + 3 / 4 * 2"<br/>
+     * then sub expression of "3 / 4 * 2" must be calclulated first<br/>
      * and then added to prev expression - "1 + 2 + (3 / 4 * 2)".
      *
      * @param iterator iterator
      * @param exp1 current expression (last iterator.next())
-     * @param lastOperation1 last opeartion of current expression
      * @return result of expressions in chain
      */
-    private strictfp double calcPriorOperationsChain(double value, Iterator<Expression> iterator, Expression exp1, SimplePostOperation lastOperation1) {
+    private strictfp double calcPriorOperationsChain(Iterator<Expression> iterator, Expression exp1) {
         System.out.println();
         logger.log("mult block");
 
@@ -143,9 +152,9 @@ public class ResultResolver {
         logger.log("result of mult chain is: " + accMult);
         // add accMult (result value of mult\divide expression chain) to global value
         // and apply operation remembered before mult\divide expression chain calculation started
-        return calcOperation(value, accMult, lastOperation1);
+//        return calcOperation(value, accMult, lastOperation1);
+        return accMult;
     }
-
 
     public boolean isOperationMultOrDivide(SimplePostOperation operation) {
         return operation.equals(SimplePostOperation.MULTIPLY) || operation.equals(SimplePostOperation.DIVIDE);

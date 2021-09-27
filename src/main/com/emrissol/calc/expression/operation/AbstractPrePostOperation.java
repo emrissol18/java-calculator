@@ -1,7 +1,6 @@
 package com.emrissol.calc.expression.operation;
 
 import com.emrissol.calc.ui.HtmlStringUtil;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -15,14 +14,12 @@ public abstract class AbstractPrePostOperation {
     protected String textEnd;
     // as option make as placeholder instead. e.g. <tag>{$text}</tag>
     protected String htmlStart;
-    @Getter(AccessLevel.NONE)
     protected String htmlEnd;
     protected boolean isOpen;
 
     protected String value;
 
-//    protected String value; // digits as string
-//    protected Operation operation;
+    public abstract double apply(double value);
 
 
     public AbstractPrePostOperation(String textStart, String textEnd, String htmlStart, String htmlEnd) {
@@ -67,13 +64,6 @@ public abstract class AbstractPrePostOperation {
         return value.concat(getTextEnd()).concat(getHtmlEnd());
     }
 
-    //    public abstract String getTextStart();
-//    public abstract String getTextEnd();
-//    public abstract String getValue();
-//    public abstract Operation getOperation();
-
-    public abstract double apply(double value);
-
     public boolean isValueAvailable() {
         return value != null;
     }
@@ -106,6 +96,6 @@ public abstract class AbstractPrePostOperation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(isOpen);
+        return Objects.hash(textStart, textEnd, isOpen);
     }
 }

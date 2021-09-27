@@ -19,15 +19,8 @@ public class PowPostOperation extends AbstractPrePostOperation {
 
     @Override
     public String getConcatEnd() {
-//        return "<sup><font size=+1 style='padding:0px;background-color:#cdcdcd;'>".concat(super.getConcatEnd()).concat("</font></sup>");
-//        return "<sup><font size=-.8>".concat(super.getConcatEnd()).concat("</font></sup>");
-//        String style = "";
-//        if ( ! hasValue()) {
-//            style = " style='background-color:#bcbcbc;'";
-//            setValue(" ");
-//        }
         return "<sup>".concat(
-                HtmlStringUtil.fontWithStyle(super.getConcatEnd(), "size=-.6")
+                HtmlStringUtil.fontWithStyle(super.getConcatEnd(), "size=4")
         ).concat("</sup>");
     }
 
