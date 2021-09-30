@@ -42,7 +42,7 @@ public class ResultResolver {
 
     /**
      * Calculate result of particular expression.<br/>
-     * If an expression has children then {@link #calcAll(Deque)} will be called<br/>
+     * If an expression has children then {@link #calcAllInner(Deque)} will be called<br/>
      * and each children will be calculated by this method and so on.
      *
      * @param expression expression
@@ -52,7 +52,7 @@ public class ResultResolver {
 //        logger.log("calcExpression() [layout]: " + expression.getLayout() + "\t[numberValue]: " + expression.getNumberValue());
         if (expression.isParent()) {
 //            logger.log("calcExpression [isParent]");
-            expression.setNumberValue(calcAll(expression.getChildren()));
+            expression.setNumberValue(calcAllInner(expression.getChildren()));
 //            logger.log("parent numberValue after set calcAllResult: " + expression.getNumberValue());
         }
         double v = expression.resolveValue();
