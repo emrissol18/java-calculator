@@ -1,9 +1,12 @@
 package com.emrissol.calc.result;
 
+import com.emrissol.calc.TestItemsFactory;
 import com.emrissol.calc.expression.Expression;
 import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.expression.operation.post.PowPostOperation;
+import com.emrissol.calc.expression.operation.pre.NegativePreOperation;
 import com.emrissol.calc.expression.operation.pre.SqrtPreOperation;
+import org.junit.Assert;
 import org.junit.Test;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -11,93 +14,106 @@ import java.util.List;
 
 public class ResultResolverTest {
 
-    private ResultResolver resultResolver = new ResultResolver();
+    public static TestItemsFactory factory = new TestItemsFactory();
+
+    private static ResultResolver resultResolver = new ResultResolver();
+
+    public static final double delta = 0.0001;
+    public static void assertEquals(double exprected, double actual) {
+        Assert.assertEquals(exprected, actual, delta);
+    }
 
     @Test
     public void testExpressionsSet1() {
         // 1 + 2 x 4 x 2
         Deque<Expression> deque = new LinkedList<>(List.of(
-                new Expression(1, SimplePostOperation.MULTIPLY),
-                new Expression(2, SimplePostOperation.ADD),
-                new Expression(3, SimplePostOperation.MULTIPLY),
-                new Expression(5, null)
+                factory.createExp(1, SimplePostOperation.MULTIPLY),
+                factory.createExp(2, SimplePostOperation.ADD),
+                factory.createExp(3, SimplePostOperation.MULTIPLY),
+                factory.createExp(5)
         ));
-        ResultResolver result = new ResultResolver();
-        double resultValue = result.calcAll(deque);
-        System.out.println("result is: " + resultValue);
-//        Assert.assertEquals(17.0d, resultValue, 0.0001);
-//        Assert.assertEquals(17.0d, resultValue, 0.0001);
+//        parseValueForAll(deque);
+        double resultValue = resultResolver.calcAll(deque);
+        assertEquals(17.0d, resultValue);
     }
 
 
+    // -1 * root( 2 + 4 * 2 ) + 4 * 2
     @Test
-    public void testPow(){
-        Expression e100 = new Expression(2, null);
+    public void testExpressionsSet2() {
+        // -1*
+        Expression minusOne = new Expression("1", SimplePostOperation.MULTIPLY);
+        minusOne.getPreOperations().add(new NegativePreOperation());
+
+        // root(2+4*2)+
+        Expression root = new Expression("", SimplePostOperation.ADD);
+        root.getPreOperations().add(new SqrtPreOperation());
+        root.addExpression(factory.createExp(2, SimplePostOperation.ADD));
+        root.addExpression(factory.createExp(4, SimplePostOperation.MULTIPLY));
+        root.addExpression(factory.createExp(2));
+
+        // 4*2
+        Expression four = factory.createExp(4, SimplePostOperation.MULTIPLY);
+        Expression two = factory.createExp(2);
+
+        Deque<Expression> deque = new LinkedList<>(List.of(
+                minusOne,
+                root,
+                four,
+                two
+        ));
+//        parseValueForAll(deque);
+        double resultValue = resultResolver.calcAll(deque);
+        System.out.println("result is: " + resultValue);
+        assertEquals(4.83772d, resultValue);
+    }
+
+
+    //2^32
+    @Test
+    public void testExpressionsSet3(){
+        Expression e100 = factory.createExp(2);
         PowPostOperation powO = new PowPostOperation();
         powO.setValue("32");
         e100.getPostOperations().add(powO);
         Double result = resultResolver.calcAll(new LinkedList<>(List.of(e100)));
-        if (result > Double.MAX_VALUE) {
-            System.out.println("result is greater then maxDouble value");
-        }
-        System.out.println("double: " + result);
-        System.out.println("long: " + (result.longValue()));
+        assertEquals(4294967296d, result);
     }
-    /*public void testExpressionsSet4() {
-        Expression e1 = new Expression(1, SimplePostOperation.ADD);
-        Expression e2 = new Expression(2, SimplePostOperation.MULTIPLY);
-        Expression e3 = new Expression(3, SimplePostOperation.SUBSTRUCT);
-        Expression e4 = new Expression(4, SimplePostOperation.MULTIPLY);
 
-        Expression e5 = new Expression(0, SimplePostOperation.ADD);
-        e5.getPreOperations().add(new SqrtPreOperation());
-        e5.addExpression(new Expression(8, SimplePostOperation.ADD));
-        e5.addExpression(new Expression(5, SimplePostOperation.MULTIPLY));
-        e5.addExpression(new Expression(4, SimplePostOperation.ADD));
-        e5.addExpression(new Expression(6, null));
+    // root( 10^3 + 9 )^6 + 4 * 2 - 4
+    @Test
+    public void testExpressionsSet4() {
+        // root(10^3 + 9)^6 +
+        Expression root = factory.createExp(0, SimplePostOperation.ADD);
+        root.getPreOperations().add(new SqrtPreOperation());
 
+        // 10^3+
+        Expression tenPowThree = factory.createExp(10, SimplePostOperation.ADD);
+        tenPowThree.getPostOperations().add(factory.createPow("3"));
+        root.addExpression(tenPowThree);
 
-        Expression e6 = new Expression(7, SimplePostOperation.SUBSTRUCT);
-        Expression e7 = new Expression(8, SimplePostOperation.MULTIPLY);
-        Expression e8 = new Expression(9, SimplePostOperation.MULTIPLY);
-        Expression e9 = new Expression(10, SimplePostOperation.MULTIPLY);
-        Expression e10 = new Expression(1, SimplePostOperation.ADD);
+        // 9
+        Expression nine = factory.createExp(9);
+        root.addExpression(nine);
 
+        // ^6
+        root.getPostOperations().add(factory.createPow("6"));
 
-        Expression e11 = new Expression(0, SimplePostOperation.MULTIPLY);
-        e11.getPreOperations().add(new SqrtPreOperation());
-        e11.addExpression(new Expression(1, SimplePostOperation.ADD));
-        e11.addExpression(new Expression(2, SimplePostOperation.MULTIPLY));
+        // 4*
+        Expression four = factory.createExp(4, SimplePostOperation.MULTIPLY);
+        // 2
+        Expression two = factory.createExp(2, SimplePostOperation.SUBSTRUCT);
 
-        Expression e12 = new Expression(0, SimplePostOperation.MULTIPLY);
-        e12.getPreOperations().add(new SqrtPreOperation());
-        e12.addExpression(new Expression(3, SimplePostOperation.ADD));
-        e12.addExpression(new Expression(5, null));
+        Expression four2 = factory.createExp(4);
 
-        e11.addExpression(e12);
-
-        e11.addExpression(new Expression(6, null));
-
-        Expression e13 = new Expression(7, SimplePostOperation.MULTIPLY);
-        Expression e14 = new Expression(10, null);
-    }*/
-
-
-    public Deque<Expression> getExpressionsSet1() {
-        Expression e5 = new Expression("", SimplePostOperation.ADD);
-        e5.getPreOperations().add(new SqrtPreOperation());
-        e5.addExpression(new Expression(8, SimplePostOperation.ADD));
-        e5.addExpression(new Expression(5, SimplePostOperation.MULTIPLY));
-        e5.addExpression(new Expression(4, SimplePostOperation.ADD));
-        e5.addExpression(new Expression(6, null));
-        return new LinkedList(List.of(
-                new Expression(1, SimplePostOperation.ADD),
-                new Expression(2, SimplePostOperation.MULTIPLY),
-                new Expression(3, SimplePostOperation.SUBSTRUCT),
-                new Expression(4, SimplePostOperation.MULTIPLY),
-                e5
-
+        Deque<Expression> deque = new LinkedList<>(List.of(
+                root,
+                four,
+                two,
+                four2
         ));
-
+        double resultValue = resultResolver.calcAll(deque);
+        System.out.println("result is: " + resultValue);
+        Assert.assertEquals(1027243733, (long) resultValue);
     }
 }

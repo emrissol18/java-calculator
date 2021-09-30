@@ -6,7 +6,7 @@ package com.emrissol.calc.result;
  */
 public class ResultFormatter {
 
-    private float fractionPrecision = 0.000001F;
+    private float fractionPrecision = 0.000009F;
 
     public ResultFormatter() {
     }
@@ -68,7 +68,7 @@ public class ResultFormatter {
         if (fractionPrecision == -1) {
             return number != 0.0;
         }
-        return Math.abs(number - number.intValue()) > fractionPrecision;
+        return Math.abs(number - number.intValue()) >= fractionPrecision;
     }
 
     public float getFractionPrecision() {

@@ -28,7 +28,7 @@ public class ResultResolver {
      * @return result
      */
     public strictfp double calcOperation(double value, double expValue, SimplePostOperation operation) {
-        logger.log("calcOperation()");
+        logger.log("calcOperation() [opeartion is " + operation.toString() + "]");
         switch (operation) {
             case ADD: value += expValue; break;
             case SUBSTRUCT: value -= expValue; break;
@@ -61,13 +61,18 @@ public class ResultResolver {
     }
 
 
+    public double calcAll(Deque<Expression> expressions) {
+        double result = calcAllInner(expressions);
+        value = 0d;
+        return result;
+    }
     /**
      * Calculate total result of all expressions that dwell in deque appling {@link #calcExpression(Expression)} method for each.
      *
      * @param expressions expressions
      * @return final result
      */
-    public strictfp double calcAll(Deque<Expression> expressions) {
+    private strictfp double calcAllInner(Deque<Expression> expressions) {
         logger.log("calcAll");
         if (expressions == null || expressions.isEmpty()) {
             logger.log("return");
@@ -101,8 +106,11 @@ public class ResultResolver {
             }
             // calc expressions that has operations with higher priority
             else if (exp1.hasOperation() && isOperationMultOrDivide(exp1.getOperation())) {
-                double accMult = calcPriorOperationsChain(iterator, exp1);
-                value = calcOperation(value, accMult, lastOperation1);
+//                double accMult = calcPriorOperationsChain(iterator, exp1, lastOperation1);
+//                value = calcOperation(value, accMult, lastOperation1);
+                Expression subExp = calcPriorOperationsChain(value, iterator, exp1, lastOperation1);
+                value = subExp.getNumberValue();
+                lastOperation1 = subExp.getOperation();
             }
             else {
                 logger.log("simple exp block");
@@ -123,11 +131,12 @@ public class ResultResolver {
      * then sub expression of "3 / 4 * 2" must be calclulated first<br/>
      * and then added to prev expression - "1 + 2 + (3 / 4 * 2)".
      *
+     * @param value global value
      * @param iterator iterator
      * @param exp1 current expression (last iterator.next())
-     * @return result of expressions in chain
+     * @return expression that holds result value in <code>numberValue</code> and last operation in <code>opeartion</code>
      */
-    private strictfp double calcPriorOperationsChain(Iterator<Expression> iterator, Expression exp1) {
+    private strictfp Expression calcPriorOperationsChain(double value, Iterator<Expression> iterator, Expression exp1, SimplePostOperation lastOperation1) {
         System.out.println();
         logger.log("mult block");
 
@@ -153,7 +162,12 @@ public class ResultResolver {
         // add accMult (result value of mult\divide expression chain) to global value
         // and apply operation remembered before mult\divide expression chain calculation started
 //        return calcOperation(value, accMult, lastOperation1);
-        return accMult;
+//        return accMult;
+        Expression multDivideSunExp = new Expression();
+        multDivideSunExp.setOperation(lastOperation1_1);
+        double subExpResult = calcOperation(value, accMult, lastOperation1);
+        multDivideSunExp.setNumberValue(subExpResult);
+        return multDivideSunExp;
     }
 
     public boolean isOperationMultOrDivide(SimplePostOperation operation) {

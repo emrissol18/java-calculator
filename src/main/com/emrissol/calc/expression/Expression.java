@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 /**
  * Represents expression object. Expressions objects could be structured hierarchically.
  * Each expression structure can consist from one or more pre-post operations, value (digits) or simple post operation (sign).
+ * <ol>
+ *     <br/><small><i>Notes:</i></small>
+ *     <li>Expression can contain dequeue of sub expressions (children);</li>
+ *     <li>If expression is parent (has children) then it must not have value. Due to value of parent is calculated result of its children.</li>
+ * </ol>
  */
 @Getter
 @Setter
@@ -46,13 +51,7 @@ public class Expression {
     }
 
     public Expression(String value, SimplePostOperation operation) {
-        this.value = value;
-        this.operation = operation;
-    }
-
-    public Expression(double numberValue, SimplePostOperation operation) {
-        this.value = String.valueOf(numberValue);
-        this.numberValue = numberValue;
+        this(value);
         this.operation = operation;
     }
 
@@ -346,7 +345,7 @@ public class Expression {
     public double resolveValue() {
         applyPrePostOperations(getPostOperations());
         applyPrePostOperations(getPreOperations());
-        logger.log("resolved exp value: " + numberValue);
+//        logger.log("resolved exp value: " + numberValue);
         return numberValue;
     }
 

@@ -17,10 +17,7 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
 
-        System.err.println("\n\tEQUAL");
-
         if ( ! manager.hasCurrent() && manager.hasExpressions()) {
-            System.out.println("equal return");
             return;
         }
 

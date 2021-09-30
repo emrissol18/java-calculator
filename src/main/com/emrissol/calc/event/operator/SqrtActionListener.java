@@ -23,7 +23,6 @@ public class SqrtActionListener extends AbstractOperatorActionListener {
         Expression expression = new Expression();
         expression.getPreOperations().add(new SqrtPreOperation());
         manager.setAndAddCurrentExp(expression);
-        System.out.println("uiManager.getScrollPane().getScrollPosition() = " + uiManager.getScrollPane().getScrollPosition());
     }
 
 }

@@ -101,7 +101,6 @@ public class ActionFilter {
                 &&
                 (
                         // curent has value AND has no operation
-//                        ( ! current.isParent() && current.hasValue() && ! current.hasOperation())
                         ( current.hasValue() && ! current.hasOperation())
                         ||
                         // OR allow if last closable operation closed and there no simple operation (+,-,*...) yet

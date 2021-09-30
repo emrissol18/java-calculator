@@ -33,32 +33,33 @@ public class UIManager {
     private ScrollPane scrollPane = new ScrollPane();
 
     @Getter
-    private JPanel jPanel;
+    private JPanel jPanelLabel;
+
+    @Getter
+    private JPanel jPanelBtns;
 
     public UIManager(Manager manager) {
         this.manager = manager;
-        jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
-        jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-
-        MigLayout migLayout = new MigLayout(
-                "wrap 4", // 4 components for each row
-                "",
-                "");
-
-        jPanel = new JPanel(migLayout);
         createLayout();
     }
 
     public void createLayout() {
+        jPanelLabel = new JPanel(new MigLayout("", "[grow, center]", "[]"));
+        jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
+        jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         scrollPane.add(jLabel);
-        jPanel.add(scrollPane, "span 4, growx");
-        System.out.println("scrollPane.getWidth() = " + scrollPane.getWidth());
+        jPanelLabel.add(scrollPane, "growx, w 100::"); // here set set scrollPane minWidth to 100, otherwise scrollPane won't shrink on resize
 
+        jPanelBtns = new JPanel(new MigLayout("wrap 4","","")); // 4 components for each row
         ButtonCreator buttonCreator = new ButtonCreator(manager, this);
-        buttonCreator.createButtons(jPanel);
+        buttonCreator.createButtons(jPanelBtns);
+
+        JPanel jPanelWrap = new JPanel(new MigLayout("wrap 1", "[grow, center]", "[center][center]"));
+        jPanelWrap.add(jPanelLabel, "pushx, growx");
+        jPanelWrap.add(jPanelBtns);
 
         JFrame jFrame = new JFrame("Calculator");
-        jFrame.add(jPanel);
+        jFrame.add(jPanelWrap);
         jFrame.pack();
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setLocationRelativeTo(null);
@@ -163,7 +164,7 @@ public class UIManager {
     }
 
     /**
-     * Try to scroll scrollPane to end if <code>jLabel</code> width <code>scrollPane</code> pane viewport.
+     * Try to scroll scrollPane to end if <code>jLabel</code>'s width greater than <code>scrollPane</code>'s viewport.
      */
     public void scrollToEnd() {
         scrollPane.validate();
