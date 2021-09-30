@@ -43,7 +43,7 @@ public class ResultResolver {
     /**
      * Calculate result of particular expression.<br/>
      * If an expression has children then {@link #calcAll(Deque)} will be called<br/>
-     * and each children would be calculated by this method and so on.
+     * and each children will be calculated by this method and so on.
      *
      * @param expression expression
      * @return expression's result
@@ -67,7 +67,7 @@ public class ResultResolver {
         return result;
     }
     /**
-     * Calculate total result of all expressions that dwell in deque appling {@link #calcExpression(Expression)} method for each.
+     * Calculate total result of all expressions that dwell in deque applying {@link #calcExpression(Expression)} method for each.
      *
      * @param expressions expressions
      * @return final result

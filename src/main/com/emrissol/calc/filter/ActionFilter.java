@@ -68,7 +68,7 @@ public class ActionFilter {
     }
 
     /**
-     * Wether is it valid to add pre operation at current state.
+     * Check whether is it allowed to add pre operation at current state.
      *
      * @return true if pre operation allowed, otherwise - false.
      */
@@ -83,7 +83,7 @@ public class ActionFilter {
     }
 
     /**
-     * Check if it is valid to add factorial post operation to current expression.<br/>
+     * Check if is it allowed to add factorial post operation to current expression.<br/>
      * <small>(<i>this method supposedly can be refactored to</i> isPostOperationAllowed() <i>method</i>)</small>.
      *
      * @return true if factorial allowed, otherwise - false.

@@ -11,10 +11,6 @@ public class ActionFilterTest {
     public static Manager manager = Manager.getInstance();
     public static ActionFilter actionFilter = new ActionFilter(manager);
 
-    /*@Before
-    public void init() {
-    }*/
-
     @Test
     public void testAllowDigit() {
         Expression expression1 = new Expression();
