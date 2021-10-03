@@ -167,6 +167,7 @@ public class Expression {
      * Create expression layout. If expression has children the layout of each children will be extracted recursively.<br>
      * <i>Note: </i> Usually the first call of this method in recurive chain will be performed by expressions
      * that has children (get itslef layout and its children) or has no parent (get itslef layout).
+     *
      * @return expression layout.
      */
     public String getLayout() {

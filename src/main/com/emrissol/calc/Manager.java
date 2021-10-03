@@ -1,6 +1,7 @@
 package com.emrissol.calc;
 
 import com.emrissol.calc.expression.Expression;
+import com.emrissol.calc.result.ExpressionsHistory;
 import lombok.Getter;
 import lombok.NonNull;
 import java.util.*;
@@ -11,7 +12,6 @@ public class Manager {
     private static Manager instance;
 
     private Manager() {
-        // here add more
     }
 
     public static Manager getInstance() {

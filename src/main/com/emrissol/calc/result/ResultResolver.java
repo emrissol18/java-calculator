@@ -119,7 +119,6 @@ public class ResultResolver {
                 lastOperation1 = exp1.getOperation();
             }
         }
-        System.out.println("[calcAll] - RESULT IS: " + value);
         return value;
     }
 

@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Abstract action listeners for all button action listeners.
+ * Abstract action listener for all button action listeners.
  * Its children must implement actionPerformedHook() method to be performed before layout refresh.
  */
 public abstract class AbstractOperatorActionListener implements ActionListener {

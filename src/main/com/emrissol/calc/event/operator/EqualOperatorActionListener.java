@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 
 public class EqualOperatorActionListener extends AbstractOperatorActionListener {
 
+    private ResultResolver resultResolver = new ResultResolver();
+    private ResultFormatter resultFormatter = new ResultFormatter();
+
     public EqualOperatorActionListener(Manager manager, UIManager uiManager) {
         super(manager, uiManager);
     }
@@ -17,7 +20,7 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
 
-        if ( ! manager.hasCurrent() && manager.hasExpressions()) {
+        if ( ! manager.hasCurrent() && manager.hasExpressions() || manager.getExpressionQueue().size() < 2) {
             return;
         }
 
@@ -25,21 +28,21 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
         manager.getCurrentExp().parseValue();
 
         // calculate all expressions
-        ResultResolver resultResolver = new ResultResolver();
         Double result = resultResolver.calcAll(manager.getExpressionQueue());
+        // format result value
+        String formattedResult = resultFormatter.format(result);
+
+        // add to history prev expressions with result
+        String historyValue = uiManager.expressionsLayoutsAsString().concat("=").concat(formattedResult).concat("<br/>");
+
+        uiManager.addToHistory(historyValue);
 
         // reset all
         uiManager.clearAll();
         manager.clearAll();
-        Expression.resetID();
-
-        // format result value
-        ResultFormatter resultFormatter = new ResultFormatter();
-        String formattedResult = resultFormatter.format(result);
 
         // create expression with result value, which will serve as start expreesion in new chain
         Expression resultExpression = new Expression(formattedResult);
-
         // set as current and add (single) expression into global deque
         manager.setAndAddCurrentExp(resultExpression);
     }
