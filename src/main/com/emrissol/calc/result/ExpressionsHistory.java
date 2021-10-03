@@ -1,6 +1,5 @@
 package com.emrissol.calc.result;
 
-import com.emrissol.calc.ui.HtmlStringUtil;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;

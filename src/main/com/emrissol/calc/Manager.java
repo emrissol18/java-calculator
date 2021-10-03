@@ -1,10 +1,10 @@
 package com.emrissol.calc;
 
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.result.ExpressionsHistory;
 import lombok.Getter;
 import lombok.NonNull;
-import java.util.*;
+import java.util.Deque;
+import java.util.LinkedList;
 
 // singleton
 public class Manager {

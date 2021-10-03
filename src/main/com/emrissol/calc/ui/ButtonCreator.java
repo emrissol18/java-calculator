@@ -13,7 +13,6 @@ import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.ui.factory.JButtonDigitFactory;
 import com.emrissol.calc.ui.factory.JButtonOperatorFactory;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
