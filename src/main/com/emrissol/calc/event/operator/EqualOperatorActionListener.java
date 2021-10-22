@@ -20,8 +20,14 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
 
-        if ( ! manager.hasCurrent() && manager.hasExpressions() || manager.getExpressionQueue().size() < 2) {
+        if ( ! manager.hasCurrent() ) {
             return;
+        }
+        else if (manager.getExpressionQueue().size() == 1) {
+            Expression last = manager.getExpressionQueue().getLast();
+            if ( ! last.hasPreOperations() && ! last.hasPostOperations()) {
+                return;
+            }
         }
 
         // parse value for last expression (cast string to double)
