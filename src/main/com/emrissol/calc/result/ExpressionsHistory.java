@@ -62,8 +62,7 @@ public class ExpressionsHistory {
     }
 
     public void toggleActive() {
-        active = ! active;
-        if (active) {
+        if ((active = ! active)) {
             scrollScrollPane();
         }
     }

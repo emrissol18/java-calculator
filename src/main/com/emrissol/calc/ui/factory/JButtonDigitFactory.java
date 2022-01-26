@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class JButtonDigitFactory implements JComponentFactory {
+public class JButtonDigitFactory /*implements JComponentFactory*/ {
 
     @Setter
     @Getter
@@ -20,7 +20,7 @@ public class JButtonDigitFactory implements JComponentFactory {
         this.listeners = listeners;
     }
 
-    @Override
+//    @Override
     public JButton create(String text) {
         JButton jButton = new JButton(text);
         jButton.setFont(font);

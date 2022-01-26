@@ -97,7 +97,6 @@ public class ResultResolver {
         while (iterator.hasNext()) {
             exp1 = iterator.next();
 
-            System.out.println();
             logger.log("iterate");
             // end of expression (sub) set, last expression has no operation
             if (lastOperation1 == null) {

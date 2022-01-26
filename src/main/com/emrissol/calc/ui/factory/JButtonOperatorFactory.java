@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class JButtonOperatorFactory implements JComponentFactory {
+public class JButtonOperatorFactory /*implements JComponentFactory*/ {
 
     List<? extends ActionListener> listeners;
 
@@ -16,7 +16,7 @@ public class JButtonOperatorFactory implements JComponentFactory {
         this.listeners = listeners;
     }
 
-    @Override
+//    @Override
     public JButton create(String text) {
         JButton jButton = new JButton(text);
         jButton.setFont(new Font("Monospace", Font.PLAIN, 20));

@@ -19,7 +19,7 @@ public class FactorialOperatorActionListener extends AbstractOperatorActionListe
     protected void actionPerformedHook(ActionEvent actionEvent) {
         if (actionFilter.isFactorialAllowed()) {
             manager.getCurrentExp().getPostOperations().add(new FactorialPostOperation());
-            logger.log("factorial is allowed");
+//            logger.log("factorial is allowed");
         }
     }
 }
