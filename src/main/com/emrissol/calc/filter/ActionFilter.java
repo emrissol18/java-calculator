@@ -28,12 +28,10 @@ public class ActionFilter {
         } else if (
                 // disallow right afrer post operation (right after '!')
                 current.hasPostOperations()
-                ||
                 // check if parent due only parent could have (closable) pre-post operation
-                current.isParent()
-                &&
+                || current.isParent()
                 // if closable pre-post operation has been closed (right after ')')
-                current.isLastPreOperClosed()
+                && current.isLastPreOperClosed()
         ) {
             return false;
         }
