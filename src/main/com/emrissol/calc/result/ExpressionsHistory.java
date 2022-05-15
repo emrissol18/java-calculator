@@ -1,5 +1,7 @@
 package com.emrissol.calc.result;
 
+import com.emrissol.calc.ui.HtmlStringUtil;
+import com.emrissol.calc.ui.UIManager;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
@@ -21,7 +23,9 @@ public class ExpressionsHistory {
 
     private boolean active;
 
-    public JPanel initAndGetLayout() {
+    private Font font = UIManager.DEFAULT_FONT;
+
+    public JPanel getLayout() {
         jLabel = new JLabel(getAllAsString());
 
         scrollPane = new ScrollPane();
@@ -30,7 +34,7 @@ public class ExpressionsHistory {
         jPanel = new JPanel(new MigLayout("", "[grow, center]", "[]"));
         jPanel.add(scrollPane, "growx, w 100::, h 40::100");
         jLabel.setBorder(new EmptyBorder(0, 10, 0, 10));
-
+        jLabel.setFont(font);
         return jPanel;
     }
 
@@ -48,7 +52,8 @@ public class ExpressionsHistory {
 
     public void refreshHistory() {
         // return if no GUI has been initialized yet
-        if (jLabel == null) {
+//        if (jLabel == null) {
+        if ( ! active) {
             return;
         }
         jLabel.setText(getAllAsString());

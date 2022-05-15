@@ -49,4 +49,5 @@ public class Logger {
     public static void log(Class<?> aClass, String message) {
         System.out.println(getLogData(aClass, "", message));
     }
+
 }

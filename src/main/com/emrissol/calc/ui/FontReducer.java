@@ -23,7 +23,7 @@ public class FontReducer {
         }
         if (jLabel.getPreferredSize().getWidth() >= jLabel.getWidth() - 40) {
             System.err.println("reduce font");
-            jLabel.setFont(jLabel.getFont().deriveFont(currentFontSize-1));
+            jLabel.setFont(jLabel.getFont().deriveFont(--currentFontSize));
             reduceFontSize();
         }
 

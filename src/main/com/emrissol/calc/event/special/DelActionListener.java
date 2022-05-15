@@ -53,7 +53,6 @@ public class DelActionListener extends AbstractOperatorActionListener {
             }
         } else if (current.hasChildren() || current.isLastPreOperClosable() ) {
             logger.log("isParent");
-
             // open pre operation
             if ( current.isLastPreOperClosed()) {
                 logger.log("open pre operation");
@@ -89,7 +88,7 @@ public class DelActionListener extends AbstractOperatorActionListener {
                 logger.log("expression is empty, remove from parent");
                 // set parent or null
                 manager.setCurrentExp(current.getParent());
-                // try remove from parent, if current has no parent then remove current from global list
+                // try to remove from parent, if current has no parent then remove current from global list
                 if ( ! current.detachFromParent()) {
                     logger.log("no parent present, remove from global list");
                     manager.removeExpression(current);

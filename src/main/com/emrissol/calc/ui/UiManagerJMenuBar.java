@@ -18,4 +18,5 @@ public class UiManagerJMenuBar extends JMenuBar {
         jmi.addActionListener(actionListener);
         main.add(jmi, 0);
     }
+
 }

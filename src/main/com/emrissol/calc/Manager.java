@@ -6,7 +6,6 @@ import lombok.NonNull;
 import java.util.Deque;
 import java.util.LinkedList;
 
-// singleton
 public class Manager {
 
     private static Manager instance;
@@ -30,10 +29,8 @@ public class Manager {
     public void setCurrentExp(Expression newCurrent) {
         // if current not null
         if ( hasCurrent()
-                &&
-                // AND is newCurrent is parent of current
-                ( newCurrent == null || (currentExp.hasParent() && currentExp.getParent().equals(newCurrent)))) {
-
+                // is newCurrent is parent of current
+                && ( newCurrent == null || (currentExp.hasParent() && currentExp.getParent().equals(newCurrent)))) {
             // parse current's value if newCurrent == null OR right after its parent is closed
             currentExp.parseValue();
         }
@@ -47,8 +44,7 @@ public class Manager {
     public void setAndAddCurrentExp(@NonNull Expression newExpression) {
         if (hasCurrent()) {
             getCurrentExp().addExpression(newExpression);
-        }
-        else {
+        } else {
             addOrphanExpression(newExpression);
         }
         setCurrentExp(newExpression);
