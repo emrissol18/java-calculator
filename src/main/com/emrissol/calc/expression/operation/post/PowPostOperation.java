@@ -34,4 +34,5 @@ public class PowPostOperation extends AbstractPrePostOperation {
     public boolean isClosable() {
         return false;
     }
+
 }

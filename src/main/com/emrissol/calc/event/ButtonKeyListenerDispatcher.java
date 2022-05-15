@@ -11,7 +11,7 @@ import java.util.Optional;
 
 /**
  * Dispatcher for assigning keys that will trigger button's action listeners.<br/>
- * <i>Note: This class will register itself to KeyboardFocusManager.getCurrentKeyboardFocusManager().</i>
+ * <i>Note: This class registers itself as <b>current keyboard focus manager</b>.</i>
  */
 public class ButtonKeyListenerDispatcher implements KeyEventDispatcher {
 

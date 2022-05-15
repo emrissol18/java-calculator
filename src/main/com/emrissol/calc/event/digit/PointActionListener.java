@@ -3,7 +3,7 @@ package com.emrissol.calc.event.digit;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.OperatorText;
+import com.emrissol.calc.expression.operation.layout.SimpleOperatorConsts;
 import com.emrissol.calc.log.Logger;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
@@ -24,15 +24,13 @@ public class PointActionListener extends AbstractOperatorActionListener {
             return;
         }
 
-        String point = OperatorText.POINT;
+        String point = SimpleOperatorConsts.POINT;
         Expression expression = new Expression(point);
         if ( ! manager.hasCurrent()) {
             manager.setAndAddCurrentExp(expression);
-        }
-        else if (manager.getCurrentExp().isParent()) {
+        } else if (manager.getCurrentExp().isParent()) {
             manager.setAndAddCurrentExp(expression);
-        }
-        else if ( ! manager.getCurrentExp().hasPoint()) {
+        } else if ( ! manager.getCurrentExp().hasPoint()) {
             manager.getCurrentExp().addToValue(point);
         }
 

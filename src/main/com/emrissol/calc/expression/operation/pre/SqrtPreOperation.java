@@ -1,13 +1,14 @@
 package com.emrissol.calc.expression.operation.pre;
 
-import com.emrissol.calc.expression.OperatorText;
+import com.emrissol.calc.expression.operation.layout.OperatorConsts;
+import com.emrissol.calc.expression.operation.layout.SpecialOperatorConsts;
 import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 
 public class SqrtPreOperation extends AbstractPrePostOperation {
 
     public SqrtPreOperation() {
-        super(OperatorText.ROOT + OperatorText.PARENTHESES_LEFT,
-                OperatorText.PARENTHESES_RIGHT,
+        super(SpecialOperatorConsts.SQRT + OperatorConsts.PARENTHESES_LEFT,
+                OperatorConsts.PARENTHESES_RIGHT,
                 "", "", true);
     }
 
@@ -20,4 +21,5 @@ public class SqrtPreOperation extends AbstractPrePostOperation {
     public boolean isClosable() {
         return true;
     }
+
 }

@@ -3,7 +3,7 @@ package com.emrissol.calc.event.operator;
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.event.AbstractOperatorActionListener;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.OperatorText;
+import com.emrissol.calc.expression.operation.layout.SimpleOperatorConsts;
 import com.emrissol.calc.expression.operation.pre.NegativePreOperation;
 import com.emrissol.calc.log.Logger;
 import com.emrissol.calc.ui.UIManager;
@@ -19,7 +19,6 @@ public class NegativeOperatorActionListener extends AbstractOperatorActionListen
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
-
         if (manager.hasCurrent()) {
             Expression current = manager.getCurrentExp();
             if (current.isParent() && current.lastChildHasOperation()) {
@@ -27,8 +26,7 @@ public class NegativeOperatorActionListener extends AbstractOperatorActionListen
                 toggleNegative(newExpression);
                 newExpression.getPreOperations().add(new NegativePreOperation());
                 manager.setAndAddCurrentExp(newExpression);
-            }
-            else {
+            } else {
                 toggleNegative(manager.getCurrentExp());
             }
         }
@@ -42,7 +40,7 @@ public class NegativeOperatorActionListener extends AbstractOperatorActionListen
         else {
             NegativePreOperation negativePreOperation = new NegativePreOperation();
             if (exp.hasPreOperations() && ! exp.hasParent()) {
-                negativePreOperation.setTextStart(OperatorText.NEGATIVE_LAYOUT);
+                negativePreOperation.setTextStart(SimpleOperatorConsts.NEGATIVE_LAYOUT);
                 negativePreOperation.setTextEnd("");
             }
             exp.getPreOperations().add(negativePreOperation);

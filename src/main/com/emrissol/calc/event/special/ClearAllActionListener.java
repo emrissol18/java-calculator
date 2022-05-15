@@ -13,8 +13,7 @@ public class ClearAllActionListener extends AbstractOperatorActionListener {
 
     @Override
     public void actionPerformedHook(ActionEvent actionEvent) {
-        uiManager.clearAll();
-        manager.clearAll();
+        uiManager.reset();
         Expression.resetID();
     }
 }

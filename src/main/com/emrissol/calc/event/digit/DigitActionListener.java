@@ -8,14 +8,15 @@ import com.emrissol.calc.log.Logger;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 
-// action listener for digit buttons (0-9)
+/**
+ * Action listener for digit buttons from 0 to 9
+ * */
 public class DigitActionListener extends AbstractOperatorActionListener {
 
     private static final Logger logger = new Logger(DigitActionListener.class);
 
     public DigitActionListener(Manager manager, UIManager uiManager) {
         super(manager, uiManager);
-        logger.setActive(false);
     }
 
     @Override
@@ -35,17 +36,14 @@ public class DigitActionListener extends AbstractOperatorActionListener {
             if (current.hasPostOperations() && current.getLastPostOper().isValueAvailable()) {
                 AbstractPrePostOperation lastPost = current.getLastPostOper();
                 lastPost.setValue(lastPost.getValue().concat(actionEvent.getActionCommand()).trim());
-            }
-            else if (current.isParent()) {
+            } else if (current.isParent()) {
                 logger.log("parent");
                 manager.setAndAddCurrentExp(newExpression);
-            }
-            else {
+            } else {
                 logger.log("! parent");
                 current.addToValue(actionEvent.getActionCommand());
             }
-        }
-        else {
+        } else {
             logger.log(" ! hasCurrent");
             manager.setAndAddCurrentExp(newExpression);
         }

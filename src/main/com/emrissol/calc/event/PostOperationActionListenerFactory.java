@@ -6,7 +6,7 @@ import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.ui.UIManager;
 
 /**
- * Factory for simple post operation (+,-,/,*) action listeners.
+ * Factory for simple post operation ("+", "-", "/" and "*") action listeners.
  */
 public class PostOperationActionListenerFactory {
 

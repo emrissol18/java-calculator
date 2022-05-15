@@ -14,9 +14,7 @@ public class PowOperatorActionListener extends AbstractOperatorActionListener {
 
     @Override
     protected void actionPerformedHook(ActionEvent actionEvent) {
-        if ( ! manager.hasCurrent()
-                ||
-                (manager.getCurrentExp().hasPostOperations() && manager.getCurrentExp().getLastPostOper().isValueAvailable())) {
+        if ( ! manager.hasCurrent() || manager.getCurrentExp().hasPostOperations()) {
             return;
         }
         manager.getCurrentExp().getPostOperations().add(new PowPostOperation());

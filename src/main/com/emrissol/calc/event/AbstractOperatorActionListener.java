@@ -33,7 +33,7 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
 
     private void refreshLayout() {
         if (manager.getExpressionQueue().isEmpty()) {
-            uiManager.clearAll();
+            uiManager.reset();
             return;
         }
         if (manager.hasCurrent()) {
@@ -45,4 +45,5 @@ public abstract class AbstractOperatorActionListener implements ActionListener {
         }
         uiManager.scrollToEnd();
     }
+
 }

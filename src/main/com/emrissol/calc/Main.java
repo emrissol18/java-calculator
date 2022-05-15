@@ -12,7 +12,7 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Manager manager = Manager.getInstance();
+        Manager manager = new Manager();
         SwingUtilities.invokeLater( () -> {
             UIManager uiManager = new UIManager(manager);
         });

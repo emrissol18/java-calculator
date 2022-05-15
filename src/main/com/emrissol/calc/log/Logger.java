@@ -21,6 +21,7 @@ public class Logger {
     public Logger(Class<?> aClass) {
         this.aClass = aClass;
         this.messagePrefix = "";
+        this.active = false;
     }
 
     public Logger(Class<?> aClass, String messagePrefix) {

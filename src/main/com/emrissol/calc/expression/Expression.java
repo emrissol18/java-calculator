@@ -7,8 +7,8 @@ import com.emrissol.calc.ui.HtmlStringUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Represents expression object. Expressions objects could be structured hierarchically.
@@ -220,8 +220,8 @@ public class Expression {
     }
 
     /**
-     * Find most top parent expression (most upper) in expression hierarchy,<br>
-     * i.e.: this -> parent -> parent...<br/>
+     * Find most top parent expression (most upper) in expression hierarchy<br>
+     * (i.e.: this -> parent -> parent...),<br/>
      * or itself.
      * @return Expression object
      */
@@ -238,18 +238,20 @@ public class Expression {
 
     /**
      * Find most last expression (most lower) in expression hierarchy if its parent does not have post operations<br>
-     * OR its last preOperation is open,<br>
-     * i.e.: this -> last_child -> last_child...<br/>
+     * OR its last preOperation is open<br>
+     * (i.e.: this -> last_child -> last_child...),<br/>
      * or itself.
      * @return Expression object
      */
     public Expression getDescendantChildOrItself() {
-        // if it has post operation(s) then they need be removed first
+        // return this if this has post operations then they need to be removed first
         // OR
-        // if it has closable pre operation(s) and they are closed, should be opened first ( e.g. cos(root(2+2)) <-- open first left parenthese )
+        // if it has closable pre operation(s) and they are closed, should be opened first
+        // (e.g. cos(root(2+2)) <-- open first right parenthese of cos operation)
         if (hasPostOperations() || isLastPreOperClosed()) {
             return this;
         }
+        // otherwise find descendant child
         if (hasChildren()) {
             Expression child = peekLastChild();
             while (child.hasChildren()) {
@@ -270,26 +272,6 @@ public class Expression {
     @Override
     public int hashCode() {
         return Objects.hash(value, operation);
-    }
-
-    @Override
-    public String toString() {
-        return "\n=====================================Expression#"+id+"{\n" +
-                ", parentId =" + (parent == null ? "null" : parent.getId()) +
-                ", value=" + value +
-                ", numberValue=" + numberValue +
-                ", operation=" + operation +
-                ",\npreOperations =" + (getPreOperations().isEmpty() ? "empty" :
-                "\n\t\t" + getPreOperations().stream().map(AbstractPrePostOperation::toString).collect(Collectors.joining("\n\t\t"))
-        ) +
-                ",\npostOperations =" + (getPostOperations().isEmpty() ? "empty" :
-                "\n\t\t" + getPostOperations().stream().map(AbstractPrePostOperation::toString).collect(Collectors.joining("\n\t\t"))
-        ) +
-                ",\nexpressions =" +
-                (getChildren().isEmpty() ? "empty" :
-                        "\n\t\t" + getChildren().stream().map(Expression::toString).collect(Collectors.joining("\n\t\t"))
-                ) +
-                '}';
     }
 
     public boolean removeLastDigitAndIsEmpty() {

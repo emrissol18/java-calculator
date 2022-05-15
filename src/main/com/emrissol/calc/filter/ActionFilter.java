@@ -74,9 +74,7 @@ public class ActionFilter {
      */
     public boolean isPreOperationAllowed() {
         Expression current = manager.getCurrentExp();
-        if (manager.hasCurrent() &&
-                // disallow if current != null AND (already has value OR has post operations)
-                (current.hasValue() || current.hasPostOperations())) {
+        if (manager.hasCurrent() && (current.hasValue() || current.hasPostOperations())) {
             return false;
         }
         return true;
@@ -94,6 +92,7 @@ public class ActionFilter {
         }
         Expression current = manager.getCurrentExp();
 
+        // TODO
         boolean hasFactorial = current.hasPostOperations()
                 && current.getPostOperations().stream().anyMatch( o -> o instanceof FactorialPostOperation);
 
@@ -103,7 +102,7 @@ public class ActionFilter {
                         // curent has value AND has no operation
                         ( current.hasValue() && ! current.hasOperation())
                         ||
-                        // OR allow if last closable operation closed and there no simple operation (+,-,*...) yet
+                        // OR allow if last closable operation closed and there no simple operation
                         (current.isLastPreOperClosed() && ! current.hasOperation())
                 );
     }

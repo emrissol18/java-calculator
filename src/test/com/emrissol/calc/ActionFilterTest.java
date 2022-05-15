@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class ActionFilterTest {
 
-    public static Manager manager = Manager.getInstance();
+    public static Manager manager = new Manager();
     public static ActionFilter actionFilter = new ActionFilter(manager);
 
     @Test

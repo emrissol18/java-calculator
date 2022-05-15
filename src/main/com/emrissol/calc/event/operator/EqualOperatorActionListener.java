@@ -22,8 +22,7 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
 
         if ( ! manager.hasCurrent() ) {
             return;
-        }
-        else if (manager.getExpressionQueue().size() == 1) {
+        } else if (manager.getExpressionQueue().size() == 1) {
             Expression last = manager.getExpressionQueue().getLast();
             if ( ! last.hasPreOperations() && ! last.hasPostOperations()) {
                 return;
@@ -39,13 +38,13 @@ public class EqualOperatorActionListener extends AbstractOperatorActionListener 
         String formattedResult = resultFormatter.format(result);
 
         // add to history prev expressions with result
-        String historyValue = uiManager.expressionsLayoutsAsString().concat("=").concat(formattedResult).concat("<br/>");
+        String historyValue = uiManager.expressionsLayoutsAsString()
+                .concat("=").concat(formattedResult).concat("<br/>");
 
         uiManager.addToHistory(historyValue);
 
         // reset all
-        uiManager.clearAll();
-        manager.clearAll();
+        uiManager.reset();
 
         // create expression with result value, which will serve as start expreesion in new chain
         Expression resultExpression = new Expression(formattedResult);

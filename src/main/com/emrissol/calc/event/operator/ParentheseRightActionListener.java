@@ -6,7 +6,10 @@ import com.emrissol.calc.expression.Expression;
 import com.emrissol.calc.ui.UIManager;
 import java.awt.event.ActionEvent;
 
-// action listener for right parenthese which serve as closure for closable pre operations
+/**
+ * Action listener for right parenthese
+ * which serve as closure for closable pre operations.
+ * */
 public class ParentheseRightActionListener extends AbstractOperatorActionListener {
 
     public ParentheseRightActionListener(Manager manager, UIManager uiManager) {
@@ -16,7 +19,6 @@ public class ParentheseRightActionListener extends AbstractOperatorActionListene
     @Override
     protected void actionPerformedHook(ActionEvent actionEvent) {
         Expression current = manager.getCurrentExp();
-
         if (current == null) {
             return;
         }

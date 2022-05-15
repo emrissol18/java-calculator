@@ -198,11 +198,12 @@ public class UIManager {
         stringBuilderInner.delete(length - preOperLength, length);
     }
 
-    public void clearAll() {
+    public void reset() {
         getJLabel().setText("");
         stringBuilderInner.setLength(0);
         stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
         expressionsLayouts.clear();
+        manager.clearAll();
     }
 
     /**

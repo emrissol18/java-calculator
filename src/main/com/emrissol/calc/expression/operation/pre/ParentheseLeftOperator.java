@@ -1,12 +1,12 @@
 package com.emrissol.calc.expression.operation.pre;
 
-import com.emrissol.calc.expression.OperatorText;
+import com.emrissol.calc.expression.operation.layout.OperatorConsts;
 import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 
 public class ParentheseLeftOperator extends AbstractPrePostOperation {
 
     public ParentheseLeftOperator() {
-        super(OperatorText.PARENTHESES_LEFT, OperatorText.PARENTHESES_RIGHT,
+        super(OperatorConsts.PARENTHESES_LEFT, OperatorConsts.PARENTHESES_RIGHT,
                 "<span style='line-height:40px;'>", "</span>", true);
     }
 
@@ -19,4 +19,5 @@ public class ParentheseLeftOperator extends AbstractPrePostOperation {
     public boolean isClosable() {
         return true;
     }
+
 }

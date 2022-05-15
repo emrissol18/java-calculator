@@ -1,12 +1,14 @@
 package com.emrissol.calc.expression.operation.pre;
 
-import com.emrissol.calc.expression.OperatorText;
+import com.emrissol.calc.expression.operation.layout.OperatorConsts;
+import com.emrissol.calc.expression.operation.layout.SimpleOperatorConsts;
 import com.emrissol.calc.expression.operation.AbstractPrePostOperation;
 
 public class NegativePreOperation extends AbstractPrePostOperation {
 
     public NegativePreOperation() {
-        super(OperatorText.PARENTHESES_LEFT.concat(OperatorText.NEGATIVE_LAYOUT), OperatorText.PARENTHESES_RIGHT, "", "");
+        super(OperatorConsts.PARENTHESES_LEFT.concat(SimpleOperatorConsts.NEGATIVE_LAYOUT),
+                OperatorConsts.PARENTHESES_RIGHT, "", "");
     }
 
     @Override
@@ -18,4 +20,5 @@ public class NegativePreOperation extends AbstractPrePostOperation {
     public boolean isClosable() {
         return false;
     }
+
 }
