@@ -13,8 +13,6 @@ public class ResultResolver {
 
     private static Logger logger = new Logger(ResultResolver.class);
 
-    private double value;
-
     public ResultResolver() {
         logger.setActive(false);
     }
@@ -39,7 +37,6 @@ public class ResultResolver {
         return value;
     }
 
-
     /**
      * Calculate result of particular expression.<br/>
      * If an expression has children then {@link #calcAllInner(Deque)} will be called<br/>
@@ -49,29 +46,26 @@ public class ResultResolver {
      * @return expression's result
      */
     public strictfp double calcExpression(Expression expression) {
-//        logger.log("calcExpression() [layout]: " + expression.getLayout() + "\t[numberValue]: " + expression.getNumberValue());
         if (expression.isParent()) {
-//            logger.log("calcExpression [isParent]");
+            logger.log("calcExpression [isParent]");
             expression.setNumberValue(calcAllInner(expression.getChildren()));
-//            logger.log("parent numberValue after set calcAllResult: " + expression.getNumberValue());
         }
         double v = expression.resolveValue();
         logger.log("calcExpression [resolved value]: " + v);
         return v;
     }
 
-
-    public double calcAll(Deque<Expression> expressions) {
-        double result = calcAllInner(expressions);
-        value = 0d;
-        return result;
-    }
     /**
-     * Calculate total result of all expressions that dwell in deque applying {@link #calcExpression(Expression)} method for each.
+     * Calculate total result of all expressions that dwell in deque<br>
+     * applying {@link #calcExpression(Expression)} method for each expression.
      *
      * @param expressions expressions
      * @return final result
      */
+    public strictfp double calcAll(Deque<Expression> expressions) {
+        return calcAllInner(expressions);
+    }
+
     private strictfp double calcAllInner(Deque<Expression> expressions) {
         logger.log("calcAll");
         if (expressions == null || expressions.isEmpty()) {
@@ -110,8 +104,7 @@ public class ResultResolver {
                 Expression subExp = calcPriorOperationsChain(value, iterator, exp1, lastOperation1);
                 value = subExp.getNumberValue();
                 lastOperation1 = subExp.getOperation();
-            }
-            else {
+            } else {
                 logger.log("simple exp block");
                 double expValue = calcExpression(exp1);
                 value = calcOperation(value, expValue, lastOperation1);

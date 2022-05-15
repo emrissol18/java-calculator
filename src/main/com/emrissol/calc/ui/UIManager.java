@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 
 public class UIManager {
 
-    public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
+    public static final Font DEFAULT_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
 
     // wrap html start & end for whole content
     private static String HTML_START = "<html>";
@@ -22,7 +22,7 @@ public class UIManager {
     private StringBuilder stringBuilderInner = new StringBuilder();
 
     // Short id -> String layout
-    private LinkedHashMap<Short, String> expressionsLayouts = new LinkedHashMap<>(4);
+    private LinkedHashMap<Short, String> expLayouts = new LinkedHashMap<>(4);
 
     @Getter
     private Manager manager;
@@ -51,19 +51,18 @@ public class UIManager {
     }
 
     public void createLayout() {
-
         JFrame jFrame = new JFrame("Calculator");
-
-
         // 1st
-        JButton historyBtn = new JButton("<html><span style='float:right;color:lightgrey;background:transparent;border:none;'>history</span></html>");
+        JButton historyBtn = new JButton(
+                "<html><span style='float:right;color:lightgrey;background:transparent;border:none;'>history</span></html>");
 
         // 2nd
         jPanelLabel = new JPanel(new MigLayout("", "[grow, center]", "[]"));
         jLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 18));
         jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         scrollPane.add(jLabel);
-        jPanelLabel.add(scrollPane, "growx, w 100::"); // here set set scrollPane minWidth to 100, otherwise scrollPane won't shrink on resize
+        // here set set scrollPane min width to 100, otherwise scrollPane won't shrink on resize event
+        jPanelLabel.add(scrollPane, "growx, w 100::");
 
         // 3rd
         jPanelBtns = new JPanel(new MigLayout("wrap 4","","")); // 4 components for each row
@@ -71,12 +70,12 @@ public class UIManager {
         buttonCreator.createButtons(jPanelBtns);
 
         // 2nd & 3rd
-        JPanel jPanelWrap = new JPanel(new MigLayout("wrap 1", "[grow, center]", "[center][center]"));
-
+        JPanel jPanelWrap = new JPanel(
+                new MigLayout("wrap 1", "[grow, center]", "[center][center]"));
         UiManagerJMenuBar menuBar = new UiManagerJMenuBar();
         menuBar.addMenuItem(new JCheckBoxMenuItem("history"), (e) -> {
             if (expressionsHistory.getJPanel() == null || ! expressionsHistory.isActive()) {
-                jPanelWrap.add(expressionsHistory.initAndGetLayout(), "growx", 0);
+                jPanelWrap.add(expressionsHistory.getLayout(), "growx", 0);
                 int historyPanelHeight = (int) expressionsHistory.getJPanel().getPreferredSize().getHeight();
                 jFrame.setSize((int) jFrameDimension.getWidth(), (int)(jFrameDimension.getHeight() + historyPanelHeight));
             }
@@ -87,12 +86,9 @@ public class UIManager {
             expressionsHistory.toggleActive();
         });
 
+        jFrame.setJMenuBar(menuBar);
         jPanelWrap.add(jPanelLabel, "pushx, growx");
         jPanelWrap.add(jPanelBtns);
-
-//        jFrame.setLayout(new MigLayout("wrap 1", "", ""));
-        jFrame.setJMenuBar(menuBar);
-
         jFrame.add(jPanelWrap);
         jFrame.pack();
         jFrameDimension = new Dimension(jFrame.getWidth(), jFrame.getHeight());
@@ -108,16 +104,16 @@ public class UIManager {
 
     public String getLayouts() {
         StringBuilder stringBuilder = new StringBuilder();
-        if (expressionsLayouts.isEmpty()) {
+        if (expLayouts.isEmpty()) {
             return "";
         }
-        expressionsLayouts.values().forEach(  (layout) -> stringBuilder.append(layout));
+        expLayouts.values().forEach(  (layout) -> stringBuilder.append(layout));
         return stringBuilder.toString();
     }
 
     public void refreshLayout(Expression expression) {
         // put or replace new layout
-        expressionsLayouts.put(expression.getId(), expression.getLayout());
+        expLayouts.put(expression.getId(), expression.getLayout());
 
         stringBuilderInner.setLength(0);
         stringBuilderInner.append(getLayouts());
@@ -126,9 +122,9 @@ public class UIManager {
     }
 
     public void refreshExpressionsLayouts() {
-        expressionsLayouts.clear();
+        expLayouts.clear();
         for (Expression expression : manager.getExpressionQueue()) {
-            expressionsLayouts.put(expression.getId(), expression.getLayout());
+            expLayouts.put(expression.getId(), expression.getLayout());
         }
     }
 
@@ -136,7 +132,6 @@ public class UIManager {
         refreshExpressionsLayouts();
         stringBuilderInner.setLength(0);
         if ( manager.hasExpressions()) {
-//            expressionsLayouts.values().forEach( (layout) -> stringBuilderInner.append(layout));
             stringBuilderInner.append(expressionsLayoutsAsString());
         }
         aggregateInnerSB();
@@ -144,7 +139,7 @@ public class UIManager {
 
     public String expressionsLayoutsAsString() {
         StringBuilder stringBuilder = new StringBuilder();
-        expressionsLayouts.values().forEach( (layout) -> stringBuilder.append(layout));
+        expLayouts.values().forEach( (layout) -> stringBuilder.append(layout));
         return stringBuilder.toString();
     }
 
@@ -202,7 +197,7 @@ public class UIManager {
         getJLabel().setText("");
         stringBuilderInner.setLength(0);
         stringBuilderOuter.replace(getStartOffset(), getEndOffset(), "");
-        expressionsLayouts.clear();
+        expLayouts.clear();
         manager.clearAll();
     }
 
@@ -221,4 +216,5 @@ public class UIManager {
         expressionsHistory.getExpressions().add(value);
         expressionsHistory.refreshHistory();
     }
+
 }

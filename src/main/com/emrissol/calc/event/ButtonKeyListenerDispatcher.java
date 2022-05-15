@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -15,32 +16,34 @@ import java.util.Optional;
  */
 public class ButtonKeyListenerDispatcher implements KeyEventDispatcher {
 
-    private Map<Integer, JButton[]> buttonsMap = new HashMap<>(20);
+    private Map<Integer, JButton> buttonsMap = new HashMap<>(20, .9f);
 
     public ButtonKeyListenerDispatcher() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
     }
 
-    public ButtonKeyListenerDispatcher(Map<Integer, JButton[]> buttonsMap) {
+    public ButtonKeyListenerDispatcher(Map<Integer, JButton> buttonsMap) {
         this();
         this.buttonsMap = buttonsMap;
     }
 
-    public void addButton(int keyCode, JButton... jButtons) {
-        buttonsMap.put(keyCode, jButtons);
+    public void addButton(int keyCode, JButton jButton) {
+        Objects.requireNonNull(jButton);
+        String keyText = KeyEvent.getKeyText(keyCode);
+        jButton.setToolTipText(keyText);
+        buttonsMap.put(keyCode, jButton);
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent keyEvent) {
         if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
             // get JButton object by keyCode
-            Optional<JButton[]> jButtons = Optional.ofNullable(buttonsMap.get(keyEvent.getKeyCode()));
-            if (jButtons.isPresent()) {
+            Optional<JButton> jButton = Optional.ofNullable(buttonsMap.get(keyEvent.getKeyCode()));
+            if (jButton.isPresent()) {
                 // call each action listener of JButton object
-                for (JButton b : jButtons.get()) {
-                    for (ActionListener l : b.getActionListeners()) {
-                        l.actionPerformed(new ActionEvent(b, ActionEvent.ACTION_FIRST, b.getActionCommand()));
-                    }
+                JButton b = jButton.get();
+                for (ActionListener l : b.getActionListeners()) {
+                    l.actionPerformed(new ActionEvent(b, ActionEvent.ACTION_FIRST, b.getActionCommand()));
                 }
             }
         }

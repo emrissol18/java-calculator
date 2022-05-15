@@ -16,4 +16,5 @@ public class ClearAllActionListener extends AbstractOperatorActionListener {
         uiManager.reset();
         Expression.resetID();
     }
+
 }

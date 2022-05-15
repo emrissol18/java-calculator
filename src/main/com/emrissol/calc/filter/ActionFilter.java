@@ -2,7 +2,6 @@ package com.emrissol.calc.filter;
 
 import com.emrissol.calc.Manager;
 import com.emrissol.calc.expression.Expression;
-import com.emrissol.calc.expression.operation.post.FactorialPostOperation;
 
 /**
  * Holds static methods for checking conditions for current state.
@@ -26,15 +25,15 @@ public class ActionFilter {
         // allow to start new expression OR add value to operation (like pow operation)
         if (current == null || (current.hasPostOperations() && current.getLastPostOper().isValueAvailable())) {
             return true;
-        }
-        else if (
-                        // disallow right afrer post operation (right after '!')
-                       current.hasPostOperations()
-                            ||
-                            // OR if closable pre-post operation has been closed (right after ')')
-                            current.isParent() // check if parent due only parent could have (closable) pre-post operation
-                                &&
-                                (current.isLastPreOperClosable() && current.isLastPreOperClosed())
+        } else if (
+                // disallow right afrer post operation (right after '!')
+                current.hasPostOperations()
+                ||
+                // check if parent due only parent could have (closable) pre-post operation
+                current.isParent()
+                &&
+                // if closable pre-post operation has been closed (right after ')')
+                current.isLastPreOperClosed()
         ) {
             return false;
         }
@@ -80,30 +79,4 @@ public class ActionFilter {
         return true;
     }
 
-    /**
-     * Check if is it allowed to add factorial post operation to current expression.<br/>
-     * <small>(<i>this method supposedly can be refactored to</i> isPostOperationAllowed() <i>method</i>)</small>.
-     *
-     * @return true if factorial allowed, otherwise - false.
-     */
-    public boolean isFactorialAllowed() {
-        if ( ! manager.hasCurrent()) {
-            return false;
-        }
-        Expression current = manager.getCurrentExp();
-
-        // TODO
-        boolean hasFactorial = current.hasPostOperations()
-                && current.getPostOperations().stream().anyMatch( o -> o instanceof FactorialPostOperation);
-
-        return  ! hasFactorial // no two factorials in a row
-                &&
-                (
-                        // curent has value AND has no operation
-                        ( current.hasValue() && ! current.hasOperation())
-                        ||
-                        // OR allow if last closable operation closed and there no simple operation
-                        (current.isLastPreOperClosed() && ! current.hasOperation())
-                );
-    }
 }

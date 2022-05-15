@@ -2,8 +2,8 @@ package com.emrissol.calc.expression.operation;
 
 import com.emrissol.calc.ui.HtmlStringUtil;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+
 import java.util.Objects;
 
 @Setter

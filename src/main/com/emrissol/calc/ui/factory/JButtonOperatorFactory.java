@@ -3,27 +3,24 @@ package com.emrissol.calc.ui.factory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
 
-public class JButtonOperatorFactory /*implements JComponentFactory*/ {
-
-    List<? extends ActionListener> listeners;
+public class JButtonOperatorFactory extends BaseJButtonFactory {
 
     public JButtonOperatorFactory() {
+        this(Collections.emptyList());
     }
 
     public JButtonOperatorFactory(List<? extends ActionListener> listeners) {
-        this.listeners = listeners;
+        super(listeners);
+        this.font = new Font(Font.MONOSPACED, Font.PLAIN, 20);
     }
 
-//    @Override
     public JButton create(String text) {
         JButton jButton = new JButton(text);
-        jButton.setFont(new Font("Monospace", Font.PLAIN, 20));
-//        jButton.setSize(60, 60);
-        for (ActionListener listener : listeners) {
-            jButton.addActionListener(listener);
-        }
+        jButton.setFont(font);
+        addListeners(jButton);
         return jButton;
     }
 

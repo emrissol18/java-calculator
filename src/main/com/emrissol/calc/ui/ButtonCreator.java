@@ -8,15 +8,14 @@ import com.emrissol.calc.event.digit.PointActionListener;
 import com.emrissol.calc.event.operator.*;
 import com.emrissol.calc.event.special.ClearAllActionListener;
 import com.emrissol.calc.event.special.DelActionListener;
+import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.expression.operation.layout.OperatorConsts;
 import com.emrissol.calc.expression.operation.layout.SpecialOperatorConsts;
-import com.emrissol.calc.expression.operation.SimplePostOperation;
 import com.emrissol.calc.ui.factory.JButtonDigitFactory;
 import com.emrissol.calc.ui.factory.JButtonOperatorFactory;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.util.Collections;
 import java.util.List;
 
 public class ButtonCreator {
@@ -30,7 +29,7 @@ public class ButtonCreator {
         this.manager = manager;
         this.uiManager = uiManager;
         digitFactory = new JButtonDigitFactory(List.of(new DigitActionListener(manager, uiManager)));
-        operatorFactory = new JButtonOperatorFactory(Collections.emptyList());
+        operatorFactory = new JButtonOperatorFactory();
     }
 
     public void createButtons(JPanel jPanel) {
@@ -39,7 +38,7 @@ public class ButtonCreator {
         JButton jButtonClear = operatorFactory.create(OperatorConsts.CLEAR);
         jButtonClear.addActionListener(new ClearAllActionListener(manager, uiManager));
         jPanel.add(jButtonClear, "sg btn");
-
+        keyListenerDispatcher.addButton(KeyEvent.VK_DELETE, jButtonClear);
 
 //        JButton jButtonCurrentStatus = operatorFactory.create("S");
 //        jButtonCurrentStatus.addActionListener( (e) -> {
@@ -55,15 +54,17 @@ public class ButtonCreator {
         JButton jButtonFactorial = operatorFactory.create(SpecialOperatorConsts.FACTORIAL);
         jButtonFactorial.addActionListener(new FactorialOperatorActionListener(manager, uiManager));
         jPanel.add(jButtonFactorial, "sg btn");
+        keyListenerDispatcher.addButton(KeyEvent.VK_F, jButtonFactorial);
 
         JButton jButtonPow = operatorFactory.create(SpecialOperatorConsts.POW);
         jButtonPow.addActionListener(new PowOperatorActionListener(manager, uiManager));
         jPanel.add(jButtonPow, "sg btn");
+        keyListenerDispatcher.addButton(KeyEvent.VK_P, jButtonPow);
 
         JButton jButtonDel = operatorFactory.create(OperatorConsts.DEL);
         jButtonDel.addActionListener(new DelActionListener(manager, uiManager));
         jPanel.add(jButtonDel, "sg btn");
-        keyListenerDispatcher.addButton(KeyEvent.VK_DELETE, jButtonDel);
+        keyListenerDispatcher.addButton(KeyEvent.VK_BACK_SPACE, jButtonDel);
 
 //        JButton jButtonPercent = operatorFactory.create(OperatorText.PERCENT);
 //        jButtonPercent.addActionListener(new PercentActionListener(manager, uiManager));
@@ -72,14 +73,17 @@ public class ButtonCreator {
         JButton jButtonRoot = operatorFactory.create(SpecialOperatorConsts.SQRT);
         jButtonRoot.addActionListener(new SqrtActionListener(manager, uiManager));
         jPanel.add(jButtonRoot, "sg btn");
+        keyListenerDispatcher.addButton(KeyEvent.VK_R, jButtonRoot);
 
         JButton jButtonParentheseLeft = operatorFactory.create(OperatorConsts.PARENTHESES_LEFT);
         jButtonParentheseLeft.addActionListener(new ParentheseLeftActionListener(manager, uiManager));
         jPanel.add(jButtonParentheseLeft, "sg btn");
+        keyListenerDispatcher.addButton(KeyEvent.VK_OPEN_BRACKET, jButtonParentheseLeft);
 
         JButton jButtonParentheseRight = operatorFactory.create(OperatorConsts.PARENTHESES_RIGHT);
         jButtonParentheseRight.addActionListener(new ParentheseRightActionListener(manager, uiManager));
         jPanel.add(jButtonParentheseRight, "sg btn");
+        keyListenerDispatcher.addButton(KeyEvent.VK_CLOSE_BRACKET, jButtonParentheseRight);
 
         PostOperationActionListenerFactory postOperationFactory = new PostOperationActionListenerFactory(manager, uiManager);
 
@@ -143,6 +147,7 @@ public class ButtonCreator {
         JButton jButtonNegative = operatorFactory.create(SpecialOperatorConsts.NEGATIVE);
         jButtonNegative.addActionListener(new NegativeOperatorActionListener(manager, uiManager));
         jPanel.add(jButtonNegative, "sg btn");
+        keyListenerDispatcher.addButton(KeyEvent.VK_N, jButtonNegative);
 
         JButton jButtonPoint = operatorFactory.create(SimplePostOperation.POINT.getText());
         jButtonPoint.addActionListener(new PointActionListener(manager, uiManager));

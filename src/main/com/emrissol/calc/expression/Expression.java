@@ -117,7 +117,7 @@ public class Expression {
         if ( ! hasPreOperations()) {
             return true;
         }
-        return ! getLastClosablePreOper().isOpen();
+        return isLastPreOperClosable() && ! getLastClosablePreOper().isOpen();
     }
 
     public Deque<AbstractPrePostOperation> getPostOperations() {

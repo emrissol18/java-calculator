@@ -22,9 +22,17 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
         if ( ! manager.hasExpressions()) {
             return;
         }
-
         Expression current = manager.getCurrentExp();
+        // add operation to current expression if present
+        // (if current present (thus has value) and if current is parent or has children)
+        if (manager.hasCurrent() && ( ! current.isParent() || current.hasChildren()) ) {
+            manager.getCurrentExp().setOperation(operation);
+            // set current's parent (nullable)
+            manager.setCurrentExp(manager.getCurrentExp().getParent());
+            return;
+        }
 
+        // else change post operation of last operation
         Optional<Expression> expToChangeSign = Optional.empty();
         // last child of current parent
         if (manager.hasCurrent() && current.lastChildHasOperation()) {
@@ -39,14 +47,6 @@ public class PostOperatorActionListener extends AbstractOperatorActionListener {
         if (expToChangeSign.isPresent()) {
             expToChangeSign.get().setOperation(operation);
             return;
-        }
-
-        // else add operation to current expression
-        // (if current present (thus it has value) and if current is parent or has children)
-        if (manager.hasCurrent() && ( ! current.isParent() || current.hasChildren()) ) {
-            manager.getCurrentExp().setOperation(operation);
-            // set parent if has or null
-            manager.setCurrentExp(manager.getCurrentExp().getParent());
         }
 
     }
